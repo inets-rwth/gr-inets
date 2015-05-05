@@ -1,0 +1,26 @@
+<block>
+  <name>Frame sync cc</name>
+  <key>inets_frame_sync_cc</key>
+  <category>INETS</category>
+  <import>import inets</import>
+  <make>inets.frame_sync_cc($threshold, $len_tag_key)</make>
+  <param>
+    <name>Threshold</name>
+    <key>threshold</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Len_tag_key</name>
+    <key>len_tag_key</key>
+    <value> "packet_len"</value>
+    <type>string</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>
