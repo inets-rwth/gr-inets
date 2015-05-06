@@ -33,13 +33,17 @@ namespace gr {
 		float _threshold;
 		int _len_preamble;
 		std::string _len_tag_key;
-
+		int _state;
+		static const int STATE_DETECT = 0;
+		static const int STATE_PREAMBLE = 1;
+		static const int STATE_PAYLOAD = 2;
      public:
       frame_sync_cc_impl(float threshold, const std::string &len_tag_key);
       ~frame_sync_cc_impl();
-
+	  void forecast(int noutput_items, gr_vector_int &ninput_items_required);
       // Where all the action really happens
-      int work(int noutput_items,
+      int general_work(int noutput_items,
+		   gr_vector_int &ninput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);
     };
@@ -47,5 +51,4 @@ namespace gr {
   } // namespace inets
 } // namespace gr
 
-#endif /* INCLUDED_INETS_FRAME_SYNC_CC_IMPL_H */
-
+#endif /* INCLUDED_INETS_FRAME_SYNC_CC_IMPL_H */ 

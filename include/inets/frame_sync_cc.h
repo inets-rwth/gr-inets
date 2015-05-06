@@ -33,7 +33,7 @@ namespace gr {
      * \ingroup inets
      *
      */
-    class INETS_API frame_sync_cc : virtual public gr::sync_block
+    class INETS_API frame_sync_cc : virtual public gr::block
     {
      public:
       typedef boost::shared_ptr<frame_sync_cc> sptr;
