@@ -37,12 +37,15 @@ namespace gr {
 
     /*
      * The private constructor
+	 * Needed to make preamble len a multiple of 8.
+	 * Otherwise the gnuradio blocks packed_to_unpacked and unpacked_to_packed don't work
+	 * beacuse the payload will not be byte aligned.	
      */
     frame_sync_cc_impl::frame_sync_cc_impl(float threshold, const std::string &len_tag_key)
       : gr::block("frame_sync_cc",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(gr_complex))),
-		_threshold(threshold), _len_preamble(13), _len_tag_key(len_tag_key),
+		_threshold(threshold), _len_preamble(16), _len_tag_key(len_tag_key),
 		_state(STATE_DETECT)
     {
 		_preamble[0] = gr_complex(-1, 0);
@@ -112,7 +115,7 @@ namespace gr {
 			if(_state == STATE_DETECT) {			
 				//std::cout << "DETECT" << std::endl;
 				sum = 0;
-				for(j = 0; j < _len_preamble; j++) {
+				for(j = 0; j < 13; j++) {
 					sum += std::conj(_preamble[j]) * in[i + j];
 				}
 				
@@ -131,17 +134,17 @@ namespace gr {
 			
 			if(_state == STATE_PREAMBLE) {
 				std::cout << "PREAMBLE" << std::endl;
-				if(ninput_items[0] - i >= 13) {
+				if(ninput_items[0] - i >= _len_preamble) {
 					
 					for(j = i; j < i+13; j++) {
 						
 				    }
 
-					i+=13;
-					consumed_items += 13;
+					i+=_len_preamble;
+					consumed_items += _len_preamble;
 					_state = STATE_PAYLOAD;
 
-					std::cout << "consuming " << "13" << " items. Total: " << consumed_items << std::endl; 
+					std::cout << "consuming " << _len_preamble  << " items. Total: " << consumed_items << std::endl; 
 				} else {
 				
 					std::cout << "not enough items in buffer" << std::endl; 
