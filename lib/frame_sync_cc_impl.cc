@@ -46,7 +46,7 @@ namespace gr {
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(gr_complex))),
 		_threshold(threshold), _len_preamble(16), _len_tag_key(len_tag_key),
-		_state(STATE_DETECT)
+		_state(STATE_DETECT), _last_phase(0)
     {
 		_preamble[0] = gr_complex(-1, 0);
 		_preamble[1] = gr_complex(-1, 0);
@@ -67,6 +67,7 @@ namespace gr {
 		//set_history(13);
 		set_tag_propagation_policy(TPP_DONT);
 		set_output_multiple(1024);
+		message_port_register_out(pmt::string_to_symbol("phase"));
 	}
 
     /*
@@ -126,7 +127,11 @@ namespace gr {
 					std::cout << "Found! curr corr: " << 
 						std::abs(sum) <<  " curr phase: " << phi << std::endl;	
 					
+					message_port_pub(pmt::string_to_symbol("phase"), pmt::from_float(phi - _last_phase));
+					
 					_state = STATE_PREAMBLE;
+					_last_phase = phi;
+					
 					std::cout << "consuming " << i - consumed_items << " items" << std::endl;
 					consumed_items = i; 
 				}
