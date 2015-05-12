@@ -1,5 +1,5 @@
 \documentclass{acm_proc_article-sp}
-
+\usepackage{url}
 \begin{document}
 \title{Demo: Spectrum Agile mm-Wave Packet Radio}
 %
@@ -77,7 +77,8 @@ Julian Arnold\\
 
 \maketitle
 \begin{abstract}
-adsadsad
+We are presenting a spectrum agile mm-Wave packet radio communication system for multimedia streaming purposes.
+The proposed system operates in the 60 GHz 70 GHz and 80 GHz bands.
 \end{abstract}
 
 % A category with the (minimum) three required fields
@@ -87,16 +88,26 @@ adsadsad
 
 %\terms{Theory}
 
-\keywords{mm-Wave, SDR, USRP, GNURadio} % NOT required for Proceedings
+%\keywords{mm-Wave, SDR, USRP, GNURadio} % NOT required for Proceedings
 
 \section{Introduction}
-aaaa
+The proposed system can be seen in Figure \ref{fig:system}. The system uses two USRP \cite{ettus} software defined radios to generate and receive a signal at an intermediate frequency. Two up/down-converts are used to transfer the intermediate frequency into the mm-Wave band. It is worth mentioning that the system can be operated in the 60 GHz, 70 GHz and 80 GHz bands.
+We use a host PC to generate the packetized signal stream at baseband using GNURadio \cite{gnuradio}. The intermediate frequency can be adjusted from 1.2 GHz up to 6 GHz which offers a large amount of available bandwidth and allows the system to be spectrum agile. Figure \ref{fig:block} shows a block level description of the whole signal chain.
+During the demo session we will demonstrate the proposed system, showing its operation in several mm-Wave bands.
+\begin{figure}
+\center
+\includegraphics[width=0.4\textwidth]{system.jpg}
+\caption{System Overview (Need better picture)}
+\label{fig:system}
+\end{figure}
 
-\section{The {\secit Body} of The Paper}
-bbb
+\begin{figure}
+\center
+\includegraphics[width=0.4\textwidth]{system.jpg}
+\caption{Block Level Description (Need better picture)}
+\label{fig:block}
+\end{figure}
 
-\subsection{Type Changes and {\subsecit Special} Characters}
-ccc
-
-
+\bibliographystyle{abbrv}
+\bibliography{sigproc}
 \end{document}
