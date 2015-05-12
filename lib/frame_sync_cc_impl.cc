@@ -104,7 +104,7 @@ namespace gr {
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];		
 
-		std::cout << "call! ninput: "<< ninput_items[0] << "noutput: " << noutput_items << std::endl; 
+		//std::cout << "call! ninput: "<< ninput_items[0] << "noutput: " << noutput_items << std::endl; 
 
         // Do <+signal processing+>
 		gr_complex sum = 0;
@@ -116,29 +116,47 @@ namespace gr {
 			if(_state == STATE_DETECT) {			
 				//std::cout << "DETECT" << std::endl;
 				sum = 0;
+				float df, df_prev = 0;
+				df = 0;
+				float df_tmp[13];
 				for(j = 0; j < 13; j++) {
 					sum += std::conj(_preamble[j]) * in[i + j];
+					df_tmp[j] =  std::arg(in[i + j] / _preamble[j]);
+					if(j > 0)
+						df += (df_tmp[j] - df_prev);
+					df_prev = df_tmp[j];
 				}
 				
+			
 				if(std::abs(sum) > _threshold) {
 					//Frame detected
 					//resolve phse
+				
+					for(j=0;j<13;j++) {
+ 						std::cout<<"diff "<<j<<": "<<df_tmp[j]<<std::endl;
+					}
 					float phi = std::arg(sum);
-					std::cout << "Found! curr corr: " << 
-						std::abs(sum) <<  " curr phase: " << phi << std::endl;	
+					df = df / 12;
+					std::cout << "curr phase = " << df_tmp[0] << " freq. offset = " << df << std::endl;
+					/*
+						std::cout << "Found! curr corr: " << 
+						std::abs(sum) <<  " curr phase: " << phi << 
+						" sending phase: " << phi - _last_phase << std::endl;
+					*/
 					
+
 					message_port_pub(pmt::string_to_symbol("phase"), pmt::from_float(phi - _last_phase));
 					
 					_state = STATE_PREAMBLE;
 					_last_phase = phi;
 					
-					std::cout << "consuming " << i - consumed_items << " items" << std::endl;
+					//std::cout << "consuming " << i - consumed_items << " items" << std::endl;
 					consumed_items = i; 
 				}
 			}
 			
 			if(_state == STATE_PREAMBLE) {
-				std::cout << "PREAMBLE" << std::endl;
+				//std::cout << "PREAMBLE" << std::endl;
 				if(ninput_items[0] - i >= _len_preamble) {
 					
 					for(j = i; j < i+13; j++) {
@@ -149,22 +167,22 @@ namespace gr {
 					consumed_items += _len_preamble;
 					_state = STATE_PAYLOAD;
 
-					std::cout << "consuming " << _len_preamble  << " items. Total: " << consumed_items << std::endl; 
+					//std::cout << "consuming " << _len_preamble  << " items. Total: " << consumed_items << std::endl; 
 				} else {
 				
-					std::cout << "not enough items in buffer" << std::endl; 
+					//std::cout << "not enough items in buffer" << std::endl; 
 					break;
 				}
 			}
 
 			if(_state == STATE_PAYLOAD) {
-				std::cout << "PAYLOAD" << std::endl;
+				//std::cout << "PAYLOAD" << std::endl;
 				if(ninput_items[0] - i >= 1024 && noutput_items >= 1024) {
 					
 					memcpy(out + items_produced, in + i, sizeof(gr_complex)*1024);
 					i += 1024;
 
-					std::cout << "adding tag at: " << (nitems_written(0) + items_produced) << std::endl;
+					//std::cout << "adding tag at: " << (nitems_written(0) + items_produced) << std::endl;
 					add_item_tag(0, nitems_written(0) + items_produced,
 						pmt::string_to_symbol(_len_tag_key), pmt::from_long(1024));
 					
@@ -172,10 +190,10 @@ namespace gr {
 					consumed_items += 1024;
 					_state = STATE_DETECT;
 
-					std::cout << "consuming " << "1024" << " items. Total: " << consumed_items << std::endl; 
+					//std::cout << "consuming " << "1024" << " items. Total: " << consumed_items << std::endl; 
 				} else {
 		
-					std::cout << "not enough items in buffer" << std::endl; 
+					//std::cout << "not enough items in buffer" << std::endl; 
 					
 					break;
 				}
@@ -191,7 +209,7 @@ namespace gr {
 		}
  
         // Tell runtime system how many output items we produced.
-        std::cout << noutput_items <<  " items processed" << std::endl; 
+        //std::cout << noutput_items <<  " items processed" << std::endl; 
 		if(items_produced>0) {
 			produce(0, items_produced);
 			return WORK_CALLED_PRODUCE;
