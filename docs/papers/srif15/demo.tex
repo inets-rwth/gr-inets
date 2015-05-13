@@ -1,5 +1,7 @@
 \documentclass{acm_proc_article-sp}
 \usepackage{url}
+\usepackage{tikz}
+
 \begin{document}
 \title{Demo: Spectrum Agile mm-Wave Packet Radio}
 %
@@ -27,7 +29,7 @@
 % without further effort on your part as the last section in
 % the body of your article BEFORE References or any Appendices.
 
-\numberofauthors{4} %  in this sample file, there are a *total*
+\numberofauthors{1} %  in this sample file, there are a *total*
 % of EIGHT authors. SIX appear on the 'first-page' (for formatting
 % reasons) and the remaining two appear in the \additionalauthors section.
 %
@@ -44,33 +46,11 @@
 %
 % 1st. author
 \alignauthor
-Prof. Petri M\"ah\"onen\\
+Julian Arnold, Ljiljana Simi\'{c}, Marina Petrova, Petri M\"ah\"onen\\
        \affaddr{Institute for Networked Systems}\\
        \affaddr{RWTH Aachen University}\\
        \affaddr{Kackertstrasse 9, 52072 Aachen, Germany}\\
-       \email{pma@inets.rwth-aachen.de}
-% 2nd. author
-\alignauthor
-Prof. Marina Petrova\\
-       \affaddr{Institute for Networked Systems}\\
-       \affaddr{RWTH Aachen University}\\
-       \affaddr{Kackertstrasse 9, 52072 Aachen, Germany}\\
-       \email{mpe@inets.rwth-aachen.de}
-% 3rd. author
-\alignauthor 
-Ljiljana Simi\'{c}, Ph. D.\\
-       \affaddr{Institute for Networked Systems}\\
-       \affaddr{RWTH Aachen University}\\
-       \affaddr{Kackertstrasse 9, 52072 Aachen, Germany}\\
-       \email{lsi@inets.rwth-aachen.de}
-\and% use '\and' if you need 'another row' of author names
-% 4th. author
-\alignauthor
-Julian Arnold\\
-       \affaddr{Institute for Networked Systems}\\
-       \affaddr{RWTH Aachen University}\\
-       \affaddr{Kackertstrasse 9, 52072 Aachen, Germany}\\
-       \email{julian.arnold@rwth-aachen.de}
+       \email{\{jua,lsi,mpe,pma\}@inets.rwth-aachen.de}
 }
 
 \date{\today}
@@ -97,16 +77,25 @@ During the demo session we will demonstrate the proposed system, showing its ope
 \begin{figure}
 \center
 \includegraphics[width=0.4\textwidth]{system.jpg}
-\caption{System Overview (Need better picture)}
+\caption{System Overview}
 \label{fig:system}
 \end{figure}
-
 \begin{figure}
 \center
-\includegraphics[width=0.4\textwidth]{system.jpg}
-\caption{Block Level Description (Need better picture)}
-\label{fig:block}
+\includegraphics[width=0.4\textwidth]{block-diagram}
+\caption{Block Level Description}
+\label{fig:system}
 \end{figure}
+%\begin{figure}
+%\begin{tikzpicture}
+%\draw[thick] (0, 0) rectangle (1,1) node[pos=.5] {USRP};
+%\draw[thick, ->] (1,.5) -- (2,.5);
+%\draw[thick] (2.4, 0.5) -- (3,.5);
+%\end{tikzpicture}
+%\caption{Do not forget!
+%Make it explicit enough that readers
+%can figure out what you are doing.}
+%\end{figure}
 
 \bibliographystyle{abbrv}
 \bibliography{sigproc}

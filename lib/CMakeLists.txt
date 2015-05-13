@@ -29,6 +29,7 @@ list(APPEND inets_sources
     simple_framer_cc_impl.cc
     simple_framer_bb_impl.cc
     frame_sync_cc_impl.cc
+    timing_recovery_cc_impl.cc
 )
 
 set(inets_sources "${inets_sources}" PARENT_SCOPE)
