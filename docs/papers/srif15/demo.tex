@@ -73,13 +73,10 @@ The proposed system operates in the 60 GHz 70 GHz and 80 GHz bands.
 The demand for high capacity connections is rapidly growing theses days driven by the increasing amount of data demanding multimedia applications. 
 One promising solution to cover this demand is the uses of the mm-Wave band which provides a large amount of currently unoccupied bandwidth. 
 While there are already some commercial products out there which make use of this band \cite{vubiqnetworks} \cite{hxi} there are almost no open implementations that enable and drive support for MAC and PHY layer protocol research.
-
-++++
-mention "Demystifying 60GHz Outdoor Picocells" and "Steering with Eyes Closed: mm-Wave Beam Steering without In-Band Measurement" and "Open Source SDR Frontend and Measurements for 60-GHz Wireless Experimentation"
-++++
-
-To the best of our knowledge we are the first to provide an open-source packetized radio system than can operate in several mm-Wave bands and that is highly reconfigurable due to the use of software defined radios. Using our system the user can easily implement and test its own PHY and MAC layer protocols and see how they behave in a real world environment.
-
+To the best of our knowledge we are among the first to provide an open-source packetized radio system than can operate in several mm-Wave bands and that is highly reconfigurable due to the use of software defined radios.
+In \cite{Zhu14} the authors demonstrate the feasibility of 60 GHz links for outdoor pico-cells. They also did extensive measurements. However, they were using of the shelf hardware to proof their assumptions which does not allow modifications of the lower layers.
+In \cite{Zetterberg15} the authors demonstrate an open-source 60 GHz transceiver design which is also compatible to USRP software defined radios. While this is indeed a big step forward the authors were mainly focusing on the hardware design and the evaluation of it. Furthermore, the design is open hardware but it still takes some efforts to actually fabricate the transceiver if one wants to use it.
+Using our system the user can easily implement and test its own PHY and MAC layer protocols and see how they behave in a real world environment.
 
 \section{Design and Implementation}
 Figure \ref{fig:block} shows a block diagram of the proposed system. 
@@ -105,8 +102,10 @@ During the demo session we will demonstrate the proposed system, showing its ope
 \caption{System Overview}
 \label{fig:system}
 \end{figure}
-
+\balancecolumns
 \section{Conclusion}
+We demonstrated an open source mm-Wave communication system for packetized multimedia applications. Furthermore, we showed the easy reconfigurability of our system due to the use of software defined radios which will drive new MAC and PHY layer developments for the mm-Wave band.
+
 %\begin{figure}
 %\begin{tikzpicture}
 %\draw[thick] (0, 0) rectangle (1,1) node[pos=.5] {USRP};
