@@ -24,7 +24,7 @@
 
 #include <gnuradio/io_signature.h>
 #include "frame_sync_cc_impl.h"
-
+# define M_PI           3.14159265358979323846
 namespace gr {
   namespace inets {
 
@@ -104,118 +104,106 @@ namespace gr {
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];		
 
-		//std::cout << "call! ninput: "<< ninput_items[0] << "noutput: " << noutput_items << std::endl; 
-
         // Do <+signal processing+>
+		
 		gr_complex sum = 0;
 		int consumed_items = 0;
-		int items_produced = 0;
+		int produced_items = 0;
 		int i, j;
 		for(i = 0; i < noutput_items; i++) {
-		
+			
 			if(_state == STATE_DETECT) {			
-				//std::cout << "DETECT" << std::endl;
 				sum = 0;
-				float df, df_prev = 0;
-				df = 0;
-				float df_tmp[13];
 				for(j = 0; j < 13; j++) {
 					sum += std::conj(_preamble[j]) * in[i + j];
-					df_tmp[j] =  std::arg(in[i + j] / _preamble[j]);
-					if(j > 0)
-						df += (df_tmp[j] - df_prev);
-					df_prev = df_tmp[j];
 				}
 				
-			
 				if(std::abs(sum) > _threshold) {
-					//Frame detected
-					//resolve phse
-				
+		//			std::cout << "thresh met: " << std::abs(sum) << std::endl;
+					float last_phi = 0;
+					float delta_phi = 0;
+					float add = 0;
+					bool round = false;
 					for(j=0;j<13;j++) {
- 						std::cout<<"diff "<<j<<": "<<df_tmp[j]<<std::endl;
-					}
-					float phi = std::arg(sum);
-					df = df / 12;
-					std::cout << "curr phase = " << df_tmp[0] << " freq. offset = " << df << std::endl;
-					/*
-						std::cout << "Found! curr corr: " << 
-						std::abs(sum) <<  " curr phase: " << phi << 
-						" sending phase: " << phi - _last_phase << std::endl;
-					*/
-					
+ 		//				std::cout << "preamble["<< j <<"]: " << in[i + j] << std::endl;
+						float curr_phi = std::arg(in[i + j]);
+ 
+						if(curr_phi < 0) {
+							curr_phi += 2 * M_PI;
+						}
 
-					message_port_pub(pmt::string_to_symbol("phase"), pmt::from_float(phi - _last_phase));
+						curr_phi = curr_phi - std::arg(_preamble[j]);
+						
+						if(curr_phi < 0) {
+							curr_phi += 2 * M_PI;
+						}
+						
+						std::cout << "curr_phi: " << curr_phi << " last_phi: " << last_phi << " add: " << add << std::endl;
+						if(j > 0)
+						{
+							if((curr_phi - last_phi) > M_PI) {
+								 last_phi += 2 * M_PI;
+							}
+							if((curr_phi - last_phi) < -1.0*M_PI) {
+								curr_phi += 2 * M_PI;
+							}	
+							
+							delta_phi += curr_phi - last_phi;  
+						}
+
+						last_phi = curr_phi;
+					}
+
+					delta_phi /= 12;
+					std::cout << "freq offset: "<<delta_phi<<std::endl;
+
+					message_port_pub(pmt::string_to_symbol("phase"), pmt::from_float(0));
 					
 					_state = STATE_PREAMBLE;
-					_last_phase = phi;
+					_last_phase = 0;
 					
-					//std::cout << "consuming " << i - consumed_items << " items" << std::endl;
-					consumed_items = i; 
+					consumed_items += i - consumed_items; 
+				} else {
+					consumed_items++;
 				}
 			}
 			
 			if(_state == STATE_PREAMBLE) {
-				//std::cout << "PREAMBLE" << std::endl;
 				if(ninput_items[0] - i >= _len_preamble) {
-					
 					for(j = i; j < i+13; j++) {
 						
 				    }
 
-					i+=_len_preamble;
+					i += _len_preamble;
 					consumed_items += _len_preamble;
 					_state = STATE_PAYLOAD;
-
-					//std::cout << "consuming " << _len_preamble  << " items. Total: " << consumed_items << std::endl; 
 				} else {
-				
-					//std::cout << "not enough items in buffer" << std::endl; 
 					break;
 				}
 			}
 
 			if(_state == STATE_PAYLOAD) {
-				//std::cout << "PAYLOAD" << std::endl;
 				if(ninput_items[0] - i >= 1024 && noutput_items >= 1024) {
 					
-					memcpy(out + items_produced, in + i, sizeof(gr_complex)*1024);
-					i += 1024;
+					memcpy(out + produced_items, in + i, sizeof(gr_complex)*1024);
 
-					//std::cout << "adding tag at: " << (nitems_written(0) + items_produced) << std::endl;
-					add_item_tag(0, nitems_written(0) + items_produced,
+					add_item_tag(0, nitems_written(0) + produced_items,
 						pmt::string_to_symbol(_len_tag_key), pmt::from_long(1024));
 					
-					items_produced += 1024;
+					i += 1024;					
+					produced_items += 1024;
 					consumed_items += 1024;
 					_state = STATE_DETECT;
-
-					//std::cout << "consuming " << "1024" << " items. Total: " << consumed_items << std::endl; 
 				} else {
-		
-					//std::cout << "not enough items in buffer" << std::endl; 
-					
 					break;
 				}
 
 			}
 		}
 		
-		//No preamble in whole buffer
-		if(_state == STATE_DETECT) {
-			consume_each(noutput_items);
-		} else {
-			consume_each(consumed_items);
-		}
- 
-        // Tell runtime system how many output items we produced.
-        //std::cout << noutput_items <<  " items processed" << std::endl; 
-		if(items_produced>0) {
-			produce(0, items_produced);
-			return WORK_CALLED_PRODUCE;
-		} else {
-			return 0;
-		}
+		consume_each(consumed_items); 
+		produce(0, produced_items);
+		return WORK_CALLED_PRODUCE;
     }
 
   } /* namespace inets */
