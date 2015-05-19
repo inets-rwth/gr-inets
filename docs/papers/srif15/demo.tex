@@ -60,7 +60,7 @@ We present a spectrum agile mm-Wave packet radio communication system and demons
 \end{abstract}
 
 % A category with the (minimum) three required fields
-\category{H.4}{Information Systems Applications}{Miscellaneous}
+\category{C.2.1}{Network Architecture and Design}{Wireless communication}
 
 \terms{Design, Experimentation}
 
@@ -70,10 +70,10 @@ We present a spectrum agile mm-Wave packet radio communication system and demons
 The demand for high capacity connections is rapidly growing theses days driven by the increasing amount of data demanding multimedia applications. 
 One promising solution to cover this demand is the uses of the mm-Wave band which provides a large amount of currently unoccupied bandwidth.
 However, while there are a lot of theoretical publications on the topic of point-to-point mm-Wave links very little practical work has been published on mm-Wave communications till now.
-Moreover, most of the little practical work done focuses on channel measurements and channel characterisation \cite{Rappaport01} \cite{Weiler01}.
+Moreover, most of the little practical work done focuses on channel measurements and channel characterisation \cite{Rappaport01} \cite{Weiler14}.
 This is mainly due to the fact that the researchers nowadays do not have access to open and configurable platforms that enable research on layer one and above. 
 In \cite{Zhu14} the authors demonstrate the feasibility of 60 GHz links for outdoor pico-cells. They also did extensive measurements. However, they were using closed point-to-point transceivers \cite{hxi} to proof their assumptions which does not allow modifications of the lower layers.
-In \cite{Nitsche01} the authors demonstrated a system level architecture for mm-Wave communications that significantly reduces the time needed for link establishment by using 2.4 GHz WiFi for direction estimation. However their mm-Wave link was provides by of the shelf mm-Wave converters \cite{vubiqnetworks}, signal generator, and oscilloscope.
+In \cite{Nitsche15} the authors demonstrated a system level architecture for mm-Wave communications that significantly reduces the time needed for link establishment by using 2.4 GHz WiFi for direction estimation. However their mm-Wave link was provides by of the shelf mm-Wave converters \cite{vubiqnetworks}, signal generator, and oscilloscope.
 Very recently the authors in \cite{Zetterberg15} demonstrated an open-source 60 GHz transceiver design which is also compatible to USRP software defined radios. While this is indeed a big step forward the authors were mainly focusing on the hardware design and the evaluation of it. Furthermore, the design is open hardware but it still takes some efforts to actually fabricate the transceiver if one wants to use it.
 Using our system the researchers can easily implement and practically evaluate novel mm-Wave PHY and MAC layer protocols and see how they behave in a real world environment.
 To the best of our knowledge we are the first to present an open-source packetized software defined radio system than can operate in several mm-Wave bands and that is highly reconfigurable due to the use of software defined radios.
@@ -82,13 +82,13 @@ To the best of our knowledge we are the first to present an open-source packetiz
 Figure \ref{fig:block} shows a block diagram of the proposed system. 
 We use a host PC running GNURadio \cite{gnuradio} to generate a complex sample-stream at baseband. The sample rate and thus the bandwidth of the stream is configurable in software. The sample-stream is packetized and send to a NI USRP-2953R \cite{ettus} software defined radio via Ethernet with a maximum bandwidth of upto 40 MHz. However, we could easily replace the specific NI USRP by a different USRP of the same product family allowing a maximum bandwidth of 160 MHz.
 The USRP transfers the complex baseband signal to a passband signal at an intermediate frequency between 1.2 GHz and 6 GHz. The exact intermediate frequency can easily be adjusted via the GNURadio program. Because of the wide IF range and the ability to change the frequency during runtime the system can operate very spectrum agile allowing it to avoid interference with other transmissions.
-In order to transfer the signal into the mm-Wave band an external up-converter is used. It is worth mentioning that the system can be operated in the 60 GHz, 70 GHz and 80 GHz bands.
+In order to transfer the signal into the mm-Wave band an external up-converter is used. It is worth mentioning that the system can be operated in the 60 GHz, 70 GHz and 80 GHz bands without further software changes which makes the system even more spectrum agile.
 The up-converted signal is then emitted using a wave guide connected horn antenna.
 On the receive side basically the same processing is applied but using a down-converter and the USRP as a receiver. The complex sample stream is fed back to the same host PC and processed in the GNURadio application where synchronisation and demodulation is applied.
 Our implementation is open source and details can be found at \cite{gr-inets}. This allows interested researchers to easily duplicate our experiments and leverage our system to drive further research by modifying parameters like modulation scheme, channel bandwidth, synchronisation method and by easily adopting new MAC layer protocols.
 
 \section{Demonstration Description} 
-During the demo session we will demonstrate the proposed system, showing its operation in several mm-Wave bands. We will bring all the necessary equipment for our demonstration. The audience will be able to inspect our hard and software set-up carefully. Furthermore, we will show to the audience the real-time operation of our system by transmitting a multimedia-stream over the mm-Wave link. As our design allows easy adjustment of PHY parameters via GNURadio the audience will also be able to experiment with those. Moreover, our GNURadio implementation will allow the audience the observe several performance measurements of the system in real-time.
+During the demo session we will demonstrate the proposed system, showing its operation in several mm-Wave bands. We will bring all the necessary equipment for our demonstration. The audience will be able to inspect our hard and software set-up carefully. Furthermore, we will show to the audience the real-time operation of our system by transmitting a multimedia-stream over the mm-Wave link. As our design allows easy adjustment of PHY parameters via GNURadio the audience will also be able to experiment with those. Moreover, our GNURadio implementation will allow the audience to observe several performance measurements of the system in real-time.
 
 \begin{figure}
 \center
