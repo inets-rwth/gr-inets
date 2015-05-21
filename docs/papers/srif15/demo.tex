@@ -78,6 +78,14 @@ Very recently the authors in \cite{Zetterberg15} demonstrated an open-source 60 
 Using our system the researchers can easily implement and practically evaluate novel mm-Wave PHY and MAC layer protocols and see how they behave in a real world environment.
 To the best of our knowledge we are the first to present an open-source packetized software defined radio system than can operate in several mm-Wave bands and that is highly reconfigurable due to the use of software defined radios.
 
+
+\begin{figure}
+\center
+\includegraphics[width=0.4\textwidth]{block-diagram}
+\caption{Block Diagram mm-Wave Packet Radio System.}
+\label{fig:block}
+\end{figure}
+
 \section{Design and Implementation}
 Figure \ref{fig:block} shows a block diagram of the proposed system. 
 We use a host PC running GNURadio \cite{gnuradio} to generate a complex sample-stream at baseband. The sample rate and thus the bandwidth of the stream is configurable in software. The sample-stream is packetized and send to a NI USRP-2953R \cite{ettus} software defined radio via Ethernet with a maximum bandwidth of upto 40 MHz. However, we could easily replace the specific NI USRP by a different USRP of the same product family allowing a maximum bandwidth of 160 MHz.
@@ -92,21 +100,14 @@ During the demo session we will demonstrate the proposed system, showing its ope
 
 \begin{figure}
 \center
-\includegraphics[width=0.4\textwidth]{block-diagram}
-\caption{Block Diagram mm-Wave Packet Radio System.}
-\label{fig:block}
-\end{figure}
-
-\begin{figure}
-\center
 \includegraphics[width=0.4\textwidth]{system}
 \caption{System Overview}
 \label{fig:system}
 \end{figure}
-\balancecolumns
+
 \section{Conclusions}
 We demonstrated an open source mm-Wave communication system for packetized transmissions which will enable future research on mm-Wave networks. Furthermore, we showed the easy reconfigurability of our system due to the use of software defined radios which will drive new MAC and PHY layer developments for the mm-Wave band.
-
+\balancecolumns
 %\begin{figure}
 %\begin{tikzpicture}
 %\draw[thick] (0, 0) rectangle (1,1) node[pos=.5] {USRP};
