@@ -35,6 +35,8 @@ namespace gr {
 		std::string _len_tag_key;
 		int _state;
 		float _last_phase;
+		float _delta_phi;
+		float _phi;
 		static const int STATE_DETECT = 0;
 		static const int STATE_PREAMBLE = 1;
 		static const int STATE_PAYLOAD = 2;

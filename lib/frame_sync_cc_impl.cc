@@ -105,7 +105,6 @@ namespace gr {
         gr_complex *out = (gr_complex *) output_items[0];		
 
         // Do <+signal processing+>
-		
 		gr_complex sum = 0;
 		int consumed_items = 0;
 		int produced_items = 0;
@@ -121,10 +120,11 @@ namespace gr {
 				if(std::abs(sum) > _threshold) {
 		//			std::cout << "thresh met: " << std::abs(sum) << std::endl;
 					float last_phi = 0;
-					float delta_phi = 0;
+				    _delta_phi = 0;
+					_phi = 0;	
 					float add = 0;
 					bool round = false;
-					for(j=0;j<13;j++) {
+					for(j = 0; j < 13; j++) {
  		//				std::cout << "preamble["<< j <<"]: " << in[i + j] << std::endl;
 						float curr_phi = std::arg(in[i + j]);
  
@@ -137,8 +137,12 @@ namespace gr {
 						if(curr_phi < 0) {
 							curr_phi += 2 * M_PI;
 						}
+
+						if(j == 0) {
+							_phi = curr_phi;
+						}
 						
-						std::cout << "curr_phi: " << curr_phi << " last_phi: " << last_phi << " add: " << add << std::endl;
+						//std::cout << "curr_phi: " << curr_phi << " last_phi: " << last_phi << " add: " << add << std::endl;
 						if(j > 0)
 						{
 							if((curr_phi - last_phi) > M_PI) {
@@ -148,14 +152,16 @@ namespace gr {
 								curr_phi += 2 * M_PI;
 							}	
 							
-							delta_phi += curr_phi - last_phi;  
+							//std::cout << "curr: " << curr_phi << " last: "<< last_phi << " delta_phi:" << _delta_phi << std::endl;
+							_delta_phi += curr_phi - last_phi;  
+							//std::cout << "new delta_phi: " << _delta_phi << std::endl;
 						}
 
 						last_phi = curr_phi;
 					}
 
-					delta_phi /= 12;
-					std::cout << "freq offset: "<<delta_phi<<std::endl;
+					_delta_phi /= 12;
+					//std::cout << "freq offset: "<<_delta_phi<<std::endl;
 
 					message_port_pub(pmt::string_to_symbol("phase"), pmt::from_float(0));
 					
@@ -184,8 +190,15 @@ namespace gr {
 
 			if(_state == STATE_PAYLOAD) {
 				if(ninput_items[0] - i >= 1024 && noutput_items >= 1024) {
+					for(j = 0; j < 1024; j++) {
+						//std::cout << "correcting by: " << std::exp(-1.0f * (float)j * std::complex<float>(0, 1) * _delta_phi) << std::endl;
+						//out[j + produced_items] = in[i + j] * 
+							//std::exp(((-1.0f * (float)(j + _len_preamble)  * _delta_phi) -  _phi) * std::complex<float>(0, 1));
 					
-					memcpy(out + produced_items, in + i, sizeof(gr_complex)*1024);
+						out[j + produced_items] = in[i + j] * 
+							std::exp(( -1.0f *  _phi ) * std::complex<float>(0, 1));
+					}
+					//memcpy(out + produced_items, in + i, sizeof(gr_complex)*1024);
 
 					add_item_tag(0, nitems_written(0) + produced_items,
 						pmt::string_to_symbol(_len_tag_key), pmt::from_long(1024));
