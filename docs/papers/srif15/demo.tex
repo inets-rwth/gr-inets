@@ -78,28 +78,27 @@ Very recently the authors in \cite{Zetterberg15} demonstrated an open-source 60 
 Using our system the researchers can easily implement and practically evaluate novel mm-Wave PHY and MAC layer protocols and see how they behave in a real world environment.
 To the best of our knowledge we are the first to present an open-source packetized software defined radio system than can operate in several mm-Wave bands and that is highly reconfigurable due to the use of software defined radios.
 
-\begin{figure}
-\center
-\includegraphics[width=0.4\textwidth]{block-diagram}
-\caption{Block Diagram mm-Wave Packet Radio System.}
-\label{fig:block}
-\end{figure}
-\begin{figure}
-\center
-\includegraphics[width=0.4\textwidth]{system}
-\caption{System Overview}
-\label{fig:system}
-\end{figure}
-
-\balancecolumns
 \section{Design and Implementation}
-Figure \ref{fig:block} shows a block diagram of the proposed system. 
+Figure \ref{fig:system} shows the demonstrated system and Figure \ref{fig:block} shows the corresponding functional block diagram. 
 We use a host PC running GNURadio \cite{gnuradio} to generate a complex sample-stream at baseband. The sample rate and thus the bandwidth of the stream is configurable in software. The sample-stream is packetized and send to a NI USRP-2953R \cite{ettus} software defined radio via Ethernet with a maximum bandwidth of upto 40 MHz. However, we could easily replace the specific NI USRP by a different USRP of the same product family allowing a maximum bandwidth of 160 MHz.
 The USRP transfers the complex baseband signal to a passband signal at an intermediate frequency between 1.2 GHz and 6 GHz. The exact intermediate frequency can easily be adjusted via the GNURadio program. Because of the wide IF range and the ability to change the frequency during runtime the system can operate very spectrum agile allowing it to avoid interference with other transmissions.
 In order to transfer the signal into the mm-Wave band an external up-converter is used. It is worth mentioning that the system can be operated in the 60 GHz, 70 GHz and 80 GHz bands without further software changes which makes the system even more spectrum agile.
 The up-converted signal is then emitted using a wave guide connected horn antenna.
 On the receive side basically the same processing is applied but using a down-converter and the USRP as a receiver. The complex sample stream is fed back to the same host PC and processed in the GNURadio application where synchronisation and demodulation is applied.
 Our implementation is open source and details can be found at \cite{gr-inets}. This allows interested researchers to easily duplicate our experiments and leverage our system to drive further research by modifying parameters like modulation scheme, channel bandwidth, synchronisation method and by easily adopting new MAC layer protocols.
+\begin{figure}[!t]
+\center
+\includegraphics[width=0.4\textwidth]{system}
+\caption{System Overview}
+\label{fig:system}
+\end{figure}
+\begin{figure}[!t]
+\center
+\includegraphics[width=0.4\textwidth]{block-diagram}
+\caption{Block Diagram mm-Wave Packet Radio System.}
+\label{fig:block}
+\end{figure}
+
 
 \section{Demonstration Description} 
 During the demo session we will demonstrate the proposed system, showing its operation in several mm-Wave bands. We will bring all the necessary equipment for our demonstration. The audience will be able to inspect our hard and software set-up carefully. Furthermore, we will show to the audience the real-time operation of our system by transmitting a multimedia-stream over the mm-Wave link. As our design allows easy adjustment of PHY parameters via GNURadio the audience will also be able to experiment with those. Moreover, our GNURadio implementation will allow the audience to observe several performance measurements of the system in real-time.
