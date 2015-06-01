@@ -20,12 +20,11 @@
     <type>complex</type>
   </sink>
   <source>
-    <name>phase</name>
-    <type>message</type>
-    <optional>1</optional>
+    <name>out</name>
+    <type>complex</type>
   </source>
   <source>
     <name>out</name>
-    <type>complex</type>
+    <type>byte</type>
   </source>
 </block>

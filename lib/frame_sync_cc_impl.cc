@@ -44,7 +44,7 @@ namespace gr {
     frame_sync_cc_impl::frame_sync_cc_impl(float threshold, const std::string &len_tag_key)
       : gr::block("frame_sync_cc",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
-              gr::io_signature::make(1, 1, sizeof(gr_complex))),
+              gr::io_signature::make2(2, 2, sizeof(gr_complex), sizeof(unsigned char))),
 		_threshold(threshold), _len_preamble(16), _len_tag_key(len_tag_key),
 		_state(STATE_DETECT), _last_phase(0)
     {
@@ -103,13 +103,16 @@ namespace gr {
     {
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];		
-
+		unsigned char *trig_out = (unsigned char *) output_items[1];
         // Do <+signal processing+>
+		
+		memset(trig_out, 0, noutput_items * sizeof(gr_complex));
+		std::cout << "call: noutput: " << noutput_items << std::endl;		
 		gr_complex sum = 0;
 		int consumed_items = 0;
 		int produced_items = 0;
 		int i, j;
-		for(i = 0; i < noutput_items; i++) {
+		for(i = 0; i < noutput_items - _len_preamble; i++) {
 			
 			if(_state == STATE_DETECT) {			
 				sum = 0;
@@ -118,7 +121,7 @@ namespace gr {
 				}
 				
 				if(std::abs(sum) > _threshold) {
-		//			std::cout << "thresh met: " << std::abs(sum) << std::endl;
+					std::cout << "preamble! corr =  " << std::abs(sum) << " i = " << i << std::endl;
 					float last_phi = 0;
 				    _delta_phi = 0;
 					_phi = 0;	
@@ -168,22 +171,23 @@ namespace gr {
 					_state = STATE_PREAMBLE;
 					_last_phase = 0;
 					
-					consumed_items += i - consumed_items; 
 				} else {
 					consumed_items++;
+					produced_items++;
 				}
+
 			}
 			
 			if(_state == STATE_PREAMBLE) {
-				if(ninput_items[0] - i >= _len_preamble) {
-					for(j = i; j < i+13; j++) {
-						
-				    }
-
-					i += _len_preamble;
+				if((noutput_items - i) > _len_preamble) {
+					_state = STATE_DETECT;
+					i += _len_preamble - 1;
 					consumed_items += _len_preamble;
-					_state = STATE_PAYLOAD;
+					produced_items += _len_preamble;
+					std::cout << "trigger at " << (i + 1) << std::endl;
+					trig_out[i + 1] = 1;
 				} else {
+					std::cout << "not enough samples" << std::endl; 
 					break;
 				}
 			}
@@ -213,9 +217,13 @@ namespace gr {
 
 			}
 		}
-		
+		std::cout << "consumed: " << consumed_items << "produced: " << produced_items << std::endl;
+		memcpy(out, in, produced_items * sizeof(gr_complex));
 		consume_each(consumed_items); 
 		produce(0, produced_items);
+		produce(1, produced_items);
+	
+	
 		return WORK_CALLED_PRODUCE;
     }
 
