@@ -25,6 +25,10 @@
   </source>
   <source>
     <name>out</name>
+    <type>complex</type>
+  </source>
+  <source>
+    <name>out</name>
     <type>byte</type>
   </source>
 </block>
