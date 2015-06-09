@@ -21,5 +21,6 @@ install(FILES
     inets_simple_framer_cc.xml
     inets_simple_framer_bb.xml
     inets_frame_sync_cc.xml
-    inets_timing_recovery_cc.xml DESTINATION share/gnuradio/grc/blocks
+    inets_timing_recovery_cc.xml
+    inets_packetizer.xml DESTINATION share/gnuradio/grc/blocks
 )

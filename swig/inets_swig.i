@@ -12,6 +12,7 @@
 #include "inets/simple_framer_bb.h"
 #include "inets/frame_sync_cc.h"
 #include "inets/timing_recovery_cc.h"
+#include "inets/packetizer.h"
 %}
 
 
@@ -23,3 +24,5 @@ GR_SWIG_BLOCK_MAGIC2(inets, simple_framer_bb);
 GR_SWIG_BLOCK_MAGIC2(inets, frame_sync_cc);
 %include "inets/timing_recovery_cc.h"
 GR_SWIG_BLOCK_MAGIC2(inets, timing_recovery_cc);
+%include "inets/packetizer.h"
+GR_SWIG_BLOCK_MAGIC2(inets, packetizer);

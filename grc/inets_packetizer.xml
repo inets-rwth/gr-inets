@@ -1,0 +1,17 @@
+<block>
+  <name>Packetizer</name>
+  <key>inets_packetizer</key>
+  <category>INETS</category>
+  <import>import inets</import>
+  <make>inets.packetizer()</make>
+  <sink>
+		<name>payload_in</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+  <source>
+		<name>packet_out</name>
+    <type>message</type>
+    <optional>1</optional>
+	</source>
+</block>
