@@ -148,8 +148,7 @@ namespace gr {
 					if(_state == STATE_PREAMBLE) { 
 						if((noutput_items - i) > (2 * _len_preamble + 1)) {
 							_state = STATE_PROCESS_PREAMBLE;
-							preamble_items_left = _len_preamble;
-						
+							preamble_items_left = _len_preamble;						
 						} else {
 							std::cout << "not enough samples" << std::endl; 
 							break;
@@ -165,9 +164,8 @@ namespace gr {
 							_phi = std::arg(_diff);
 							//std::cout << "preamble[0] = " << _preamble[0] << " received = " << in[i] << std::endl;
 							//std::cout << "arg preamble[0] = " << std::arg(_preamble[0]) << " arg rec = " << std::arg(in[i]) << std::endl;					
-							std::cout << "complex correction term: " << _diff << " abs = " << std::abs(_diff) << " arg = " << std::arg(_diff) << std::endl;
+							std::cout << "complex correction term (i = " << i << " ): " << _diff << " abs = " << std::abs(_diff) << " arg = " << std::arg(_diff) << std::endl;
 							//std::cout << "phase difference = " << _phi << std::endl;
-						
 						}
 
 						consumed_items++;

@@ -31,7 +31,8 @@ endif()
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
-    DESTINATION ${GR_PYTHON_DIR}/inets
+    packetizer_python.py
+    unmake_packet_python.py DESTINATION ${GR_PYTHON_DIR}/inets
 )
 
 ########################################################################
@@ -45,3 +46,5 @@ GR_ADD_TEST(qa_simple_framer_cc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}
 GR_ADD_TEST(qa_simple_framer_bb ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_simple_framer_bb.py)
 GR_ADD_TEST(qa_timing_recovery_cc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_timing_recovery_cc.py)
 GR_ADD_TEST(qa_packetizer ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_packetizer.py)
+GR_ADD_TEST(qa_packetizer_python ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_packetizer_python.py)
+GR_ADD_TEST(qa_unmake_packet_python ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_unmake_packet_python.py)
