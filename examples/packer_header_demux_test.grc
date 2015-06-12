@@ -218,7 +218,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>31</value>
+      <value>34</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -281,7 +281,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>5</value>
+      <value>18</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -289,7 +289,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 339)</value>
+      <value>(56, 251)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -391,7 +391,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(32, 379)</value>
+      <value>(192, 395)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -445,7 +445,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(72, 355)</value>
+      <value>(184, 235)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -472,7 +472,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(40, 403)</value>
+      <value>(128, 403)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -711,42 +711,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1144, 864)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_message_debug_0_0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_message_debug</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(200, 16)</value>
+      <value>(1112, 864)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -950,6 +919,53 @@
     </param>
   </block>
   <block>
+    <key>blocks_pdu_to_tagged_stream</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(896, 971)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_pdu_to_tagged_stream_1</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>tag</key>
+      <value>packet_len</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>blocks_repack_bits_bb</key>
     <param>
       <key>k</key>
@@ -1087,7 +1103,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(360, 219)</value>
+      <value>(200, 59)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1103,7 +1119,7 @@
     </param>
     <param>
       <key>mtu</key>
-      <value>1020</value>
+      <value>10000</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1450,6 +1466,61 @@
     <param>
       <key>minoutbuf</key>
       <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_udp_sink</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>ipaddr</key>
+      <value>192.168.10.4</value>
+    </param>
+    <param>
+      <key>port</key>
+      <value>52002</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1112, 947)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_udp_sink_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>psize</key>
+      <value>10000</value>
+    </param>
+    <param>
+      <key>eof</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
     </param>
   </block>
   <block>
@@ -2317,6 +2388,37 @@
     <param>
       <key>minoutbuf</key>
       <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>note</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(0, 483)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>note_0</value>
+    </param>
+    <param>
+      <key>note</key>
+      <value>For converter use: TX gain = 5 RX gain = 32</value>
     </param>
   </block>
   <block>
@@ -3854,7 +3956,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(8, 307)</value>
+      <value>(184, 307)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -5630,6 +5732,12 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>blocks_pdu_to_tagged_stream_1</source_block_id>
+    <sink_block_id>blocks_udp_sink_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>blocks_repack_bits_bb_0</source_block_id>
     <sink_block_id>blocks_tagged_stream_mux_0</sink_block_id>
     <source_key>0</source_key>
@@ -5676,12 +5784,6 @@
     <sink_block_id>digital_psk_mod_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_tagged_stream_to_pdu_0</source_block_id>
-    <sink_block_id>blocks_message_debug_0_0</sink_block_id>
-    <source_key>pdus</source_key>
-    <sink_key>print_pdu</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_tagged_stream_to_pdu_0</source_block_id>
@@ -5835,19 +5937,19 @@
   </connection>
   <connection>
     <source_block_id>inets_packetizer_python_0</source_block_id>
-    <sink_block_id>blocks_message_debug_0_0_0</sink_block_id>
-    <source_key>out</source_key>
-    <sink_key>print_pdu</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>inets_packetizer_python_0</source_block_id>
     <sink_block_id>blocks_pdu_to_tagged_stream_0</sink_block_id>
     <source_key>out</source_key>
     <sink_key>pdus</sink_key>
   </connection>
   <connection>
     <source_block_id>inets_unmake_packet_python_0</source_block_id>
-    <sink_block_id>blocks_socket_pdu_0</sink_block_id>
+    <sink_block_id>blocks_message_debug_0_0_0</sink_block_id>
+    <source_key>out</source_key>
+    <sink_key>print_pdu</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_unmake_packet_python_0</source_block_id>
+    <sink_block_id>blocks_pdu_to_tagged_stream_1</sink_block_id>
     <source_key>out</source_key>
     <sink_key>pdus</sink_key>
   </connection>
