@@ -89,11 +89,16 @@ namespace gr {
 					ninput_items_required[0] = noutput_items;
 					break;
 				case STATE_PREAMBLE:
-					ninput_items_required[0] = _len_preamble;
+					ninput_items_required[0] = noutput_items;
 					break;
 				case STATE_PAYLOAD:
 					ninput_items_required[0] = 1024;
 					break;
+        case STATE_PROCESS_PREAMBLE:
+          ninput_items_required[0] = noutput_items;
+          break;
+        case STATE_SET_TRIGGER:
+          ninput_items_required[0] = noutput_items;
 				default:
 					break;
 			}
@@ -112,12 +117,11 @@ namespace gr {
 				unsigned char *trig_out = (unsigned char *) output_items[2];
         // Do <+signal processing+>
 		
-				memset(trig_out, 0, noutput_items * sizeof(gr_complex));
+				//memset(trig_out, 0, noutput_items * sizeof(unsigned char));
 		
-				//std::cout << "call: noutput: " << noutput_items << std::endl;		
+				//std::cout << "frame_sync: state = " << _state << " noutput: " << noutput_items << std::endl;		
 		
 				gr_complex sum = 0;
-				
 				int consumed_items = 0;
 				int produced_items = 0;
 				
@@ -126,12 +130,13 @@ namespace gr {
 				int preamble_items_left = 0;
 
 				for(i = 0; i < noutput_items - _len_preamble; i++) {
-					
+					trig_out[i] = 0;
 					sum = 0;
-					for(j = 0; j < 39; j++) {
-						sum += std::conj(_preamble[j]) * in[i + j];
-					}
-
+          if(i < _len_preamble){
+					  for(j = 0; j < 39; j++) {
+						  sum += std::conj(_preamble[j]) * in[i + j];
+					  }
+          }
 					corr_out[i] = sum;
 					
 					if(_state == STATE_DETECT) {			
@@ -146,13 +151,13 @@ namespace gr {
 					}
 					
 					if(_state == STATE_PREAMBLE) { 
-						if((noutput_items - i) > (2 * _len_preamble + 1)) {
+						//if((noutput_items - i) > (2 * _len_preamble + 1)) {
 							_state = STATE_PROCESS_PREAMBLE;
 							preamble_items_left = _len_preamble;						
-						} else {
-							std::cout << "not enough samples" << std::endl; 
-							break;
-						}
+						//} else {
+							//std::cout << "############# WARNING: Not enough samples in input buffer  ############" << std::endl; 
+							//break;
+						//}
 					}
 
 					if(_state == STATE_PROCESS_PREAMBLE) {
@@ -164,7 +169,8 @@ namespace gr {
 							_phi = std::arg(_diff);
 							//std::cout << "preamble[0] = " << _preamble[0] << " received = " << in[i] << std::endl;
 							//std::cout << "arg preamble[0] = " << std::arg(_preamble[0]) << " arg rec = " << std::arg(in[i]) << std::endl;					
-							std::cout << "complex correction term (i = " << i << " ): " << _diff << " abs = " << std::abs(_diff) << " arg = " << std::arg(_diff) << std::endl;
+							//std::cout << "complex correction term (i = " << i << " ): " << 
+              //    _diff << " abs = " << std::abs(_diff) << " arg = " << std::arg(_diff) << std::endl;
 							//std::cout << "phase difference = " << _phi << std::endl;
 						}
 
@@ -173,21 +179,29 @@ namespace gr {
 						preamble_items_left--;
 						
 						if(preamble_items_left == 0) {
-							_state = STATE_DETECT;
-							trig_out[i + 1] = 1; 
-						}				
+							_state = STATE_SET_TRIGGER;
+						  continue;
+            }				
 					}
+
+          if(_state == STATE_SET_TRIGGER) {
+            trig_out[i] = 1;
+            //std::cout << "setting trigger at i = " << i << std::endl;
+            _state = STATE_DETECT;
+            consumed_items++;
+            produced_items++;
+          }
 
 				}
 				if(std::abs(_diff) < 0.8) {
-					std::cout << "correcting " << produced_items << " ot of " << noutput_items  << " output items using: " << _diff << std::endl;
+					//std::cout << "correcting " << produced_items << " ot of " << noutput_items  << " output items using: " << _diff << std::endl;
 				}
 				for(i = 0; i < produced_items; i++) {
 					out[i] = in[i] * _diff;
 				}
 
 				//memcpy(out, in, produced_items * sizeof(gr_complex));
-				
+        //std::cout << "producing " << produced_items << " consuming " << consumed_items << std::endl;
 				consume_each(consumed_items); 
 				produce(0, produced_items);
 				produce(1, produced_items);

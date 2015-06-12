@@ -42,7 +42,7 @@ namespace gr {
 		static const int STATE_PREAMBLE = 1;
 		static const int STATE_PAYLOAD = 3;
 		static const int STATE_PROCESS_PREAMBLE = 2;
-
+    static const int STATE_SET_TRIGGER = 4;
      public:
       frame_sync_cc_impl(float threshold, const std::string &len_tag_key);
       ~frame_sync_cc_impl();
