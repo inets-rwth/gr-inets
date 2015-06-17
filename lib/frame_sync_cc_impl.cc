@@ -119,8 +119,8 @@ namespace gr {
 		
 				//memset(trig_out, 0, noutput_items * sizeof(unsigned char));
 		
-				std::cout << "frame_sync: state = " << _state << " noutput: " << noutput_items << std::endl;		
-	      std::cout << "looping from 0 to " << noutput_items - 38 - 1 << std::endl;	
+				//std::cout << "frame_sync: state = " << _state << " noutput: " << noutput_items << std::endl;		
+	      //std::cout << "looping from 0 to " << noutput_items - 38 - 1 << std::endl;	
 				gr_complex sum = 0;
 				int consumed_items = 0;
 				int produced_items = 0;
@@ -141,7 +141,7 @@ namespace gr {
 
 						if(std::abs(sum) > _threshold) {
 							_state = STATE_PREAMBLE;
-						  std::cout << "preamble detected. i = " << i << std::endl;
+						  //std::cout << "preamble detected. i = " << i << std::endl;
             } else {
 							consumed_items++;
 							produced_items++;
@@ -154,7 +154,7 @@ namespace gr {
 							_state = STATE_PROCESS_PREAMBLE;
 							preamble_items_left = _len_preamble;						
 						} else {
-							std::cout << "############# WARNING: Not enough samples in input buffer  ############" << std::endl; 
+							//std::cout << "############# WARNING: Not enough samples in input buffer  ############" << std::endl; 
 							break;
 						}
 					}
@@ -185,7 +185,7 @@ namespace gr {
 
           if(_state == STATE_SET_TRIGGER) {
             trig_out[i] = 1;
-            std::cout << "setting trigger at i = " << i << std::endl;
+            //std::cout << "setting trigger at i = " << i << std::endl;
             _state = STATE_DETECT;
             consumed_items++;
             produced_items++;
@@ -200,7 +200,7 @@ namespace gr {
 				}
 
 				//memcpy(out, in, produced_items * sizeof(gr_complex));
-        std::cout << "producing " << produced_items << " consuming " << consumed_items << std::endl;
+        //std::cout << "producing " << produced_items << " consuming " << consumed_items << std::endl;
 				consume_each(consumed_items); 
 				produce(0, produced_items);
 				produce(1, produced_items);
