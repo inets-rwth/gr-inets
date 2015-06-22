@@ -196,7 +196,7 @@ namespace gr {
 					//std::cout << "correcting " << produced_items << " ot of " << noutput_items  << " output items using: " << _diff << std::endl;
 				}
 				for(i = 0; i < produced_items; i++) {
-					out[i] = in[i] * _diff;
+					out[i] = in[i];// * _diff;
 				}
 
 				//memcpy(out, in, produced_items * sizeof(gr_complex));

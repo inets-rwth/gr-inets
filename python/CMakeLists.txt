@@ -32,7 +32,8 @@ GR_PYTHON_INSTALL(
     FILES
     __init__.py
     packetizer_python.py
-    unmake_packet_python.py DESTINATION ${GR_PYTHON_DIR}/inets
+    unmake_packet_python.py
+    DESTINATION ${GR_PYTHON_DIR}/inets
 )
 
 ########################################################################

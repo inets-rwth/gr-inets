@@ -24,5 +24,6 @@ install(FILES
     inets_timing_recovery_cc.xml
     inets_packetizer.xml
     inets_packetizer_python.xml
-    inets_unmake_packet_python.xml DESTINATION share/gnuradio/grc/blocks
+    inets_unmake_packet_python.xml
+    inets_modem.xml DESTINATION share/gnuradio/grc/blocks
 )
