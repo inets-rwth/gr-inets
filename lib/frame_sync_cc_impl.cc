@@ -71,7 +71,7 @@ namespace gr {
 			//therfore we need 12 samples as look ahead
 			//set_history(13);
 			set_tag_propagation_policy(TPP_DONT);
-			set_output_multiple(1024);
+			//set_output_multiple(1024);
 			message_port_register_out(pmt::string_to_symbol("phase"));
 		}
 
