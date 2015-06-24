@@ -1,8 +1,11 @@
-\documentclass{acm_proc_article-sp}
+%\documentclass{acm_proc_article-sp}
+\documentclass{sig-alternate}
+
 \usepackage{url}
+\usepackage[]{placeins}
 
 \begin{document}
-\title{Demo: Spectrum Agile mm-Wave Packet Radio Implementation on USRPs}
+\title{Demo: Spectrum-Agile mm-Wave Packet Radio Implementation on USRPs}
 %
 % You need the command \numberofauthors to handle the 'placement
 % and alignment' of the authors beneath the title.
@@ -46,8 +49,7 @@
 % 1st. author
 \alignauthor
 Julian Arnold, Ljiljana Simi\'{c}, Marina Petrova and Petri M\"ah\"onen\\
-       \affaddr{Institute for Networked Systems}\\
-       \affaddr{RWTH Aachen University}\\
+       \affaddr{Institute for Networked Systems, RWTH Aachen University}\\
        \affaddr{Kackertstrasse 9, 52072 Aachen, Germany}\\
        \email{\{jua, lsi, mpe, pma\}@inets.rwth-aachen.de}
 }
@@ -56,55 +58,83 @@ Julian Arnold, Ljiljana Simi\'{c}, Marina Petrova and Petri M\"ah\"onen\\
 
 \maketitle
 \begin{abstract}
-We present a spectrum agile mm-Wave packet radio communication system and demonstrate it with multimedia streaming applications. The developed platform is based on USRP software defined radios executing open source GNURadio code and cost-efficient commercial off-the-shelf components. Our system is able to operate on both V and E-bands, covering in practice 60, 70 and 80 GHz frequency bands. One of the main design goals has been to provide a design that academic groups, particularly protocol designers, could use easily for future mm-wave system testing. 
+We present a spectrum-agile mm-wave packet radio communication system and demonstrate it by using multimedia streaming. The developed platform is based on USRP software defined radios (SDRs) executing open-source GNU Radio code and cost-efficient commercial off-the-shelf components. Our system is able to operate in both the V- and E-bands, covering in practice the 60~GHz, 70~GHz and 80~GHz frequency bands. One of the main design goals has been to provide an SDR design that academic groups, particularly protocol designers, could use easily for future mm-wave system development and experimental verification.
 \end{abstract}
 
 % A category with the (minimum) three required fields
 \category{C.2.1}{Network Architecture and Design}{Wireless communication}
-
 \terms{Design, Experimentation}
-
-\keywords{mm-Wave, SDR, USRP, GNURadio} % NOT required for Proceedings
+\keywords{mm-wave, SDR, USRP, GNU Radio} % NOT required for Proceedings
 
 \section{Introduction}
-The demand for high capacity connections is rapidly growing theses days driven by the increasing amount of data demanding multimedia applications. 
-One promising solution to cover this demand is the uses of the mm-Wave band which provides a large amount of currently unoccupied bandwidth.
-However, while there are a lot of theoretical publications on the topic of point-to-point mm-Wave links very little practical work has been published on mm-Wave communications till now.
-Moreover, most of the little practical work done focuses on channel measurements and channel characterisation \cite{Rappaport01} \cite{Weiler14}.
-This is mainly due to the fact that the researchers nowadays do not have access to open and configurable platforms that enable research on layer one and above. 
-In \cite{Zhu14} the authors demonstrate the feasibility of 60 GHz links for outdoor pico-cells. They also did extensive measurements. However, they were using closed point-to-point transceivers \cite{hxi} to proof their assumptions which does not allow modifications of the lower layers.
-In \cite{Nitsche15} the authors demonstrated a system level architecture for mm-Wave communications that significantly reduces the time needed for link establishment by using 2.4 GHz WiFi for direction estimation. However their mm-Wave link was provides by of the shelf mm-Wave converters \cite{vubiqnetworks}, signal generator, and oscilloscope.
-Very recently the authors in \cite{Zetterberg15} demonstrated an open-source 60 GHz transceiver design which is also compatible to USRP software defined radios. While this is indeed a big step forward the authors were mainly focusing on the hardware design and the evaluation of it. Furthermore, the design is open hardware but it still takes some efforts to actually fabricate the transceiver if one wants to use it.
-Using our system the researchers can easily implement and practically evaluate novel mm-Wave PHY and MAC layer protocols and see how they behave in a real world environment.
-To the best of our knowledge we are the first to present an open-source packetized software defined radio system than can operate in several mm-Wave bands and that is highly reconfigurable due to the use of software defined radios.
+The demand for high speed connections and wireless capacity is rapidly growing, driven by the ever-increasing number of data-hungry applications. One promising solution to address this demand is to use mm-wave bands which provide a large amount of currently unoccupied bandwidth. However, while there is a growing body of literature on theoretical aspects of mm-wave communications (e.g. see~\cite{Rappaport14} and references therein) and several standards for short-range communication in the 60~GHz band are emerging~\cite{IEEE80211ad, IEEE802153c}, thus far very little \emph{practical} work has been published on mm-wave communication networks. Moreover, the published experimental work overwhelmingly focuses on mm-wave channel measurements and characterization~\cite{Rappaport01, Weiler14}; to the best of our knowledge, the only notable exceptions to this are the works in~\cite{Zhou12, Zhu14, Nitsche15, Zetterberg15}. We believe that this lack of publications focusing on practical aspects of mm-wave networks is largely due to the fact that researchers do not have access to open, configurable, and cost-efficient platforms that would enable experimental mm-wave research, not only at the PHY layer, but also across the upper protocol layers.
+
+In~\cite{Zhou12, Zhu14} the authors reported on their measurements to demonstrate the feasibility of 60 GHz links for indoor data centre links and outdoor pico-cells, respectively. However, due to limited hardware availability, the work in~\cite{Zhou12, Zhu14} used closed point-to-point mm-wave transceivers~\cite{hxi, wilocity} that do not allow any modification of the lower layers. Moreover, these mm-wave devices are originally designed for point-to-point backhaul-like links~\cite{hxi}  and device-to-device communication~\cite{wilocity} and are not intended for general experimental work; beyond providing very basic characterization of achievable mm-wave link quality with their own specific design, the value of these platforms for more advanced mm-wave network research is thus extremely limited. In~\cite{Nitsche15} the authors demonstrated a technique that significantly reduces the time needed for 60~GHz link establishment by using 2.4/5~GHz Wi-Fi for direction estimation. However their mm-wave link was not packetized, but provided by connecting mm-wave converters~\cite{vubiqnetworks} to a signal generator and oscilloscope. Very recently the authors in~\cite{Zetterberg15} demonstrated an open-source 60~GHz transceiver design which is also compatible with USRP software defined radios (SDRs). Although this is indeed a big step forward, the authors mainly focused on the open hardware design and its evaluation and substantial effort would still be required to actually fabricate the proposed transceiver for use in research.
+
+In this demo we present a spectrum-agile mm-wave packet radio system implemented on USRPs. Using our system researchers can easily implement and practically evaluate novel mm-wave PHY and MAC layer protocols and study their performance in real-world environments. To the best of our knowledge, we are the first to demonstrate an open-source packetized, highly-configurable SDR system that can be readily made to operate in several mm-wave bands.
 
 \section{Design and Implementation}
-Figure \ref{fig:system} shows the demonstrated system and Figure \ref{fig:block} shows the corresponding functional block diagram. 
-We use a host PC running GNURadio \cite{gnuradio} to generate a complex sample-stream at baseband. The sample rate and thus the bandwidth of the stream is configurable in software. The sample-stream is packetized and send to a NI USRP-2953R \cite{ettus} software defined radio via Ethernet with a maximum bandwidth of upto 40 MHz. However, we could easily replace the specific NI USRP by a different USRP of the same product family allowing a maximum bandwidth of 160 MHz.
-The USRP transfers the complex baseband signal to a passband signal at an intermediate frequency between 1.2 GHz and 6 GHz. The exact intermediate frequency can easily be adjusted via the GNURadio program. Because of the wide IF range and the ability to change the frequency during runtime the system can operate very spectrum agile allowing it to avoid interference with other transmissions.
-In order to transfer the signal into the mm-Wave band an external up-converter is used. It is worth mentioning that the system can be operated in the 60 GHz, 70 GHz and 80 GHz bands without further software changes which makes the system even more spectrum agile.
-The up-converted signal is then emitted using a wave guide connected horn antenna.
-On the receive side basically the same processing is applied but using a down-converter and the USRP as a receiver. The complex sample stream is fed back to the same host PC and processed in the GNURadio application where synchronisation and demodulation is applied.
-Our implementation is open source and details can be found at \cite{gr-inets}. This allows interested researchers to easily duplicate our experiments and leverage our system to drive further research by modifying parameters like modulation scheme, channel bandwidth, synchronisation method and by easily adopting new MAC layer protocols.
-\begin{figure}[!t]
+Figs.~\ref{fig:system}~and~\ref{fig:block} show the demonstration system and the corresponding functional block diagram, respectively.
+\begin{figure}[!tb]
 \center
-\includegraphics[width=0.4\textwidth]{system}
-\caption{System Overview}
+\includegraphics[width=0.4\textwidth]{system2.png}
+\caption{Demonstrator equipment setup overview.}
 \label{fig:system}
 \end{figure}
-\begin{figure}[!t]
+\begin{figure}[!tb]
 \center
 \includegraphics[width=0.4\textwidth]{block-diagram}
-\caption{Block Diagram mm-Wave Packet Radio System.}
+\caption{Block diagram of the demonstrated mm-wave packet radio system.}
 \label{fig:block}
 \end{figure}
+We use a host PC running GNU Radio~\cite{gnuradio} to generate a complex sample stream at baseband. The sample rate and thus the bandwidth of the stream is configurable in software.
+The transceiver implementation is following a very modular concept based on the work demonstrated in \cite{Malsbury:phymac} using recent GNU Radio features such as tagged streams and message passing.
+The transceiver is composed out of a transmit and a receive hierarchical block to keep the individual flow graphs small and manageable. 
+Receiver and transmitter hierarchical blocks are mostly composed out of stock GNU Radio components. However, some additional blocks have been added to make the transceiver work properly with multimedia content.
+Figure~\ref{fig:tx-path} shows the GNU Radio block diagram of the transmitter hierarchical block of our transceiver implementation.
+Before converting the incoming packets from the upper layer into a sample stream the packets have to be fragmented into smaller packets so that the GNU Radio framework can handle them properly. This requirement will become clear as we discuss the receiver section. Therefore, the incoming packets are passed to a custom block ("packetizer python") after which the packets are converted to a tagged stream. Using a tagged stream mux preamble, header and padding bits are added to the sample stream. We might as well merge all the packed building steps into our "packetizer python" block to reduce block count and to clean up the flow graph even more. The final tagged stream is then modulated. After modulation the stream tags need to be adjusted using the "Tagged Stream Multiply Length Tag" block before the tagged symbol stream can be scaled and handed of to the hardware. 
 
+The receiver hierarchical block of our transceiver implementation applies matched filtering, frequency and time synchronization to the incoming symbol stream. Afterwards, the recently added\linebreak "Header/Payload Demux" (HPD) block is used to split up the incoming symbol stream into a payload and a header tagged stream based on a trigger signal it receives from a block upstream ("Frame sync cc"). This custom block was implemented in order to detect a preamble added by the transmitter and to resolve phase ambiguity. Now, as the HPD block tries to copy a whole payload sequence at once into its output buffer the payload size is limited by the maximum size of shared memory available to a block in GNU Radio. As this size is limited fragmentation of packets, as mentioned earlier, is necessary. The custom block "unmake packet python" reassembles the fragments again before handing off the final packet.
+
+The receiver hierarchical block and the transmitter hierarchical block are combined to a complete transceiver block (see Figure~\ref{fig:top-block}).
+ 
+ The symbol stream generated by the transmit part of the transceiver is sent to an NI USRP-2953R \cite{ettus} SDR via Ethernet, with a maximum bandwidth of up to 40~MHz. However, one can easily replace the specific NI USRP used in the demonstration by a different NI USRP of the same product family containing other daughter cards, allowing a maximum bandwidth of 160~MHz. In the demonstration the USRP transfers the complex baseband signal to a passband signal at an intermediate frequency (IF) between 1.2~GHz and 6~GHz. The exact value of the IF can easily be adjusted via the GNU Radio program. Because of the wide IF range and the ability to change the frequency during run-time, our system can operate in a very spectrum-agile manner, allowing it to avoid interference with other transmissions.
+
+An external upconverter \cite{siversima} is used to transfer the IF signal to the mm-wave RF band, which is then transmitted over the air using a waveguide-connected horn antenna. On the receiver side, the equivalent  processing is applied using a down-converter and the USRP as a receiver. The complex sample stream is fed back to a second host PC and processed in the receive path of the GNU Radio transceiver.
+
+We note that the radio frontend we use directly supports the USRP-generated IF signal and gives us the freedom to change the central frequency in the mm-wave bands within the provided 1-6~GHz band (the actual maximum bandwidth of the signal depends on the baseband implementation).  Our system can thus be operated in the 60~GHz, 70~GHz, and 80~GHz bands simply by using the appropriate mm-wave converter boards without any further software changes to our SDR baseband implementation, which makes our system even more spectrum-agile.
+
+We plan to release our baseband SDR implementation via our website \cite{gr-inets} as open-source code, with a detailed description of the overall hardware chain, as soon as a stable code version is approved. This will allow interested researchers to easily replicate the demonstrated experimental system, thereby enabling further practical research in mm-wave networks by modifying in software parameters like modulation scheme, channel bandwidth, synchronization method, as well as implementing novel MAC layer protocols.
+
+\begin{figure*}[!tb]
+\center
+\includegraphics[scale=0.33]{rx_path.png}
+\caption{Receiver Flow Graph}
+\label{fig:rx-path}
+\end{figure*}
+\begin{figure*}[!tb]
+\center
+\includegraphics[scale=0.33]{tx_path.png}
+\caption{Transmitter Flow Graph}
+\label{fig:tx-path}
+\end{figure*}
+\begin{figure*}[!tb]
+\center
+\includegraphics[scale=0.3]{transceiver.png}
+\caption{Top Level Flow Graph}
+\label{fig:top-block}
+\end{figure*}
 
 \section{Demonstration Description} 
-During the demo session we will demonstrate the proposed system, showing its operation in several mm-Wave bands. We will bring all the necessary equipment for our demonstration. The audience will be able to inspect our hard and software set-up carefully. Furthermore, we will show to the audience the real-time operation of our system by transmitting a multimedia-stream over the mm-Wave link. As our design allows easy adjustment of PHY parameters via GNURadio the audience will also be able to experiment with those. Moreover, our GNURadio implementation will allow the audience to observe several performance measurements of the system in real-time.
+During the demo session we will demonstrate the proposed system, showing its operation in several mm-wave bands by transmitting a multimedia stream over the air. % We will bring all the necessary equipment for our demonstration.
+The audience will be able to closely inspect our hardware and software set-up and consider if a similar approach would be interesting for their own research. %Furthermore, we will show to the audience the real-time operation of our system by transmitting a multimedia-stream over the mm-wave link. 
+As our design allows easy adjustment of PHY parameters via GNU Radio the audience will also be able to experiment with those %. Moreover, our GNU Radio implementation will allow the audience to 
+and observe  in real-time the effect on several performance metrics of the mm-wave link.
+%\balancecolumns
+
 
 \section{Conclusions}
-We demonstrated an open source mm-Wave communication system for packetized transmissions which will enable future research on mm-Wave networks. Furthermore, we showed the easy reconfigurability of our system due to the use of software defined radios which will drive new MAC and PHY layer developments for the mm-Wave band.
+We have demonstrated an open-source mm-wave packet radio system, which will enable future practical research on mm-wave networks using readily available COTS components and open-source software. Furthermore, we have demonstrated the easy reconfigurability of our experimental system due to the use of SDRs, which will help drive novel MAC and PHY layer solutions for the mm-wave band.
 
 %\begin{figure}
 %\begin{tikzpicture}
