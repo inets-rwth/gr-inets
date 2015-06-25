@@ -94,7 +94,7 @@ Receiver and transmitter hierarchical blocks are mostly composed out of stock GN
 Figure~\ref{fig:tx-path} shows the GNU Radio block diagram of the transmitter hierarchical block of our transceiver implementation.
 Before converting the incoming packets from the upper layer into a sample stream the packets have to be fragmented into smaller packets so that the GNU Radio framework can handle them properly. This requirement will become clear as we discuss the receiver section. Therefore, the incoming packets are passed to a custom block ("packetizer python") after which the packets are converted to a tagged stream. Using a tagged stream mux preamble, header and padding bits are added to the sample stream. We might as well merge all the packed building steps into our "packetizer python" block to reduce block count and to clean up the flow graph even more. The final tagged stream is then modulated. After modulation the stream tags need to be adjusted using the "Tagged Stream Multiply Length Tag" block before the tagged symbol stream can be scaled and handed of to the hardware. 
 
-The receiver hierarchical block of our transceiver implementation applies matched filtering, frequency and time synchronization to the incoming symbol stream. Afterwards, the recently added\linebreak "Header/Payload Demux" (HPD) block is used to split up the incoming symbol stream into a payload and a header tagged stream based on a trigger signal it receives from a block upstream ("Frame sync cc"). This custom block was implemented in order to detect a preamble added by the transmitter and to resolve phase ambiguity. Now, as the HPD block tries to copy a whole payload sequence at once into its output buffer the payload size is limited by the maximum size of shared memory available to a block in GNU Radio. As this size is limited fragmentation of packets, as mentioned earlier, is necessary. The custom block "unmake packet python" reassembles the fragments again before handing off the final packet.
+The receiver hierarchical block of our transceiver implementation applies matched filtering, frequency and time synchronization to the incoming symbol stream (see Figure~\ref{fig:rx-path}). Afterwards, the recently added\linebreak "Header/Payload Demux" (HPD) block is used to split up the incoming symbol stream into a payload and a header tagged stream based on a trigger signal it receives from a block upstream ("Frame sync cc"). This custom block was implemented in order to detect a preamble added by the transmitter and to resolve phase ambiguity. Now, as the HPD block tries to copy a whole payload sequence at once into its output buffer the payload size is limited by the maximum size of shared memory available to a block in GNU Radio. As this size is limited fragmentation of packets, as mentioned earlier, is necessary. The custom block "unmake packet python" reassembles the fragments again before handing off the final packet.
 
 The receiver hierarchical block and the transmitter hierarchical block are combined to a complete transceiver block (see Figure~\ref{fig:top-block}).
  
@@ -106,21 +106,23 @@ We note that the radio frontend we use directly supports the USRP-generated IF s
 
 We plan to release our baseband SDR implementation via our website \cite{gr-inets} as open-source code, with a detailed description of the overall hardware chain, as soon as a stable code version is approved. This will allow interested researchers to easily replicate the demonstrated experimental system, thereby enabling further practical research in mm-wave networks by modifying in software parameters like modulation scheme, channel bandwidth, synchronization method, as well as implementing novel MAC layer protocols.
 
-\begin{figure*}[!tb]
+\begin{figure*}[p]
 \center
-\includegraphics[scale=0.33]{rx_path.png}
-\caption{Receiver Flow Graph}
-\label{fig:rx-path}
-\end{figure*}
-\begin{figure*}[!tb]
-\center
-\includegraphics[scale=0.33]{tx_path.png}
+\includegraphics[scale=0.41]{tx_path.png}
 \caption{Transmitter Flow Graph}
 \label{fig:tx-path}
 \end{figure*}
-\begin{figure*}[!tb]
+
+\begin{figure*}[p]
 \center
-\includegraphics[scale=0.3]{transceiver.png}
+\includegraphics[scale=0.41]{rx_path.png}
+\caption{Receiver Flow Graph}
+\label{fig:rx-path}
+\end{figure*}
+
+\begin{figure*}
+\center
+\includegraphics[scale=0.41]{transceiver.png}
 \caption{Top Level Flow Graph}
 \label{fig:top-block}
 \end{figure*}
