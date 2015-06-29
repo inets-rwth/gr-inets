@@ -447,7 +447,7 @@
     </param>
     <param>
       <key>packet_len</key>
-      <value>128</value>
+      <value>256</value>
     </param>
     <param>
       <key>type</key>
