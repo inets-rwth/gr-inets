@@ -28,30 +28,34 @@ namespace gr {
 
     class frame_sync_cc_impl : public frame_sync_cc
     {
-     private:
-		gr_complex _preamble[39]; //13 bit Barker code
-		float _threshold;
-		int _len_preamble;
-		std::string _len_tag_key;
-		int _state;
-		float _last_phase;
-		float _delta_phi;
-		float _phi;
-		gr_complex _diff;
-		static const int STATE_DETECT = 0;
-		static const int STATE_PREAMBLE = 1;
-		static const int STATE_PAYLOAD = 3;
-		static const int STATE_PROCESS_PREAMBLE = 2;
-    static const int STATE_SET_TRIGGER = 4;
-     public:
-      frame_sync_cc_impl(float threshold, const std::string &len_tag_key);
-      ~frame_sync_cc_impl();
-	  void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-      // Where all the action really happens
-      int general_work(int noutput_items,
-		   gr_vector_int &ninput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      private:
+		    gr_complex _preamble[39]; //13 bit Barker code
+		    float _threshold;
+		    int _len_preamble;
+		    std::string _len_tag_key;
+	    	int _state;
+		    float _last_phase;
+		    float _delta_phi;
+		    float _phi;
+		    gr_complex _diff;
+		    static const int STATE_DETECT = 0;
+		    static const int STATE_PREAMBLE = 1;
+		    static const int STATE_PAYLOAD = 3;
+		    static const int STATE_PROCESS_PREAMBLE = 2;
+        static const int STATE_SET_TRIGGER = 4;
+        
+        float calculate_fd(const gr_complex* x, const gr_complex* c, int N, int L0);
+        std::complex<float> calculate_R(int m, const gr_complex* z, int L0);
+
+      public:
+        frame_sync_cc_impl(float threshold, const std::string &len_tag_key);
+        ~frame_sync_cc_impl();
+	      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+        // Where all the action really happens
+        int general_work(int noutput_items,
+		      gr_vector_int &ninput_items,
+	        gr_vector_const_void_star &input_items,
+	        gr_vector_void_star &output_items);
     };
 
   } // namespace inets

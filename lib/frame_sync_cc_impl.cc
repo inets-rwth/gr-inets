@@ -61,6 +61,7 @@ namespace gr {
 			_preamble[10] = gr_complex(-1, 0);
 			_preamble[11] = gr_complex(1, 0);
 			_preamble[12] = gr_complex(-1, 0);
+
 			int i,j;		
 			for(i = 0;i < 2; i++) {
 				for(j = 0; j < 13; j++) {
@@ -166,12 +167,17 @@ namespace gr {
 							_diff = _preamble[0] / in[i];
 							_diff = (1 / std::abs(_diff)) * _diff;
 							_phi = std::arg(_diff);
-							//std::cout << "preamble[0] = " << _preamble[0] << " received = " << in[i] << std::endl;
+							
+              
+              
+              //std::cout << "preamble[0] = " << _preamble[0] << " received = " << in[i] << std::endl;
 							//std::cout << "arg preamble[0] = " << std::arg(_preamble[0]) << " arg rec = " << std::arg(in[i]) << std::endl;					
 							//std::cout << "complex correction term (i = " << i << " ): " << 
               //    _diff << " abs = " << std::abs(_diff) << " arg = " << std::arg(_diff) << std::endl;
 							//std::cout << "phase difference = " << _phi << std::endl;
-						}
+						  float fd = calculate_fd(&in[i], _preamble, 19, 39);
+              std::cout << "calculated fd to fd = " << fd << std::endl;
+            }
 
 						consumed_items++;
 						produced_items++;
@@ -209,6 +215,43 @@ namespace gr {
 			
 				return WORK_CALLED_PRODUCE;
     }
+
+    float frame_sync_cc_impl::calculate_fd(const gr_complex* x,const gr_complex* c, int N, int L0)
+    {
+
+      float w_div = N * (4.0f * N * N - 6.0f * N * L0 + 3.0f * L0 * L0 - 1.0f);
+      //z(k) = x(k) * conj(c(k))   
+      std::complex<float>* z = new std::complex<float>[L0];
+      for(int i = 0; i < L0; i++) {
+        z[i] = x[i] * std::conj(c[i]);
+      }
+
+      float sum = 0;
+      for(int i = 1; i <= N; i++) {
+        float w = (3.0f * ((L0 - i) * (L0 - i + 1) - N * (L0 - N))) / w_div;
+        float c1 = std::arg(calculate_R(i, z, L0));
+        float c2 = std::arg(calculate_R(i - 1, z, L0));
+        float c3 = c1 - c2;
+        //TODO wrap c3 to [-pi,pi)
+        sum += w * c3;
+      }
+      delete[] z; 
+      return sum / (2.0f * M_PI);
+
+    }
+    
+    std::complex<float> frame_sync_cc_impl::calculate_R(int m, const gr_complex* z, int L0)
+    {
+      std::complex<float> sum = 0;
+      for(int i = m; i < L0; i++) {
+        float x = std::arg(z[i]) - std::arg(z[i - m]);
+        std::complex<float> x2 = std::polar(1.0f, x);
+        sum += x2;
+      }
+      return ((1.0f/(L0 - m)) * sum); 
+    }
+
+
 
   } /* namespace inets */
 } /* namespace gr */
