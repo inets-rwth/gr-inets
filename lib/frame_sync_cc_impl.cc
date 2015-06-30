@@ -46,7 +46,7 @@ namespace gr {
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make3(3, 3, sizeof(gr_complex), sizeof(gr_complex) ,sizeof(unsigned char))),
 			_threshold(threshold), _len_preamble(40), _len_tag_key(len_tag_key),
-			_state(STATE_DETECT), _last_phase(0), _phi(0), _diff(1,0)
+			_state(STATE_DETECT),  _diff(1,0)
     {
 			_preamble[0] = gr_complex(-1, 0);
 			_preamble[1] = gr_complex(-1, 0);
@@ -72,7 +72,7 @@ namespace gr {
 			//therfore we need 12 samples as look ahead
 			//set_history(13);
 			set_tag_propagation_policy(TPP_DONT);
-			//set_output_multiple(1024);
+			set_output_multiple(1024);
 			message_port_register_out(pmt::string_to_symbol("phase"));
 		}
 
@@ -85,6 +85,9 @@ namespace gr {
 
 		void frame_sync_cc_impl::forecast(int noutput_items, gr_vector_int &ninput_items_required)
 		{
+
+      ninput_items_required[0] = noutput_items;
+      return;
 			switch(_state) {
 				case STATE_DETECT:
 					ninput_items_required[0] = noutput_items;
@@ -93,7 +96,7 @@ namespace gr {
 					ninput_items_required[0] = noutput_items;
 					break;
 				case STATE_PAYLOAD:
-					ninput_items_required[0] = 1024;
+					ninput_items_required[0] = noutput_items;
 					break;
         case STATE_PROCESS_PREAMBLE:
           ninput_items_required[0] = noutput_items;
@@ -120,7 +123,7 @@ namespace gr {
 		
 				//memset(trig_out, 0, noutput_items * sizeof(unsigned char));
 		
-				//std::cout << "frame_sync: state = " << _state << " noutput: " << noutput_items << std::endl;		
+				std::cout << "frame_sync: state = " << _state << " noutput: " << noutput_items << std::endl;		
 	      //std::cout << "looping from 0 to " << noutput_items - 38 - 1 << std::endl;	
 				gr_complex sum = 0;
 				int consumed_items = 0;
@@ -166,7 +169,7 @@ namespace gr {
 							//resolve phase ambiguity
 							_diff = _preamble[0] / in[i];
 							_diff = (1 / std::abs(_diff)) * _diff;
-							_phi = std::arg(_diff);
+							_d_phi = std::arg(_diff);
 							
               
               
@@ -175,8 +178,8 @@ namespace gr {
 							//std::cout << "complex correction term (i = " << i << " ): " << 
               //    _diff << " abs = " << std::abs(_diff) << " arg = " << std::arg(_diff) << std::endl;
 							//std::cout << "phase difference = " << _phi << std::endl;
-						  float fd = calculate_fd(&in[i], _preamble, 19, 39);
-              std::cout << "calculated fd to fd = " << fd << std::endl;
+						  _d_f = calculate_fd(&in[i], _preamble, 19, 39);
+              std::cout << "calculated fd to fd = " << _d_f << std::endl;
             }
 
 						consumed_items++;
@@ -192,22 +195,31 @@ namespace gr {
           if(_state == STATE_SET_TRIGGER) {
             trig_out[i] = 1;
             //std::cout << "setting trigger at i = " << i << std::endl;
-            _state = STATE_DETECT;
+            add_item_tag(0, nitems_written(0) + i, pmt::intern("fd"), pmt::from_float(_d_f));          
+            add_item_tag(0, nitems_written(0) + i, pmt::intern("phi"), pmt::from_float(_d_phi));
+             _state = STATE_DETECT;
             consumed_items++;
             produced_items++;
           }
 
 				}
-				if(std::abs(_diff) < 0.8) {
-					//std::cout << "correcting " << produced_items << " ot of " << noutput_items  << " output items using: " << _diff << std::endl;
+				/*
+        float corr = 0;
+        for(i = 0; i < produced_items; i++) {
+          corr = -2.0f * M_PI * _d_f * i;// + _last_corr;
+          corr = wrap_phase(corr);
+          out[i] = in[i] * std::polar(1.0f, corr);
 				}
-				for(i = 0; i < produced_items; i++) {
-					out[i] = in[i];// * _diff;
-				}
-
-				//memcpy(out, in, produced_items * sizeof(gr_complex));
+        _last_corr = -2.0f * M_PI * _d_f * produced_items + _last_corr; 
+        std::cout << "last corr = " << _last_corr << " corr = " << corr << std::endl;	
+       //memcpy(out, in, produced_items * sizeof(gr_complex));
         //std::cout << "producing " << produced_items << " consuming " << consumed_items << std::endl;
-				consume_each(consumed_items); 
+				
+        */
+        for(i = 0; i < produced_items; i++) {
+          out[i] = in[i];
+				}
+        consume_each(consumed_items); 
 				produce(0, produced_items);
 				produce(1, produced_items);
 				produce(2, produced_items);
@@ -215,6 +227,27 @@ namespace gr {
 			
 				return WORK_CALLED_PRODUCE;
     }
+
+    float frame_sync_cc_impl::wrap_phase(float phi)
+    {
+      while(phi > 2.0f * M_PI) {
+        phi -= 2.0f * M_PI;
+      }
+      while(phi < -2.0f * M_PI) {
+        phi += 2.0f * M_PI;
+      }
+      
+      if(phi > M_PI) {
+        phi = -(2.0f * M_PI - phi);
+      }
+
+      if(phi <= -M_PI) {
+        phi = 2.0f * M_PI + phi;
+      }
+
+      return phi;
+    }
+
 
     float frame_sync_cc_impl::calculate_fd(const gr_complex* x,const gr_complex* c, int N, int L0)
     {

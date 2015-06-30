@@ -34,11 +34,11 @@ namespace gr {
 		    int _len_preamble;
 		    std::string _len_tag_key;
 	    	int _state;
-		    float _last_phase;
-		    float _delta_phi;
-		    float _phi;
-		    gr_complex _diff;
-		    static const int STATE_DETECT = 0;
+		    float _d_f;
+        float _d_phi;
+        float _last_corr;
+        std::complex<float> _diff;
+        static const int STATE_DETECT = 0;
 		    static const int STATE_PREAMBLE = 1;
 		    static const int STATE_PAYLOAD = 3;
 		    static const int STATE_PROCESS_PREAMBLE = 2;
@@ -46,7 +46,7 @@ namespace gr {
         
         float calculate_fd(const gr_complex* x, const gr_complex* c, int N, int L0);
         std::complex<float> calculate_R(int m, const gr_complex* z, int L0);
-
+        float wrap_phase(float phi);
       public:
         frame_sync_cc_impl(float threshold, const std::string &len_tag_key);
         ~frame_sync_cc_impl();

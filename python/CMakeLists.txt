@@ -49,3 +49,4 @@ GR_ADD_TEST(qa_timing_recovery_cc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DI
 GR_ADD_TEST(qa_packetizer ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_packetizer.py)
 GR_ADD_TEST(qa_packetizer_python ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_packetizer_python.py)
 GR_ADD_TEST(qa_unmake_packet_python ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_unmake_packet_python.py)
+GR_ADD_TEST(qa_variable_rotator ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_variable_rotator.py)

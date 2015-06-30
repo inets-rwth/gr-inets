@@ -31,6 +31,7 @@ list(APPEND inets_sources
     frame_sync_cc_impl.cc
     timing_recovery_cc_impl.cc
     packetizer_impl.cc
+    variable_rotator_impl.cc
 )
 
 set(inets_sources "${inets_sources}" PARENT_SCOPE)
