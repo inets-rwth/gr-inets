@@ -21,7 +21,10 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
+#include <boost/assign/std/vector.hpp> // for 'operator+=()'
+#include <boost/assert.hpp>
+using namespace std;
+using namespace boost::assign; // bring 'operator+=()' into scope
 #include <gnuradio/io_signature.h>
 #include "frame_sync_cc_impl.h"
 # define M_PI           3.14159265358979323846
@@ -45,9 +48,12 @@ namespace gr {
       : gr::block("frame_sync_cc",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make3(3, 3, sizeof(gr_complex), sizeof(gr_complex) ,sizeof(unsigned char))),
-			_threshold(threshold), _len_preamble(40), _len_tag_key(len_tag_key),
+			_threshold(threshold), _len_preamble(128), _len_tag_key(len_tag_key),
 			_state(STATE_DETECT),  _diff(1,0)
     {
+      _preamble += -1,1,1,-1,1,-1,1,1,-1,-1,-1,-1,1,-1,-1,-1,-1,1,-1,-1,-1,1,1,-1,1,1,-1,-1,1,1,1,-1,-1,-1,-1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,-1,1,1,-1,-1,1,1,-1,-1,1,1,1,1,1,1,-1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,1,-1,-1,1,-1,1,-1,-1,-1,1,-1,1,-1,1,1,-1,1,-1,-1,-1,1,1,1,1,-1,1,-1,-1,1,-1,-1,-1,-1,1,1,-1,1,1,-1,-1,-1,-1,1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,1;
+
+      /*
 			_preamble[0] = gr_complex(-1, 0);
 			_preamble[1] = gr_complex(-1, 0);
 			_preamble[2] = gr_complex(-1, 0);
@@ -68,6 +74,7 @@ namespace gr {
 					_preamble[(i + 1) * 13 + j] = _preamble[j];
 				} 
 			}
+      */
 			//Preamble could have first sample only in our inputbuffer
 			//therfore we need 12 samples as look ahead
 			//set_history(13);
@@ -133,10 +140,10 @@ namespace gr {
 				
 				int preamble_items_left = 0;
 
-				for(i = 0; i < noutput_items - 38; i++) {
+				for(i = 0; i < noutput_items - _len_preamble; i++) {
 					trig_out[i] = 0;
 					sum = 0;
-					for(j = 0; j < 39; j++) {
+					for(j = 0; j < _len_preamble; j++) {
 					 sum += std::conj(_preamble[j]) * in[i + j];
 					}
 					corr_out[i] = sum;
@@ -154,7 +161,7 @@ namespace gr {
 					}
 					
 					if(_state == STATE_PREAMBLE) { 
-						if((noutput_items - 38 - i) > (_len_preamble)) {
+						if((noutput_items - _len_preamble - i) >= (_len_preamble)) {
 							_state = STATE_PROCESS_PREAMBLE;
 							preamble_items_left = _len_preamble;						
 						} else {
@@ -178,7 +185,7 @@ namespace gr {
 							//std::cout << "complex correction term (i = " << i << " ): " << 
               //    _diff << " abs = " << std::abs(_diff) << " arg = " << std::arg(_diff) << std::endl;
 							//std::cout << "phase difference = " << _phi << std::endl;
-						  _d_f = calculate_fd(&in[i], _preamble, 19, 39);
+						  _d_f = calculate_fd(&in[i],&_preamble[0], _len_preamble/4, _len_preamble/2);
               std::cout << "calculated fd to fd = " << _d_f << std::endl;
             }
 
@@ -252,36 +259,41 @@ namespace gr {
     float frame_sync_cc_impl::calculate_fd(const gr_complex* x,const gr_complex* c, int N, int L0)
     {
 
-      float w_div = N * (4.0f * N * N - 6.0f * N * L0 + 3.0f * L0 * L0 - 1.0f);
+      double w_div =(float)N * (4.0f * (float)N * (float)N - 6.0f * (float)N * (float)L0 + 3.0f * (float)L0 * (float)L0 - 1.0f);
       //z(k) = x(k) * conj(c(k))   
-      std::complex<float>* z = new std::complex<float>[L0];
+      std::complex<double>* z = new std::complex<double>[L0];
       for(int i = 0; i < L0; i++) {
-        z[i] = x[i] * std::conj(c[i]);
+        z[i] = (1 / std::abs(x[i])) * x[i] * std::conj(c[i]);
       }
 
-      float sum = 0;
+      //double sum = 0;
+      std::complex<double> sum = 0;
       for(int i = 1; i <= N; i++) {
-        float w = (3.0f * ((L0 - i) * (L0 - i + 1) - N * (L0 - N))) / w_div;
-        float c1 = std::arg(calculate_R(i, z, L0));
-        float c2 = std::arg(calculate_R(i - 1, z, L0));
-        float c3 = c1 - c2;
+        //double w = (3.0f * ((float)(L0 - i) * (float)(L0 - i + 1) - (float)N * (float)(L0 - N))) / w_div;
+        //double c1 = std::arg(calculate_R(i, z, L0));
+        //double c2 = std::arg(calculate_R(i - 1, z, L0));
+        //double c3 = c1 - c2;
+        //c3 = wrap_phase(c3);
         //TODO wrap c3 to [-pi,pi)
-        sum += w * c3;
+        //sum += w * c3;
+        sum += calculate_R(i, z, L0);
       }
       delete[] z; 
-      return sum / (2.0f * M_PI);
+      //return sum / (2.0f * M_PI);
+      return (std::arg(sum) / (M_PI * (N + 1.0)));
 
     }
     
-    std::complex<float> frame_sync_cc_impl::calculate_R(int m, const gr_complex* z, int L0)
+    std::complex<double> frame_sync_cc_impl::calculate_R(int m, const std::complex<double>* z, int L0)
     {
-      std::complex<float> sum = 0;
+      std::complex<double> sum = 0;
       for(int i = m; i < L0; i++) {
-        float x = std::arg(z[i]) - std::arg(z[i - m]);
-        std::complex<float> x2 = std::polar(1.0f, x);
-        sum += x2;
+        //float x = std::arg(z[i]) - std::arg(z[i - m]);
+        //std::complex<float> x2 = std::polar(1.0f, x);
+        std::complex<double> x = z[i] * std::conj(z[i - m]);
+        sum += x;
       }
-      return ((1.0f/(L0 - m)) * sum); 
+      return ((1.0/(double)(L0 - m)) * sum); 
     }
 
 

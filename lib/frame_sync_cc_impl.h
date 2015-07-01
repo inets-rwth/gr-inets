@@ -29,7 +29,7 @@ namespace gr {
     class frame_sync_cc_impl : public frame_sync_cc
     {
       private:
-		    gr_complex _preamble[39]; //13 bit Barker code
+		    std::vector<gr_complex> _preamble; //13 bit Barker code
 		    float _threshold;
 		    int _len_preamble;
 		    std::string _len_tag_key;
@@ -45,7 +45,7 @@ namespace gr {
         static const int STATE_SET_TRIGGER = 4;
         
         float calculate_fd(const gr_complex* x, const gr_complex* c, int N, int L0);
-        std::complex<float> calculate_R(int m, const gr_complex* z, int L0);
+        std::complex<double> calculate_R(int m, const std::complex<double>* z, int L0);
         float wrap_phase(float phi);
       public:
         frame_sync_cc_impl(float threshold, const std::string &len_tag_key);
