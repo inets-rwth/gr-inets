@@ -130,7 +130,7 @@ namespace gr {
 		
 				//memset(trig_out, 0, noutput_items * sizeof(unsigned char));
 		
-				std::cout << "frame_sync: state = " << _state << " noutput: " << noutput_items << std::endl;		
+				//std::cout << "frame_sync: state = " << _state << " noutput: " << noutput_items << std::endl;		
 	      //std::cout << "looping from 0 to " << noutput_items - 38 - 1 << std::endl;	
 				gr_complex sum = 0;
 				int consumed_items = 0;

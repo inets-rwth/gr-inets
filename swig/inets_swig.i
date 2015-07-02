@@ -14,6 +14,7 @@
 #include "inets/timing_recovery_cc.h"
 #include "inets/packetizer.h"
 #include "inets/variable_rotator.h"
+#include "inets/baseband_derotation.h"
 %}
 
 
@@ -29,3 +30,5 @@ GR_SWIG_BLOCK_MAGIC2(inets, timing_recovery_cc);
 GR_SWIG_BLOCK_MAGIC2(inets, packetizer);
 %include "inets/variable_rotator.h"
 GR_SWIG_BLOCK_MAGIC2(inets, variable_rotator);
+%include "inets/baseband_derotation.h"
+GR_SWIG_BLOCK_MAGIC2(inets, baseband_derotation);

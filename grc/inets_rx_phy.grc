@@ -105,7 +105,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(960, 411)</value>
+      <value>(464, 507)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -152,7 +152,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(440, 515)</value>
+      <value>(648, 515)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -352,7 +352,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 419)</value>
+      <value>(960, 419)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -391,7 +391,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(416, 168)</value>
+      <value>(424, 192)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -600,6 +600,49 @@
     </param>
   </block>
   <block>
+    <key>inets_baseband_derotation</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(744, 395)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>inets_baseband_derotation_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>mu</key>
+      <value>-0.001</value>
+    </param>
+  </block>
+  <block>
     <key>inets_frame_sync_cc</key>
     <param>
       <key>alias</key>
@@ -666,7 +709,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(680, 520)</value>
+      <value>(864, 520)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -725,7 +768,7 @@
     </param>
     <param>
       <key>num_delay</key>
-      <value>72</value>
+      <value>160</value>
     </param>
   </block>
   <block>
@@ -768,7 +811,7 @@
     </param>
     <param>
       <key>num_delay</key>
-      <value>40</value>
+      <value>128</value>
     </param>
   </block>
   <block>
@@ -826,7 +869,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(912, 515)</value>
+      <value>(1064, 515)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -869,7 +912,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 363)</value>
+      <value>(960, 363)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1231,6 +1274,18 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>inets_baseband_derotation_0</source_block_id>
+    <sink_block_id>digital_constellation_decoder_cb_0_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_baseband_derotation_0</source_block_id>
+    <sink_block_id>pad_sink_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>inets_frame_sync_cc_0</source_block_id>
     <sink_block_id>digital_header_payload_demux_0</sink_block_id>
     <source_key>0</source_key>
@@ -1256,13 +1311,7 @@
   </connection>
   <connection>
     <source_block_id>inets_variable_rotator_0</source_block_id>
-    <sink_block_id>digital_constellation_decoder_cb_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>inets_variable_rotator_0</source_block_id>
-    <sink_block_id>pad_sink_1</sink_block_id>
+    <sink_block_id>inets_baseband_derotation_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

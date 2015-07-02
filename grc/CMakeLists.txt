@@ -26,5 +26,6 @@ install(FILES
     inets_packetizer_python.xml
     inets_unmake_packet_python.xml
     inets_modem.xml
-    inets_variable_rotator.xml DESTINATION share/gnuradio/grc/blocks
+    inets_variable_rotator.xml
+    inets_baseband_derotation.xml DESTINATION share/gnuradio/grc/blocks
 )
