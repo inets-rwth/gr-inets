@@ -32,10 +32,10 @@ namespace gr {
   namespace inets {
 
     frame_sync_cc::sptr
-    frame_sync_cc::make(float threshold, const std::string &len_tag_key)
+    frame_sync_cc::make(const std::vector<gr_complex> &preamble, float threshold, const std::string &len_tag_key)
     {
       return gnuradio::get_initial_sptr
-        (new frame_sync_cc_impl(threshold, len_tag_key));
+        (new frame_sync_cc_impl(preamble, threshold, len_tag_key));
     }
 
     /*
@@ -44,15 +44,15 @@ namespace gr {
 	 * Otherwise the gnuradio blocks packed_to_unpacked and unpacked_to_packed don't work
 	 * beacuse the payload will not be byte aligned.	
      */
-    frame_sync_cc_impl::frame_sync_cc_impl(float threshold, const std::string &len_tag_key)
+    frame_sync_cc_impl::frame_sync_cc_impl(const std::vector<gr_complex> &preamble, float threshold, const std::string &len_tag_key)
       : gr::block("frame_sync_cc",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make3(3, 3, sizeof(gr_complex), sizeof(gr_complex) ,sizeof(unsigned char))),
-			_threshold(threshold), _len_preamble(128), _len_tag_key(len_tag_key),
-			_state(STATE_DETECT),  _diff(1,0)
+			_threshold(threshold), _len_tag_key(len_tag_key),
+			_state(STATE_DETECT),  _diff(1,0), _preamble(preamble)
     {
-      _preamble += -1,1,1,-1,1,-1,1,1,-1,-1,-1,-1,1,-1,-1,-1,-1,1,-1,-1,-1,1,1,-1,1,1,-1,-1,1,1,1,-1,-1,-1,-1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,-1,1,1,-1,-1,1,1,-1,-1,1,1,1,1,1,1,-1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,1,-1,-1,1,-1,1,-1,-1,-1,1,-1,1,-1,1,1,-1,1,-1,-1,-1,1,1,1,1,-1,1,-1,-1,1,-1,-1,-1,-1,1,1,-1,1,1,-1,-1,-1,-1,1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,1;
 
+      _len_preamble = _preamble.size();
       /*
 			_preamble[0] = gr_complex(-1, 0);
 			_preamble[1] = gr_complex(-1, 0);
@@ -143,9 +143,10 @@ namespace gr {
 				for(i = 0; i < noutput_items - _len_preamble; i++) {
 					trig_out[i] = 0;
 					sum = 0;
-					for(j = 0; j < _len_preamble; j++) {
-					 sum += std::conj(_preamble[j]) * in[i + j];
-					}
+					for(j = 0; j < _len_preamble / 2; j++) {
+					 //sum += std::conj(_preamble[j]) * in[i + j];
+					 sum += std::conj(in[i + j]) * in[i + j + (_len_preamble / 2)];   
+          }
 					corr_out[i] = sum;
 					
 					if(_state == STATE_DETECT) {			
@@ -174,9 +175,9 @@ namespace gr {
 
 						if(preamble_items_left == _len_preamble) {
 							//resolve phase ambiguity
-							_diff = _preamble[0] / in[i];
-							_diff = (1 / std::abs(_diff)) * _diff;
-							_d_phi = std::arg(_diff);
+							//_diff = _preamble[0] / in[i];
+							//_diff = (1 / std::abs(_diff)) * _diff;
+							//_d_phi = std::arg(_diff);
 							
               
               
@@ -185,7 +186,7 @@ namespace gr {
 							//std::cout << "complex correction term (i = " << i << " ): " << 
               //    _diff << " abs = " << std::abs(_diff) << " arg = " << std::arg(_diff) << std::endl;
 							//std::cout << "phase difference = " << _phi << std::endl;
-						  _d_f = calculate_fd(&in[i],&_preamble[0], _len_preamble/4, _len_preamble/2);
+						  _d_f = calculate_fd(&in[i],&_preamble[0], _len_preamble / 2, _len_preamble);
               std::cout << "calculated fd to fd = " << _d_f << std::endl;
             }
 
@@ -194,7 +195,18 @@ namespace gr {
 						preamble_items_left--;
 						
 						if(preamble_items_left == 0) {
-							_state = STATE_SET_TRIGGER;
+							//correct preamble
+              gr_complex* preamble_corr = new gr_complex[_len_preamble];
+              gr_complex d_phi = 0;
+              gr_complex d_phi_sum = 0;
+              for(int k = 0; k < _len_preamble; k++){
+                preamble_corr[k] = in[i + k - (_len_preamble - 1)] * std::polar(1.0f, (float)(k * _d_f * -2.0f * M_PI)); 
+                d_phi = _preamble[k] / preamble_corr[k];
+                d_phi = (1 / std::abs(d_phi)) * d_phi;
+                d_phi_sum += d_phi;
+              } 
+              _d_phi = std::arg(d_phi_sum / (float)_len_preamble);
+              _state = STATE_SET_TRIGGER;
 						  continue;
             }				
 					}

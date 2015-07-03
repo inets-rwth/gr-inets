@@ -47,6 +47,9 @@ namespace gr {
        * creating new instances.
        */
       static sptr make(float mu);
+      virtual void set_mu(float mu) = 0;
+      virtual float mu() const = 0;
+
     };
 
   } // namespace inets

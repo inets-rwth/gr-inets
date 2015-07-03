@@ -4,6 +4,7 @@
   <category>INETS</category>
   <import>import inets</import>
   <make>inets.baseband_derotation($mu)</make>
+  <callback>set_mu($mu)</callback>
   <param>
     <name>Mu</name>
     <key>mu</key>

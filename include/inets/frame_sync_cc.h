@@ -46,7 +46,7 @@ namespace gr {
        * class. inets::frame_sync_cc::make is the public interface for
        * creating new instances.
        */
-      static sptr make(float threshold, const std::string &len_tag_key = "packet_len");
+      static sptr make(const std::vector<gr_complex> &preamble, float threshold, const std::string &len_tag_key = "packet_len");
     };
 
   } // namespace inets

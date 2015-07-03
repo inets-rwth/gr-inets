@@ -36,6 +36,8 @@ namespace gr {
       baseband_derotation_impl(float mu);
       ~baseband_derotation_impl();
 
+      void set_mu(float mu){ _mu = mu; };
+      float mu() const { return _mu; };
       // Where all the action really happens
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

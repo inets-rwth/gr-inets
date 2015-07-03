@@ -48,7 +48,8 @@ namespace gr {
         std::complex<double> calculate_R(int m, const std::complex<double>* z, int L0);
         float wrap_phase(float phi);
       public:
-        frame_sync_cc_impl(float threshold, const std::string &len_tag_key);
+
+        frame_sync_cc_impl(const std::vector<gr_complex> &preamble, float threshold, const std::string &len_tag_key);
         ~frame_sync_cc_impl();
 	      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
         // Where all the action really happens

@@ -159,6 +159,10 @@
       <value>0</value>
     </param>
     <param>
+      <key>mu</key>
+      <value>mu</value>
+    </param>
+    <param>
       <key>threshold</key>
       <value>threshold</value>
     </param>
@@ -173,6 +177,10 @@
     <param>
       <key>matched_filter_coeff</key>
       <value>matched_filter_coeff</value>
+    </param>
+    <param>
+      <key>preamble</key>
+      <value>preamble</value>
     </param>
   </block>
   <block>
@@ -263,6 +271,49 @@
     <param>
       <key>type</key>
       <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>parameter</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(912, 11)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>mu</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Mu</value>
+    </param>
+    <param>
+      <key>short_id</key>
+      <value></value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>eng_float</value>
     </param>
     <param>
       <key>value</key>
@@ -367,7 +418,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(704, 355)</value>
+      <value>(704, 323)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -410,7 +461,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(704, 427)</value>
+      <value>(704, 387)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -453,7 +504,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(704, 387)</value>
+      <value>(704, 355)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -539,7 +590,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, 323)</value>
+      <value>(176, 339)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -568,6 +619,49 @@
     <param>
       <key>vlen</key>
       <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>parameter</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(192, 91)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>preamble</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>preamble</value>
+    </param>
+    <param>
+      <key>short_id</key>
+      <value></value>
+    </param>
+    <param>
+      <key>type</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>()</value>
     </param>
   </block>
   <block>
