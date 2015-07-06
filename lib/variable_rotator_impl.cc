@@ -67,24 +67,24 @@ namespace gr {
         gr_complex *out = (gr_complex *) output_items[0];
 
         // Do <+signal processing+>
-        std::vector<tag_t> tags;
-        get_tags_in_window(tags, 0, 0, 1, pmt::intern("fd"));
+        std::vector<tag_t> fd_tags;
+        std::vector<tag_t> phi_tags;
+        get_tags_in_window(fd_tags, 0, 0, noutput_items, pmt::intern("fd"));
+        get_tags_in_window(phi_tags, 0, 0, noutput_items, pmt::intern("phi"));
         float df = 0;
-        if(tags.size() != 0) {
-          df = pmt::to_float(tags[0].value);
-          _rot.set_phase_incr(exp(gr_complex(0, df * -2.0f * M_PI)));
-        } else {
-          std::cout << "Missing tag at element number 0." << std::endl;
+        for(int i = 0; i < noutput_items; i++) {
+          
+          for(int j = 0; j < fd_tags.size(); j++) {
+            if(fd_tags[j].offset == (nitems_written(0) + i)) {
+              df = pmt::to_float(fd_tags[j].value);
+              _rot.set_phase_incr(exp(gr_complex(0, df * -2.0f * M_PI)));
+              _rot.set_phase(exp(gr_complex(0, pmt::to_float(phi_tags[j].value) + df * -2.0f * M_PI * _num_delay )));  
+            }
+          }
+          
+          out[i] =  _rot.rotate(in[i]);
         }
-        tags.clear();
-        get_tags_in_window(tags, 0, 0, 1, pmt::intern("phi"));
-        if(tags.size() != 0)
-        {
-          _rot.set_phase(exp(gr_complex(0, pmt::to_float(tags[0].value) + df * -2.0f * M_PI * _num_delay )));  
-        } else {
-          std::cout << "Missing tag at element number 0." << std::endl;
-        }
-        _rot.rotateN(out, in, noutput_items);
+
         // Tell runtime system how many output items we produced.
         return noutput_items;
     }

@@ -59,10 +59,24 @@ namespace gr {
     {
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];
-        _error = 0;
-        _error_last = 0;
+        //_error = 0;
+        //_error_last = 0;
         // Do <+signal processing+>
+
+        std::vector<tag_t> phi_tags;
+        get_tags_in_window(phi_tags, 0, 0, noutput_items, pmt::intern("phi"));
+
         for(int i = 0; i < noutput_items; i++) {
+
+          for(int j = 0; j < phi_tags.size(); j++) {
+             if(phi_tags[j].offset == (nitems_written(0) + i)) {
+               float phi = pmt::to_float(phi_tags[j].value);
+               _error = 0;
+               _error_last = 0;
+             }
+          }
+
+
           out[i] = in[i] * std::polar(1.0f, -1.0f * _error);
 
           float arg = std::arg(out[i]);

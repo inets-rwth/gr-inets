@@ -182,7 +182,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>-0.13</value>
+      <value>-0.09</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -698,7 +698,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(984, 376)</value>
+      <value>(752, 368)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -844,7 +844,7 @@
     </param>
     <param>
       <key>preamble</key>
-      <value>preamble</value>
+      <value>preamble[1:64]</value>
     </param>
   </block>
   <block>

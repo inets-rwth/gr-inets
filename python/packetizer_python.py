@@ -35,7 +35,7 @@ class packetizer_python(gr.basic_block):
     self.message_port_register_out(pmt.intern('out'))
     self.set_msg_handler(pmt.intern('in'), self.handle_message)
     #Max MTU size in bytes the PHY is able to handle
-    self.max_mtu_size = 500
+    self.max_mtu_size = 250
 
   def handle_message(self, msg_pmt):
     meta = pmt.to_python(pmt.car(msg_pmt))

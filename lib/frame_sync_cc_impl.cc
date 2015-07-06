@@ -143,17 +143,23 @@ namespace gr {
 				for(i = 0; i < noutput_items - _len_preamble; i++) {
 					trig_out[i] = 0;
 					sum = 0;
-					for(j = 0; j < _len_preamble / 2; j++) {
-					 //sum += std::conj(_preamble[j]) * in[i + j];
-					 sum += std::conj(in[i + j]) * in[i + j + (_len_preamble / 2)];   
+					for(j = 0; j < _len_preamble; j++) {
+					 sum += std::conj(_preamble[j]) * in[i + j];
+					 //sum += std::conj(in[i + j]) * in[i + j + (_len_preamble / 2)];   
           }
 					corr_out[i] = sum;
 					
 					if(_state == STATE_DETECT) {			
 
 						if(std::abs(sum) > _threshold) {
-							_state = STATE_PREAMBLE;
-						  //std::cout << "preamble detected. i = " << i << std::endl;
+							 //if(std::abs(corr_out[i]) < std::abs(corr_out[i-1])) {
+                  _state = STATE_PREAMBLE;
+						   //   i--;
+               //   consumed_items--;
+               //   produced_items--; 
+               //}
+
+               //std::cout << "preamble detected. i = " << i << std::endl;
             } else {
 							consumed_items++;
 							produced_items++;
@@ -187,7 +193,8 @@ namespace gr {
               //    _diff << " abs = " << std::abs(_diff) << " arg = " << std::arg(_diff) << std::endl;
 							//std::cout << "phase difference = " << _phi << std::endl;
 						  _d_f = calculate_fd(&in[i],&_preamble[0], _len_preamble / 2, _len_preamble);
-              std::cout << "calculated fd to fd = " << _d_f << std::endl;
+              _d_phi = std::arg(_preamble[_len_preamble - 1] / ((1.0f/std::abs(in[i + (_len_preamble - 1)])) * in[i + (_len_preamble - 1) ]));
+              //std::cout << "calculated fd to fd = " << _d_f << ", phi = " << _d_phi << std::endl;
             }
 
 						consumed_items++;
@@ -196,16 +203,16 @@ namespace gr {
 						
 						if(preamble_items_left == 0) {
 							//correct preamble
-              gr_complex* preamble_corr = new gr_complex[_len_preamble];
-              gr_complex d_phi = 0;
-              gr_complex d_phi_sum = 0;
-              for(int k = 0; k < _len_preamble; k++){
-                preamble_corr[k] = in[i + k - (_len_preamble - 1)] * std::polar(1.0f, (float)(k * _d_f * -2.0f * M_PI)); 
-                d_phi = _preamble[k] / preamble_corr[k];
-                d_phi = (1 / std::abs(d_phi)) * d_phi;
-                d_phi_sum += d_phi;
-              } 
-              _d_phi = std::arg(d_phi_sum / (float)_len_preamble);
+              //gr_complex* preamble_corr = new gr_complex[_len_preamble];
+              //gr_complex d_phi = 0;
+              //gr_complex d_phi_sum = 0;
+              //for(int k = 0; k < _len_preamble; k++){
+                //preamble_corr[k] = in[i + k - (_len_preamble - 1)] * std::polar(1.0f, (float)(k * _d_f * -2.0f * M_PI)); 
+                //d_phi = _preamble[k] / preamble_corr[k];
+                //d_phi = (1 / std::abs(d_phi)) * d_phi;
+                //d_phi_sum += d_phi;
+              //} 
+              //_d_phi = std::arg(d_phi_sum / (float)_len_preamble);
               _state = STATE_SET_TRIGGER;
 						  continue;
             }				
