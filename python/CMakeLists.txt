@@ -33,7 +33,7 @@ GR_PYTHON_INSTALL(
     __init__.py
     packetizer_python.py
     unmake_packet_python.py
-    DESTINATION ${GR_PYTHON_DIR}/inets
+    stop_and_wait_arq.py DESTINATION ${GR_PYTHON_DIR}/inets
 )
 
 ########################################################################
@@ -51,3 +51,4 @@ GR_ADD_TEST(qa_packetizer_python ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR
 GR_ADD_TEST(qa_unmake_packet_python ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_unmake_packet_python.py)
 GR_ADD_TEST(qa_variable_rotator ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_variable_rotator.py)
 GR_ADD_TEST(qa_baseband_derotation ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_baseband_derotation.py)
+GR_ADD_TEST(qa_stop_and_wait_arq ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_stop_and_wait_arq.py)
