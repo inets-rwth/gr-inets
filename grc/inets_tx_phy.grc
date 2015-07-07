@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='ASCII'?>
+<?xml version='1.0' encoding='utf-8'?>
 <?grc format='1' created='3.7.8'?>
 <flow_graph>
   <timestamp>Mon Jun 22 11:05:12 2015</timestamp>
@@ -406,7 +406,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(232, 363)</value>
+      <value>(256, 363)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -493,124 +493,6 @@
     </param>
   </block>
   <block>
-    <key>blocks_repack_bits_bb</key>
-    <param>
-      <key>k</key>
-      <value>8</value>
-    </param>
-    <param>
-      <key>l</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>endianness</key>
-      <value>gr.GR_LSB_FIRST</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(472, 355)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_repack_bits_bb_1_0</value>
-    </param>
-    <param>
-      <key>len_tag_key</key>
-      <value>""</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>align_output</key>
-      <value>False</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_repack_bits_bb</key>
-    <param>
-      <key>k</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>l</key>
-      <value>8</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>endianness</key>
-      <value>gr.GR_MSB_FIRST</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(656, 355)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_repack_bits_bb_1_0_0</value>
-    </param>
-    <param>
-      <key>len_tag_key</key>
-      <value>""</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>align_output</key>
-      <value>False</value>
-    </param>
-  </block>
-  <block>
     <key>blocks_stream_to_tagged_stream</key>
     <param>
       <key>alias</key>
@@ -654,7 +536,7 @@
     </param>
     <param>
       <key>packet_len</key>
-      <value>8</value>
+      <value>4</value>
     </param>
     <param>
       <key>type</key>
@@ -1239,7 +1121,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(40, 435)</value>
+      <value>(112, 435)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1263,7 +1145,7 @@
     </param>
     <param>
       <key>rev_pack</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>rev_unpack</key>
@@ -1555,9 +1437,9 @@
   </connection>
   <connection>
     <source_block_id>blocks_pdu_to_tagged_stream_0</source_block_id>
-    <sink_block_id>blocks_repack_bits_bb_1_0</sink_block_id>
+    <sink_block_id>blocks_tagged_stream_mux_0</sink_block_id>
     <source_key>0</source_key>
-    <sink_key>0</sink_key>
+    <sink_key>3</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_pdu_to_tagged_stream_0</source_block_id>
@@ -1570,18 +1452,6 @@
     <sink_block_id>blocks_tagged_stream_mux_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>2</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_repack_bits_bb_1_0</source_block_id>
-    <sink_block_id>blocks_repack_bits_bb_1_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_repack_bits_bb_1_0_0</source_block_id>
-    <sink_block_id>blocks_tagged_stream_mux_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>3</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_stream_to_tagged_stream_0_0</source_block_id>

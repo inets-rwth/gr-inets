@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='ASCII'?>
+<?xml version='1.0' encoding='utf-8'?>
 <?grc format='1' created='3.7.8'?>
 <flow_graph>
   <timestamp>Mon Jun 22 11:22:20 2015</timestamp>
@@ -741,7 +741,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(496, 187)</value>
+      <value>(488, 139)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -804,7 +804,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(448, 304)</value>
+      <value>(448, 352)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -844,7 +844,7 @@
     </param>
     <param>
       <key>preamble</key>
-      <value>preamble[1:64]</value>
+      <value>preamble[0:32]</value>
     </param>
   </block>
   <block>
@@ -4047,7 +4047,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(120, 467)</value>
+      <value>(120, 427)</value>
     </param>
     <param>
       <key>_rotation</key>
