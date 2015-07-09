@@ -143,8 +143,8 @@ namespace gr {
 				for(i = 0; i < noutput_items - _len_preamble; i++) {
 					trig_out[i] = 0;
 					sum = 0;
-					for(j = 0; j < _len_preamble; j++) {
-					 sum += std::conj(_preamble[j]) * in[i + j];
+					for(j = 1; j < _len_preamble; j++) {
+					 sum += std::conj(_preamble[j]) * in[i + j] * std::conj(in[i + j - 1]) * _preamble[j - 1];
 					 //sum += std::conj(in[i + j]) * in[i + j + (_len_preamble / 2)];   
           }
 					corr_out[i] = sum;
