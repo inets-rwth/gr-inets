@@ -19,9 +19,14 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+import string
 import numpy
 import time
+import Queue
 from gnuradio import gr
+import pmt
+from gnuradio import digital
+import threading
 
 class stop_and_wait_arq(gr.basic_block):
     """
@@ -30,6 +35,8 @@ class stop_and_wait_arq(gr.basic_block):
     STATE_WAIT_FOR_ACK = 0
     STATE_IDLE = 1
     PACKET_TYPE_DATA = 0
+    PACKET_TYPE_ACK = 1
+
     def __init__(self):
         gr.basic_block.__init__(self,
             name="stop_and_wait_arq",
@@ -41,87 +48,127 @@ class stop_and_wait_arq(gr.basic_block):
         self.message_port_register_out(pmt.intern('to_phy'))
         self.set_msg_handler(pmt.intern('from_app'), self.handle_app_message)
         self.set_msg_handler(pmt.intern('from_phy'), self.handle_phy_message)
-        self.app_queue = Queue() 
-        self.state = STATE_IDLE
+        self.app_queue = Queue.Queue() 
+        self.state = self.STATE_IDLE
+        self.last_tx_time = 0
+        self.last_tx_packet = 0
+        self.ack_timeout = 1.0 #in fractional seconds
+        self.max_mtu_size = 200
+        self.wait_for_frag = False
+        self.packet_buffer = []
+        self.last_frag_index = 0
+        self.tx_seq_num = 0
+        self.thread_lock = threading.Lock()        
 
     def handle_app_message(self, msg_pmt):
-        packets_str = self.fragment_packet(msg_pmt)
-        for packet_str in packets_str:
-          packet_str_total = chr(PACKET_TYPE_DATA) 
-          packet_str_total += packet_str 
-          packet_str_total = digital.crc.gen_and_append_crc32(packet_str_total)
-          packet_str_total = digital.packet_utils.whiten(packet_str_total, 0)
-          
-          send_pmt = pmt.make_u8vector(len(packet_str_total), ord(' '))
-          for i in range(len(packet_str_total)):
-            pmt.u8vector_set(send_pmt, i, ord(packet_str_total[i]))
-          
-          send_pmt = pmt.cons(pmt.PMT_NIL, send_pmt)
-          self.app_queue.put(send_pmt)
-          self.handle_queue()
+        #print 'app interrupt'
+        with self.thread_lock:
+          packets_str = self.fragment_packet(msg_pmt)
+          for packet_str in packets_str:
+            packet_str_total = chr(self.tx_seq_num)
+            
+            if self.tx_seq_num < 255:
+              self.tx_seq_num = self.tx_seq_num + 1
+            else:
+              self.tx_seq_num = 0
 
-    def handle_queue(self)
-        if self.state == STATE_IDLE:
+            packet_str_total += chr(self.PACKET_TYPE_DATA) 
+            packet_str_total += packet_str 
+            packet_str_total = digital.crc.gen_and_append_crc32(packet_str_total)
+            packet_str_total = digital.packet_utils.whiten(packet_str_total, 0)
+            
+            send_pmt = pmt.make_u8vector(len(packet_str_total), ord(' '))
+            for i in range(len(packet_str_total)):
+              pmt.u8vector_set(send_pmt, i, ord(packet_str_total[i]))
+            
+            send_pmt = pmt.cons(pmt.PMT_NIL, send_pmt)
+            self.app_queue.put(send_pmt)
+            self.handle_queue()
+
+    def handle_queue(self):
+        if self.state == self.STATE_IDLE:
           if self.app_queue.empty() == False:
+            print 'Sending packet. Queue fill level = ', self.app_queue.qsize()
             self.last_tx_packet = self.app_queue.get()
             self.last_tx_time = time.time()
-            self.state = STATE_WAIT_FOR_ACK
-            self.message_port_pub(pmt.intern('to_phy'), pmt.cons(pmt.PMT_NIL, self.last_tx_packet))
+            self.state = self.STATE_WAIT_FOR_ACK
+            
+            self.message_port_pub(pmt.intern('to_phy'), self.last_tx_packet)
                 
-        else if self.state == STATE_WAIT_FOR_ACK:
+        elif self.state == self.STATE_WAIT_FOR_ACK:
+          #print 'Not sending packet yet. ACK pending'
           if (time.time() - self.last_tx_time) > self.ack_timeout:
             #retransmit 
+            print 'ACK timeout. Retransmitting'
             self.last_tx_time = time.time()
-            self.message_port_pub(pmt.intern('to_phy'), pmt.cons(pmt.PMT_NIL, self.last_tx_packet))
+            self.message_port_pub(pmt.intern('to_phy'), self.last_tx_packet)
 
     def handle_phy_message(self, msg_pmt):        
-        meta = pmt.to_python(pmt.car(msg_pmt))
-        msg = pmt.cdr(msg_pmt)
-        msg_str = "".join([chr(x) for x in pmt.u8vector_elements(msg)])
-        packet_str = digital.packet_utils.dewhiten(msg_str, 0)
-        (ok, packet_str) = digital.crc.check_crc32(packet_str)
-        if not ok:
-          print '#######################################################'
-          print '################## ERROR: Bad CRC #####################'
-          print '#######################################################'
-          return
-        if ok:
-          packet_type_byte = ord(packet_str[0])
-          if packet_type_byte == PACKET_TYPE_DATA:
-            #send ACK packet
-            ack_pdu = generate_ack_packet_pdu()
-            self.message_port_pub(pmt.intern('to_phy'), ack_pdu)
-            #process fragment
+        with self.thread_lock:
+          print 'phy interrupt'
+          meta = pmt.to_python(pmt.car(msg_pmt))
+          msg = pmt.cdr(msg_pmt)
+          msg_str = "".join([chr(x) for x in pmt.u8vector_elements(msg)])
+          packet_str = digital.packet_utils.dewhiten(msg_str, 0)
+          (ok, packet_str) = digital.crc.check_crc32(packet_str)
+          if not ok:
+            print '#######################################################'
+            print '################## ERROR: Bad CRC #####################'
+            print '#######################################################'
+            return
+          if ok:
+            packet_rx_seq_byte = ord(packet_str[0])
             packet_str = packet_str[1:]
-            self.process_fragment(packet_str)
-          else if packet_type_byte == PACKET_TYPE_ACK:
-            #mark curr packet as transmitted
-            self.state = STATE_IDLE
-            self.handle_queue()
+            packet_type_byte = ord(packet_str[0])
+            packet_str = packet_str[1:]
+            print 'packet received. seq = ', packet_rx_seq_byte, ' type = ', packet_type_byte
+            if packet_type_byte == self.PACKET_TYPE_DATA:
+              #send ACK packet
+              print 'Sending ACK'
+              ack_pdu = self.generate_ack_packet_pdu(packet_rx_seq_byte)
+              self.message_port_pub(pmt.intern('to_phy'), ack_pdu)
+              #process fragment
+              self.process_fragment(packet_str)
+            elif packet_type_byte == self.PACKET_TYPE_ACK:
+              #mark curr packet as transmitted
+              self.state = self.STATE_IDLE
+              self.handle_queue()
     
-    def generate_ack_packet_pdu(self):
+    def generate_ack_packet_pdu(self, seq_num):
+        packet_str = chr(seq_num)
+        packet_str += chr(self.PACKET_TYPE_ACK) 
+        #add dummy data. Otherwise FEC will make problems
+        packet_str += 'aaa'
+        packet_str = digital.crc.gen_and_append_crc32(packet_str)
+        packet_str = digital.packet_utils.whiten(packet_str, 0)
+         
+        send_pmt = pmt.make_u8vector(len(packet_str), ord(' '))
         
+        for i in range(len(packet_str)):
+          pmt.u8vector_set(send_pmt, i, ord(packet_str[i]))
+        
+        return pmt.cons(pmt.PMT_NIL, send_pmt)
 
     def process_fragment(self, packet_str):
-        fckerag_byte = ord(packet_str[1])  
+        frag_byte = ord(packet_str[0])  
         frag_index = frag_byte >> 2
         if frag_byte & 0x01 == 1 :
           self.last_frag_index = frag_index
           if frag_byte & 0x02 == 0 :
             self.wait_for_frag = True
-            self.packet_buffer += packet[1:] 
+            self.packet_buffer += packet_str[1:] 
             return
           else:
             self.wait_for_frag = False
-            self.packet_buffer += packet[1:]
-            packet = self.packet_buffer
+            self.packet_buffer += packet_str[1:]
+            packet_str = self.packet_buffer
             self.packet_buffer = ''
         else:
           packet_str = packet_str[1:]
           self.wait_for_frag = False
         if not self.wait_for_frag:
           send_pmt = pmt.make_u8vector(len(packet_str), ord(' '))
-          for i in range(len(packet)):
+          for i in range(len(packet_str)):
             pmt.u8vector_set(send_pmt, i, ord(packet_str[i]))
           self.message_port_pub(pmt.intern('to_app'), pmt.cons(pmt.PMT_NIL, send_pmt))
       
