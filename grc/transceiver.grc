@@ -171,7 +171,54 @@
     </param>
     <param>
       <key>value</key>
-      <value>(-1,1,-1,-1,-1,-1,-1,1,1,1,1,-1,1,1,-1,-1,1,1,-1,1,-1,-1,1,-1,1,1,1,-1,1,-1,-1,-1,1,1,1,1,1,-1,1,-1,1,-1,-1,-1,-1,1,-1,1,1,1,1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,1,-1)</value>
+      <value>(-1,1,-1,-1,-1,-1,-1,1,1,1,1,-1,1,1,-1,-1,1,1,-1,1,-1,-1,1,-1,1,1,1,-1,1,-1,-1,-1,1,1,1,1,1,-1,1,-1,1,-1,-1,-1,-1,1,-1,1,1,1,1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,1,-1)[0:32]</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_constellation</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>const_points</key>
+      <value>[1+0j, -1+0j, 0-1j, 0+1j]</value>
+    </param>
+    <param>
+      <key>dims</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(832, 139)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>qpsk_const</value>
+    </param>
+    <param>
+      <key>rot_sym</key>
+      <value>4</value>
+    </param>
+    <param>
+      <key>soft_dec_lut</key>
+      <value>None</value>
+    </param>
+    <param>
+      <key>precision</key>
+      <value>8</value>
+    </param>
+    <param>
+      <key>sym_map</key>
+      <value>[0, 1, 2, 3]</value>
     </param>
   </block>
   <block>
@@ -547,7 +594,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>500e3</value>
+      <value>1e6</value>
     </param>
   </block>
   <block>
@@ -651,7 +698,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(576, 576)</value>
+      <value>(648, 608)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -698,7 +745,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 368)</value>
+      <value>(800, 280)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -722,7 +769,7 @@
     </param>
   </block>
   <block>
-    <key>blocks_null_sink</key>
+    <key>blocks_null_source</key>
     <param>
       <key>alias</key>
       <value></value>
@@ -741,11 +788,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 328)</value>
+      <value>(240, 360)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -753,15 +800,23 @@
     </param>
     <param>
       <key>id</key>
-      <value>blocks_null_sink_0_0</value>
+      <value>blocks_null_source_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>num_outputs</key>
+      <value>1</value>
     </param>
     <param>
       <key>type</key>
       <value>complex</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
     </param>
     <param>
       <key>vlen</key>
@@ -788,7 +843,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(504, 155)</value>
+      <value>(504, 147)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -828,6 +883,37 @@
     </param>
   </block>
   <block>
+    <key>import</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(720, 176)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>import_0</value>
+    </param>
+    <param>
+      <key>import</key>
+      <value>import gnuradio.digital</value>
+    </param>
+  </block>
+  <block>
     <key>inets_radio</key>
     <param>
       <key>alias</key>
@@ -839,7 +925,7 @@
     </param>
     <param>
       <key>constellation</key>
-      <value>bpsk_const</value>
+      <value>qpsk_const</value>
     </param>
     <param>
       <key>affinity</key>
@@ -914,7 +1000,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(488, 264)</value>
+      <value>(496, 264)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -949,7 +1035,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(256, 139)</value>
+      <value>(8, 347)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -984,15 +1070,15 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 275)</value>
+      <value>(840, 283)</value>
     </param>
     <param>
       <key>gui_hint</key>
-      <value>tab@1</value>
+      <value></value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1252,7 +1338,7 @@
     </param>
     <param>
       <key>name</key>
-      <value>"Payload"</value>
+      <value>""</value>
     </param>
     <param>
       <key>nconnections</key>
@@ -1339,11 +1425,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(760, 547)</value>
+      <value>(840, 579)</value>
     </param>
     <param>
       <key>gui_hint</key>
-      <value>tab@1</value>
+      <value>tab@0</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1698,7 +1784,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 179)</value>
+      <value>(840, 355)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -2800,7 +2886,7 @@
     </param>
     <param>
       <key>dev_addr</key>
-      <value>"addr=192.168.10.2"</value>
+      <value>"addr=192.168.10.3"</value>
     </param>
     <param>
       <key>dev_args</key>
@@ -2808,11 +2894,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 411)</value>
+      <value>(840, 459)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2836,7 +2922,7 @@
     </param>
     <param>
       <key>sd_spec0</key>
-      <value>"A:0"</value>
+      <value></value>
     </param>
     <param>
       <key>time_source0</key>
@@ -3615,7 +3701,7 @@
     </param>
     <param>
       <key>dev_addr</key>
-      <value>"addr=192.168.10.2"</value>
+      <value>"addr=192.168.10.3"</value>
     </param>
     <param>
       <key>dev_args</key>
@@ -3623,11 +3709,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(208, 395)</value>
+      <value>(152, 403)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3647,7 +3733,7 @@
     </param>
     <param>
       <key>sd_spec0</key>
-      <value>"B:0"</value>
+      <value></value>
     </param>
     <param>
       <key>time_source0</key>
@@ -3781,6 +3867,12 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>blocks_null_source_0</source_block_id>
+    <sink_block_id>inets_radio_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>blocks_socket_pdu_0</source_block_id>
     <sink_block_id>inets_stop_and_wait_arq_0</sink_block_id>
     <source_key>pdus</source_key>
@@ -3790,12 +3882,6 @@
     <source_block_id>inets_radio_0</source_block_id>
     <sink_block_id>blocks_complex_to_mag_0</sink_block_id>
     <source_key>3</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>inets_radio_0</source_block_id>
-    <sink_block_id>blocks_null_sink_0_0</sink_block_id>
-    <source_key>1</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
