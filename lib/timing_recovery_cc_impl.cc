@@ -73,7 +73,7 @@ namespace gr {
 				opt_delay = j;
 			}
 		}
-		std::cout << "opt delay = " << opt_delay << std::endl;
+//		std::cout << "opt delay = " << opt_delay << std::endl;
 		int index = 0;
 		for(j = opt_delay;j < (noutput_items * _sps) - _sps; j += _sps) {
 			out[index++] = in[j];
