@@ -265,7 +265,7 @@
     </param>
     <param>
       <key>num_samps</key>
-      <value>128</value>
+      <value>64</value>
     </param>
     <param>
       <key>type</key>
@@ -536,7 +536,7 @@
     </param>
     <param>
       <key>packet_len</key>
-      <value>8</value>
+      <value>16</value>
     </param>
     <param>
       <key>type</key>
@@ -591,7 +591,7 @@
     </param>
     <param>
       <key>packet_len</key>
-      <value>256</value>
+      <value>64</value>
     </param>
     <param>
       <key>type</key>
@@ -693,7 +693,7 @@
     </param>
     <param>
       <key>c</key>
-      <value>8*sps</value>
+      <value>4*sps</value>
     </param>
     <param>
       <key>lengthtagname</key>
@@ -775,7 +775,7 @@
     <key>blocks_unpacked_to_packed_xx</key>
     <param>
       <key>bits_per_chunk</key>
-      <value>1</value>
+      <value>2</value>
     </param>
     <param>
       <key>alias</key>
@@ -882,7 +882,7 @@
     </param>
     <param>
       <key>vector</key>
-      <value>(1,-0,1,1,1,1,1,-0,-0,-0,-0,1,-0,-0,1,1,-0,-0,1,-0,1,1,-0,1,-0,-0,-0,1,-0,1,1,1,-0,-0,-0,-0,-0,1,-0,1,-0,1,1,1,1,-0,1,-0,-0,-0,-0,1,1,1,-0,-0,1,1,1,1,1,-0,-0,1)</value>
+      <value>(3,0,3,3,3,3,3,0,0,0,0,3,0,0,3,3,0,0,3,0,3,3,0,3,0,0,0,3,0,3,3,3,0,0,0,0,0,3,0,3,0,3,3,3,3,0,3,0,0,0,0,3,3,3,0,0,3,3,3,3,3,0,0,3)</value>
     </param>
   </block>
   <block>
@@ -929,6 +929,69 @@
     </param>
   </block>
   <block>
+    <key>digital_burst_shaper_xx</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(968, 523)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>digital_burst_shaper_xx_0</value>
+    </param>
+    <param>
+      <key>insert_phasing</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>length_tag_name</key>
+      <value>"packet_len"</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>post_padding</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>pre_padding</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>window</key>
+      <value>gnuradio.fft.window.hanning(256)</value>
+    </param>
+  </block>
+  <block>
     <key>digital_constellation_modulator</key>
     <param>
       <key>alias</key>
@@ -956,7 +1019,7 @@
     </param>
     <param>
       <key>excess_bw</key>
-      <value>0.35</value>
+      <value>0.5</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1094,6 +1157,37 @@
     </param>
   </block>
   <block>
+    <key>import</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(992, 475)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>import_0</value>
+    </param>
+    <param>
+      <key>import</key>
+      <value>import gnuradio</value>
+    </param>
+  </block>
+  <block>
     <key>virtual_sink</key>
     <param>
       <key>comment</key>
@@ -1159,7 +1253,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(984, 555)</value>
+      <value>(1208, 555)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1316,7 +1410,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>0</value>
+      <value>4</value>
     </param>
   </block>
   <connection>
@@ -1333,7 +1427,7 @@
   </connection>
   <connection>
     <source_block_id>blocks_multiply_const_vxx_0</source_block_id>
-    <sink_block_id>pad_sink_0</sink_block_id>
+    <sink_block_id>digital_burst_shaper_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1394,6 +1488,12 @@
   <connection>
     <source_block_id>blocks_vector_source_x_0_0_1_0_0</source_block_id>
     <sink_block_id>blocks_unpacked_to_packed_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_burst_shaper_xx_0</source_block_id>
+    <sink_block_id>pad_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
