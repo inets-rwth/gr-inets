@@ -65,7 +65,6 @@ namespace gr {
 
         std::vector<tag_t> phi_tags;
         get_tags_in_window(phi_tags, 0, 0, noutput_items, pmt::intern("phi"));
-
         for(int i = 0; i < noutput_items; i++) {
 
           for(int j = 0; j < phi_tags.size(); j++) {
@@ -81,17 +80,38 @@ namespace gr {
 
           float arg = std::arg(out[i]);
           float error = 0;
-          if(arg > M_PI / 2 || arg < -M_PI / 2) {
-              if(arg < 0) {
-                error = arg + 2 * M_PI;
-              } else {
-                error = arg - 2 * M_PI;
-              }
-          } else {
-            error = arg;
-          } 
+           
+          if(_constellation->points().size() == 2) {
+            if(arg > M_PI / 2.0f || arg < -M_PI / 2.0f) {
+                if(arg < 0) {
+                  error = arg + M_PI;
+                } else {
+                  error = arg - M_PI;
+                }
+            } else {
+              error = arg;
+            } 
+          }
 
-          _error = _error_last - _mu * error;
+          if(_constellation->points().size() == 4) {
+            if(arg >= 0 && arg < (M_PI / 2.0f)) {
+              error = arg - (M_PI / 4.0f); 
+            }
+            if(arg >= (M_PI / 2.0f)) {
+              error = arg - ((3.0f * M_PI) / 4.0f);
+            }
+            if(arg <= (-M_PI / 2.0f)) {
+              error = ((3.0f * M_PI) / 4.0f) + arg;
+            }
+            if(arg < 0 && arg > (-M_PI/2.0f)) {
+              error = (M_PI/4.0f) + arg;
+            }
+          }
+
+          //std::cout << "curr error = " << error << std::endl;
+          _error = _error_last + _mu * error;
+          //std::cout << "error = " << _error << std::endl;
+        
           _error_last = _error; 
         }
         // Tell runtime system how many output items we produced.

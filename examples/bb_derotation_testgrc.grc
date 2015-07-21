@@ -85,6 +85,96 @@
     </param>
     <param>
       <key>_coordinate</key>
+      <value>(408, 11)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>mu</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>range_mu</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_range</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0.3</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(288, 11)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>range_mu</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Mu</value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>0.001</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>rangeType</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>counter_slider</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
       <value>(8, 75)</value>
     </param>
     <param>
@@ -329,7 +419,7 @@
     </param>
     <param>
       <key>taps</key>
-      <value>1.0 + 1.0j</value>
+      <value>1.0</value>
     </param>
   </block>
   <block>
@@ -352,11 +442,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(496, 243)</value>
+      <value>(496, 179)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -392,6 +482,65 @@
     </param>
   </block>
   <block>
+    <key>digital_chunks_to_symbols_xx</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>dimension</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(496, 243)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>digital_chunks_to_symbols_xx_0_0</value>
+    </param>
+    <param>
+      <key>in_type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>num_ports</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>out_type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>symbol_table</key>
+      <value>[0.7+0j, -0.7+0j]</value>
+    </param>
+  </block>
+  <block>
     <key>import</key>
     <param>
       <key>alias</key>
@@ -407,7 +556,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(168, 11)</value>
+      <value>(176, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -466,7 +615,7 @@
     </param>
     <param>
       <key>mu</key>
-      <value>0.03</value>
+      <value>mu</value>
     </param>
   </block>
   <block>
@@ -757,7 +906,7 @@
     </param>
     <param>
       <key>name</key>
-      <value>""</value>
+      <value>"Input"</value>
     </param>
     <param>
       <key>nconnections</key>
@@ -836,7 +985,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(744, 491)</value>
+      <value>(744, 483)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1100,7 +1249,7 @@
     </param>
     <param>
       <key>name</key>
-      <value>""</value>
+      <value>"BB Derot"</value>
     </param>
     <param>
       <key>nconnections</key>
@@ -1168,6 +1317,12 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>blocks_packed_to_unpacked_xx_0</source_block_id>
+    <sink_block_id>digital_chunks_to_symbols_xx_0_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>blocks_throttle_0</source_block_id>
     <sink_block_id>inets_baseband_derotation_0</sink_block_id>
     <source_key>0</source_key>
@@ -1187,6 +1342,12 @@
   </connection>
   <connection>
     <source_block_id>digital_chunks_to_symbols_xx_0</source_block_id>
+    <sink_block_id>channels_channel_model_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_chunks_to_symbols_xx_0_0</source_block_id>
     <sink_block_id>channels_channel_model_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
