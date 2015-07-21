@@ -32,8 +32,9 @@ namespace gr {
       float _mu;
       float _error;
       float _error_last;
+      gr::digital::constellation_sptr _constellation;
      public:
-      baseband_derotation_impl(float mu);
+      baseband_derotation_impl(float mu, gr::digital::constellation_sptr con);
       ~baseband_derotation_impl();
 
       void set_mu(float mu){ _mu = mu; };

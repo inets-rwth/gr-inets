@@ -1,13 +1,13 @@
 /* -*- c++ -*- */
 
 #define INETS_API
-
+#define DIGITAL_API
 %include "gnuradio.i"			// the common stuff
-
 //load generated python docstrings
 %include "inets_swig_doc.i"
 
 %{
+#include "gnuradio/digital/constellation.h"
 #include "inets/simple_framer_cc.h"
 #include "inets/simple_framer_bb.h"
 #include "inets/frame_sync_cc.h"
@@ -16,6 +16,7 @@
 #include "inets/variable_rotator.h"
 #include "inets/baseband_derotation.h"
 %}
+%include "gnuradio/digital/constellation.h"
 
 
 %include "inets/simple_framer_cc.h"

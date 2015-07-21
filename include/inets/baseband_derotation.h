@@ -24,10 +24,10 @@
 
 #include <inets/api.h>
 #include <gnuradio/sync_block.h>
+#include <gnuradio/digital/constellation.h>
 
 namespace gr {
   namespace inets {
-
     /*!
      * \brief <+description of block+>
      * \ingroup inets
@@ -46,7 +46,7 @@ namespace gr {
        * class. inets::baseband_derotation::make is the public interface for
        * creating new instances.
        */
-      static sptr make(float mu);
+      static sptr make(float mu, gr::digital::constellation_sptr con);
       virtual void set_mu(float mu) = 0;
       virtual float mu() const = 0;
 

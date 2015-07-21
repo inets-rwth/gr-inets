@@ -29,20 +29,20 @@ namespace gr {
   namespace inets {
 
     baseband_derotation::sptr
-    baseband_derotation::make(float mu)
+    baseband_derotation::make(float mu, gr::digital::constellation_sptr con)
     {
       return gnuradio::get_initial_sptr
-        (new baseband_derotation_impl(mu));
+        (new baseband_derotation_impl(mu, con));
     }
 
     /*
      * The private constructor
      */
-    baseband_derotation_impl::baseband_derotation_impl(float mu)
+    baseband_derotation_impl::baseband_derotation_impl(float mu, gr::digital::constellation_sptr con)
       : gr::sync_block("baseband_derotation",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(gr_complex))),
-      _error(0), _error_last(0), _mu(mu)
+      _error(0), _error_last(0), _mu(mu), _constellation(con)
     {}
 
     /*
