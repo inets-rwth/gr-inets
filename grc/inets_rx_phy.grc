@@ -241,7 +241,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -304,7 +304,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1216, 355)</value>
+      <value>(1224, 355)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -391,6 +391,124 @@
     </param>
   </block>
   <block>
+    <key>blocks_repack_bits_bb</key>
+    <param>
+      <key>k</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>l</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>endianness</key>
+      <value>gr.GR_MSB_FIRST</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(960, 211)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_repack_bits_bb_1_0</value>
+    </param>
+    <param>
+      <key>len_tag_key</key>
+      <value></value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>align_output</key>
+      <value>False</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_repack_bits_bb</key>
+    <param>
+      <key>k</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>l</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>endianness</key>
+      <value>gr.GR_MSB_FIRST</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(952, 451)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_repack_bits_bb_1_0_0</value>
+    </param>
+    <param>
+      <key>len_tag_key</key>
+      <value>"packet_len"</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>align_output</key>
+      <value>False</value>
+    </param>
+  </block>
+  <block>
     <key>blocks_tagged_stream_to_pdu</key>
     <param>
       <key>alias</key>
@@ -406,7 +524,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -500,11 +618,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(848, 291)</value>
+      <value>(840, 291)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -543,7 +661,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -598,7 +716,7 @@
     </param>
     <param>
       <key>header_len</key>
-      <value>32</value>
+      <value>16</value>
     </param>
     <param>
       <key>id</key>
@@ -661,7 +779,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -704,7 +822,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>header_formatter</key>
@@ -771,7 +889,7 @@
     </param>
     <param>
       <key>loop_bw</key>
-      <value>0.06</value>
+      <value>0.1</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -779,7 +897,7 @@
     </param>
     <param>
       <key>max_dev</key>
-      <value>0.1</value>
+      <value>1.5</value>
     </param>
     <param>
       <key>minoutbuf</key>
@@ -795,7 +913,7 @@
     </param>
     <param>
       <key>taps</key>
-      <value>gnuradio.filter.firdes.root_raised_cosine(32,32*sps,1,0.5,32*44)</value>
+      <value>gnuradio.filter.firdes.root_raised_cosine(32,32*sps,1,0.5,32*22)</value>
     </param>
     <param>
       <key>type</key>
@@ -822,7 +940,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -950,6 +1068,10 @@
       <value></value>
     </param>
     <param>
+      <key>con</key>
+      <value>constellation</value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -959,7 +1081,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(400, 315)</value>
+      <value>(400, 307)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1213,7 +1335,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1260,7 +1382,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 259)</value>
+      <value>(952, 139)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1346,7 +1468,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 163)</value>
+      <value>(952, 91)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1546,7 +1668,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>4</value>
+      <value>2</value>
     </param>
   </block>
   <block>
@@ -1611,6 +1733,18 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>blocks_repack_bits_bb_1_0</source_block_id>
+    <sink_block_id>digital_packet_headerparser_b_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_repack_bits_bb_1_0_0</source_block_id>
+    <sink_block_id>blocks_repack_bits_bb_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>blocks_tagged_stream_to_pdu_1</source_block_id>
     <sink_block_id>fec_async_decoder_0_0</sink_block_id>
     <source_key>pdus</source_key>
@@ -1618,19 +1752,31 @@
   </connection>
   <connection>
     <source_block_id>digital_constellation_decoder_cb_0</source_block_id>
-    <sink_block_id>digital_packet_headerparser_b_0</sink_block_id>
+    <sink_block_id>blocks_repack_bits_bb_1_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>digital_constellation_decoder_cb_0_0</source_block_id>
-    <sink_block_id>blocks_repack_bits_bb_1</sink_block_id>
+    <sink_block_id>blocks_repack_bits_bb_1_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>digital_header_payload_demux_0</source_block_id>
     <sink_block_id>digital_constellation_decoder_cb_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_header_payload_demux_0</source_block_id>
+    <sink_block_id>pad_sink_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_header_payload_demux_0</source_block_id>
+    <sink_block_id>pad_sink_2</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1659,12 +1805,6 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>digital_pfb_clock_sync_xxx_0</source_block_id>
-    <sink_block_id>pad_sink_2</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>fec_async_decoder_0_0</source_block_id>
     <sink_block_id>pad_sink_0</sink_block_id>
     <source_key>out</source_key>
@@ -1679,12 +1819,6 @@
   <connection>
     <source_block_id>inets_baseband_derotation_0</source_block_id>
     <sink_block_id>digital_header_payload_demux_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>inets_baseband_derotation_0</source_block_id>
-    <sink_block_id>pad_sink_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1709,12 +1843,6 @@
   <connection>
     <source_block_id>inets_timing_recovery_cc_0</source_block_id>
     <sink_block_id>inets_frame_sync_cc_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>inets_timing_recovery_cc_0</source_block_id>
-    <sink_block_id>pad_sink_2</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
