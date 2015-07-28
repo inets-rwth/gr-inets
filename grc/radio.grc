@@ -528,7 +528,50 @@
     </param>
     <param>
       <key>optional</key>
-      <value>False</value>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>pad_sink</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(704, 443)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>pad_sink_1_0_1</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Trigger</value>
+    </param>
+    <param>
+      <key>num_streams</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>optional</key>
+      <value>True</value>
     </param>
     <param>
       <key>vlen</key>
@@ -797,6 +840,12 @@
     <source_block_id>inets_rx_phy_1</source_block_id>
     <sink_block_id>pad_sink_1_0</sink_block_id>
     <source_key>2</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_rx_phy_1</source_block_id>
+    <sink_block_id>pad_sink_1_0_1</sink_block_id>
+    <source_key>3</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>

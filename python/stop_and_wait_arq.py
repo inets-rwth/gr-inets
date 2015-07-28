@@ -37,11 +37,12 @@ class stop_and_wait_arq(gr.basic_block):
     PACKET_TYPE_DATA = 0
     PACKET_TYPE_ACK = 1
 
-    def __init__(self):
+    def __init__(self, ack_timeout, max_mtu_size, use_ack):
         gr.basic_block.__init__(self,
             name="stop_and_wait_arq",
             in_sig=[],
             out_sig=[])
+	
         self.message_port_register_in(pmt.intern('from_app'))
         self.message_port_register_out(pmt.intern('to_app'))
         self.message_port_register_in(pmt.intern('from_phy'))
@@ -52,8 +53,9 @@ class stop_and_wait_arq(gr.basic_block):
         self.state = self.STATE_IDLE
         self.last_tx_time = 0
         self.last_tx_packet = 0
-        self.ack_timeout = 1.0 #in fractional seconds
-        self.max_mtu_size = 200
+        self.ack_timeout = ack_timeout #in fractional seconds
+        self.max_mtu_size = max_mtu_size
+	self.use_ack = use_ack
         self.wait_for_frag = False
         self.packet_buffer = []
         self.last_frag_index = 0
@@ -91,7 +93,9 @@ class stop_and_wait_arq(gr.basic_block):
             print 'Sending packet. Queue fill level = ', self.app_queue.qsize()
             self.last_tx_packet = self.app_queue.get()
             self.last_tx_time = time.time()
-            self.state = self.STATE_WAIT_FOR_ACK
+            
+            if self.use_ack:
+	      self.state = self.STATE_WAIT_FOR_ACK
             
             self.message_port_pub(pmt.intern('to_phy'), self.last_tx_packet)
                 
@@ -123,11 +127,13 @@ class stop_and_wait_arq(gr.basic_block):
             packet_str = packet_str[1:]
             print 'packet received. seq = ', packet_rx_seq_byte, ' type = ', packet_type_byte
             if packet_type_byte == self.PACKET_TYPE_DATA:
-              #send ACK packet
-              print 'Sending ACK'
-              ack_pdu = self.generate_ack_packet_pdu(packet_rx_seq_byte)
-              self.message_port_pub(pmt.intern('to_phy'), ack_pdu)
-              #process fragment
+              if self.use_ack:
+	      	#send ACK packet
+              	print 'Sending ACK'
+              	ack_pdu = self.generate_ack_packet_pdu(packet_rx_seq_byte)
+              	self.message_port_pub(pmt.intern('to_phy'), ack_pdu)
+              
+	      #process fragment
               self.process_fragment(packet_str)
             elif packet_type_byte == self.PACKET_TYPE_ACK:
               #mark curr packet as transmitted

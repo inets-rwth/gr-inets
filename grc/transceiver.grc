@@ -547,7 +547,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1.5e6</value>
+      <value>1e6</value>
     </param>
   </block>
   <block>
@@ -601,7 +601,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>30</value>
+      <value>25</value>
     </param>
   </block>
   <block>
@@ -632,7 +632,7 @@
     </param>
   </block>
   <block>
-    <key>blocks_complex_to_mag</key>
+    <key>blocks_char_to_float</key>
     <param>
       <key>alias</key>
       <value></value>
@@ -651,7 +651,54 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(784, 640)</value>
+      <value>(728, 667)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_char_to_float_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>scale</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_complex_to_mag</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(792, 552)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -660,6 +707,49 @@
     <param>
       <key>id</key>
       <value>blocks_complex_to_mag_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_complex_to_mag</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(768, 616)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_complex_to_mag_0_0</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -733,7 +823,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -761,7 +851,7 @@
     </param>
     <param>
       <key>period</key>
-      <value>100</value>
+      <value>1000</value>
     </param>
   </block>
   <block>
@@ -784,11 +874,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(272, 192)</value>
+      <value>(272, 227)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -804,7 +894,7 @@
     </param>
     <param>
       <key>maxsize</key>
-      <value>200</value>
+      <value>600</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -812,7 +902,7 @@
     </param>
     <param>
       <key>minsize</key>
-      <value>200</value>
+      <value>600</value>
     </param>
     <param>
       <key>minoutbuf</key>
@@ -1010,6 +1100,10 @@
   <block>
     <key>inets_stop_and_wait_arq</key>
     <param>
+      <key>ack_timeout</key>
+      <value>0.1</value>
+    </param>
+    <param>
       <key>alias</key>
       <value></value>
     </param>
@@ -1027,7 +1121,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(504, 232)</value>
+      <value>(504, 251)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1038,12 +1132,20 @@
       <value>inets_stop_and_wait_arq_0</value>
     </param>
     <param>
+      <key>max_mtu</key>
+      <value>500</value>
+    </param>
+    <param>
       <key>maxoutbuf</key>
       <value>0</value>
     </param>
     <param>
       <key>minoutbuf</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>use_ack</key>
+      <value>False</value>
     </param>
   </block>
   <block>
@@ -1448,7 +1550,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1720,7 +1822,7 @@
     </param>
     <param>
       <key>nconnections</key>
-      <value>1</value>
+      <value>3</value>
     </param>
     <param>
       <key>size</key>
@@ -2103,7 +2205,7 @@
     </param>
     <param>
       <key>tr_mode</key>
-      <value>qtgui.TRIG_MODE_FREE</value>
+      <value>qtgui.TRIG_MODE_TAG</value>
     </param>
     <param>
       <key>tr_slope</key>
@@ -2111,7 +2213,7 @@
     </param>
     <param>
       <key>tr_tag</key>
-      <value>""</value>
+      <value>"fd"</value>
     </param>
     <param>
       <key>type</key>
@@ -2170,7 +2272,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(784, 131)</value>
+      <value>(784, 203)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -3631,7 +3733,7 @@
     </param>
     <param>
       <key>dev_addr</key>
-      <value>"addr=192.168.10.3"</value>
+      <value>"addr=192.168.10.2"</value>
     </param>
     <param>
       <key>dev_args</key>
@@ -3643,7 +3745,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(784, 235)</value>
+      <value>(952, 267)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4446,7 +4548,7 @@
     </param>
     <param>
       <key>dev_addr</key>
-      <value>"addr=192.168.10.3"</value>
+      <value>"addr=192.168.10.2"</value>
     </param>
     <param>
       <key>dev_args</key>
@@ -4458,7 +4560,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(192, 403)</value>
+      <value>(192, 419)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4606,10 +4708,22 @@
     </param>
   </block>
   <connection>
+    <source_block_id>blocks_char_to_float_0</source_block_id>
+    <sink_block_id>qtgui_time_sink_x_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>2</sink_key>
+  </connection>
+  <connection>
     <source_block_id>blocks_complex_to_mag_0</source_block_id>
     <sink_block_id>qtgui_time_sink_x_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_complex_to_mag_0_0</source_block_id>
+    <sink_block_id>qtgui_time_sink_x_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_complex_to_mag_squared_0</source_block_id>
@@ -4651,6 +4765,18 @@
     <source_block_id>inets_radio_0</source_block_id>
     <sink_block_id>qtgui_time_sink_x_1</sink_block_id>
     <source_key>1</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_radio_0</source_block_id>
+    <sink_block_id>blocks_complex_to_mag_0_0</sink_block_id>
+    <source_key>2</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_radio_0</source_block_id>
+    <sink_block_id>blocks_char_to_float_0</sink_block_id>
+    <source_key>4</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>

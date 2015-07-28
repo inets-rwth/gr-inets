@@ -4,7 +4,22 @@
   <key>inets_stop_and_wait_arq</key>
   <category>inets</category>
   <import>import inets</import>
-  <make>inets.stop_and_wait_arq()</make>
+  <make>inets.stop_and_wait_arq($ack_timeout, $max_mtu, $use_ack)</make>
+  <param>
+    <name>Use ACK</name>
+    <key>use_ack</key>
+    <type>bool</type>
+  </param>
+  <param>
+    <name>ACK Timeout</name>
+    <key>ack_timeout</key>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Max MTU Size</name>
+    <key>max_mtu</key>
+    <type>int</type>
+  </param>
   <!-- Make one 'sink' node per input. Sub-nodes:
        * name (an identifier for the GUI)
        * type

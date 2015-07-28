@@ -245,7 +245,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(456, 811)</value>
+      <value>(600, 811)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -304,7 +304,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1064, 643)</value>
+      <value>(1040, 651)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -316,7 +316,7 @@
     </param>
     <param>
       <key>len_tag_key</key>
-      <value>"packet_len"</value>
+      <value></value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -363,7 +363,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(872, 643)</value>
+      <value>(848, 651)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -375,7 +375,7 @@
     </param>
     <param>
       <key>len_tag_key</key>
-      <value>"packet_len"</value>
+      <value></value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -481,7 +481,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(672, 643)</value>
+      <value>(656, 651)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -509,6 +509,57 @@
     </param>
   </block>
   <block>
+    <key>blocks_tag_gate</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(144, 480)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_tag_gate_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>propagate_tags</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
     <key>blocks_tagged_stream_to_pdu</key>
     <param>
       <key>alias</key>
@@ -528,7 +579,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 811)</value>
+      <value>(744, 811)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -665,7 +716,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(464, 651)</value>
+      <value>(464, 659)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -760,7 +811,7 @@
     </param>
     <param>
       <key>trigger_tag_key</key>
-      <value></value>
+      <value>""</value>
     </param>
   </block>
   <block>
@@ -783,7 +834,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(456, 731)</value>
+      <value>(472, 811)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -885,7 +936,7 @@
     </param>
     <param>
       <key>init_phase</key>
-      <value>0</value>
+      <value>0.1</value>
     </param>
     <param>
       <key>loop_bw</key>
@@ -944,7 +995,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(824, 811)</value>
+      <value>(968, 811)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -969,6 +1020,61 @@
     <param>
       <key>rev_pack</key>
       <value>True</value>
+    </param>
+  </block>
+  <block>
+    <key>fir_filter_xxx</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(144, 203)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>fir_filter_xxx_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>samp_delay</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>gnuradio.filter.firdes.root_raised_cosine(1,sps,1,0.8,sps*11)</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ccc</value>
     </param>
   </block>
   <block>
@@ -1098,6 +1204,49 @@
     <param>
       <key>threshold</key>
       <value>threshold</value>
+    </param>
+  </block>
+  <block>
+    <key>inets_timing_recovery_cc</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(352, 211)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>inets_timing_recovery_cc_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>sps</key>
+      <value>sps</value>
     </param>
   </block>
   <block>
@@ -1241,7 +1390,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1056, 811)</value>
+      <value>(1200, 811)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1351,7 +1500,7 @@
     </param>
     <param>
       <key>optional</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>vlen</key>
@@ -1370,7 +1519,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(448, 259)</value>
+      <value>(696, 275)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1395,6 +1544,49 @@
     <param>
       <key>optional</key>
       <value>False</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>pad_sink</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(696, 475)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>pad_sink_2_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Trigger</value>
+    </param>
+    <param>
+      <key>num_streams</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>optional</key>
+      <value>True</value>
     </param>
     <param>
       <key>vlen</key>
@@ -1655,7 +1847,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(680, 427)</value>
+      <value>(696, 427)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1755,6 +1947,12 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>blocks_tag_gate_0</source_block_id>
+    <sink_block_id>digital_header_payload_demux_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>blocks_tagged_stream_to_pdu_1</source_block_id>
     <sink_block_id>fec_async_decoder_0_0</sink_block_id>
     <source_key>pdus</source_key>
@@ -1809,15 +2007,15 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>digital_pfb_clock_sync_xxx_0</source_block_id>
-    <sink_block_id>pad_sink_2</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>fec_async_decoder_0_0</source_block_id>
     <sink_block_id>pad_sink_0</sink_block_id>
     <source_key>out</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fir_filter_xxx_0</source_block_id>
+    <sink_block_id>inets_timing_recovery_cc_0</sink_block_id>
+    <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
@@ -1834,14 +2032,32 @@
   </connection>
   <connection>
     <source_block_id>inets_frame_sync_cc_0</source_block_id>
+    <sink_block_id>pad_sink_2</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_frame_sync_cc_0</source_block_id>
     <sink_block_id>pad_sink_1_0</sink_block_id>
     <source_key>1</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>inets_frame_sync_cc_0</source_block_id>
+    <sink_block_id>pad_sink_2_0</sink_block_id>
+    <source_key>2</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_frame_sync_cc_0</source_block_id>
     <sink_block_id>virtual_sink_1</sink_block_id>
     <source_key>2</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_timing_recovery_cc_0</source_block_id>
+    <sink_block_id>inets_frame_sync_cc_0</sink_block_id>
+    <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
@@ -1857,8 +2073,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>pad_source_0</source_block_id>
+    <sink_block_id>fir_filter_xxx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>virtual_source_0</source_block_id>
-    <sink_block_id>digital_header_payload_demux_0</sink_block_id>
+    <sink_block_id>blocks_tag_gate_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
