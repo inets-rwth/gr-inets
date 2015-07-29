@@ -285,21 +285,21 @@ namespace gr {
         z[i] = (1 / std::abs(x[i])) * x[i] * std::conj(c[i]);
       }
 
-      //double sum = 0;
-      std::complex<double> sum = 0;
+      double sum = 0;
+      //std::complex<double> sum = 0;
       for(int i = 1; i <= N; i++) {
-        //double w = (3.0f * ((float)(L0 - i) * (float)(L0 - i + 1) - (float)N * (float)(L0 - N))) / w_div;
-        //double c1 = std::arg(calculate_R(i, z, L0));
-        //double c2 = std::arg(calculate_R(i - 1, z, L0));
-        //double c3 = c1 - c2;
-        //c3 = wrap_phase(c3);
+        double w = (3.0f * ((float)(L0 - i) * (float)(L0 - i + 1) - (float)N * (float)(L0 - N))) / w_div;
+        double c1 = std::arg(calculate_R(i, z, L0));
+        double c2 = std::arg(calculate_R(i - 1, z, L0));
+        double c3 = c1 - c2;
+        c3 = wrap_phase(c3);
         //TODO wrap c3 to [-pi,pi)
-        //sum += w * c3;
-        sum += calculate_R(i, z, L0);
+        sum += w * c3;
+        //sum += calculate_R(i, z, L0);
       }
       delete[] z; 
-      //return sum / (2.0f * M_PI);
-      return (std::arg(sum) / (M_PI * (N + 1.0)));
+      return ((float)sum / (2.0f * M_PI));
+      //return (std::arg(sum) / (M_PI * (N + 1.0)));
 
     }
     
@@ -307,10 +307,10 @@ namespace gr {
     {
       std::complex<double> sum = 0;
       for(int i = m; i < L0; i++) {
-        //float x = std::arg(z[i]) - std::arg(z[i - m]);
-        //std::complex<float> x2 = std::polar(1.0f, x);
-        std::complex<double> x = z[i] * std::conj(z[i - m]);
-        sum += x;
+        float x = std::arg(z[i]) - std::arg(z[i - m]);
+        std::complex<float> x2 = std::polar(1.0f, x);
+        //std::complex<double> x = z[i] * std::conj(z[i - m]);
+        sum += x2;
       }
       return ((1.0/(double)(L0 - m)) * sum); 
     }
