@@ -28,5 +28,6 @@ install(FILES
     inets_modem.xml
     inets_variable_rotator.xml
     inets_baseband_derotation.xml
-    inets_stop_and_wait_arq.xml DESTINATION share/gnuradio/grc/blocks
+    inets_stop_and_wait_arq.xml
+    inets_rrrm.xml DESTINATION share/gnuradio/grc/blocks
 )
