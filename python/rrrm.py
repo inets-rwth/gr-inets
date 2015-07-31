@@ -29,15 +29,20 @@ class rrrm(gr.basic_block):
     STATE_RUN = 0
     STATE_WAIT_FOR_CHANNEL_SWITCH = 1
 
+    PACKET_TYPE_DATA = 0
+    PACKET_TYPE_SWITCH = 1
+    PACKET_TYPE_SWITCH_ACCEPT = 2
+    PACKET_TYPE_SWITCH_REJECT = 3
+
     def __init__(self):
         gr.basic_block.__init__(self,
             name="rrrm",
             in_sig=[],
             out_sig=[])
 
-	self.message_port_register_in(pmt.intern('from_app'))
+        self.message_port_register_in(pmt.intern('from_app'))
         self.message_port_register_out(pmt.intern('to_app'))
-	self.message_port_register_in(pmt.intern('from_radar'))
+        self.message_port_register_in(pmt.intern('from_radar'))
         self.message_port_register_in(pmt.intern('from_ll'))
         self.message_port_register_out(pmt.intern('to_ll'))
         self.message_port_register_out(pmt.intern('to_antenna'))
@@ -46,20 +51,74 @@ class rrrm(gr.basic_block):
         self.set_msg_handler(pmt.intern('from_radar'), self.handle_radar_message)
         self.app_queue = Queue.Queue()
         self.state = STATE_RUN
+        self.curr_channel_id = 0;
 
 
-    def handle_app_message(self, msg_pmt):	
-	if self.state == STATE_RUN:
-	    self.message_port_pub(pmt.intern('to_ll'), msg_pmt)
-	
-	if self.state == STATE_WAIT_FOR_CHANNEL_SWITCH:
-	    self.app_queue.put(msg_pmt)
-	
-
+    def handle_app_message(self, msg_pmt):  
+        if self.state == STATE_RUN:
+    
+        if self.state == STATE_SWITCH_CHANNEL:
+            self.app_queue.put(msg_pmt)
+    
     def handle_radar_message(self, msg_pmt):
+        msg_str = get_data_str_from_pmt(msg_pmt)
+        
+        if msg_str == "ALERT": #come up with proper protocol here....
+            self.state = STATE_SWITCH_CHANNEL
+            #calculate new path
+            self.curr_channel_id = self.curr_channel_id + 1 
+            self.send_switch_command(self.curr_channel_id)
 
+    def send_switch_command(self, new_channel_id):
+        packet_str = chr(PACKET_TYPE_SWITCH)
+        packet_str = packet_str + chr(new_channel_id)
+        send_pmt = self.get_pmt_from_data_str(packet_str)  
+        self.message_port_pub(pmt.intern('to_ll'), send_pmt) 
+
+    def send_switch_accept(self):
+        packet_str = chr(PACKET_TYPE_SWITCH_ACCEPT)
+        send_pmt = self.get_pmt_from_data_str(packet_str)  
+        self.message_port_pub(pmt.intern('to_ll'), send_pmt) 
+
+    def send_switch_reject(self):
+        packet_str = chr(PACKET_TYPE_SWITCH_REJECT)
+        send_pmt = self.get_pmt_from_data_str(packet_str)  
+        self.message_port_pub(pmt.intern('to_ll'), send_pmt) 
+
+    def send_data_message(self, msg_pmt): 
+        msg_str = self.get_data_str_from_pmt(msg_pmt)
+        msg_str = chr(PACKET_TYPE_DATA) + msg_str
+        send_pmt = self.get_pmt_from_data_str(msg_str)
+        self.message_port_pub(pmt.intern('to_ll'), send_pmt)
 
     def handle_ll_message(self, msg_pmt):
+        msg_str = get_data_str_from_pmt(msg_pmt)
+        msg_type, msg_data = self.parse_rrrm_message(msg_str)
+        if msg_type == MESSAGE_TYPE_DATA:
+            send_pmt = get_pmt_from_data_str(msg_data)
+            self.message_port_pub(pmt.intern('to_app'), send_pmt)
+        if msg_type == MESSAGE_TYPE_SWITCH:
+                         
 
 
+    def parse_rrrm_message(self, message_str):
+        message_type = ord(message_str[0])
+        message_data = message_str[1:]
+        return (message_type, message_data)        
 
+    ################ PMT helper functions #####################
+    def get_data_str_from_pmt(msg_pmt):
+        meta = pmt.to_python(pmt.car(msg_pmt))
+        msg = pmt.cdr(msg_pmt)
+        msg_str = "".join([chr(x) for x in pmt.u8vector_elements(msg)])
+        return msg_str
+
+    def get_pmt_from_data_str(msg_str):
+        send_pmt = pmt.make_u8vector(len(msg_str), ord(' '))
+        for i in range(len(packet_str)):
+            pmt.u8vector_set(send_pmt, i, ord(msg_str[i]))
+        
+        send_pmt = pmt.cons(pmt.PMT_NIL, send_pmt)
+        return send_pmt
+
+        
