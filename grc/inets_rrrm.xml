@@ -10,11 +10,6 @@
        * name
        * key (makes the value accessible as $keyname, e.g. in the make node)
        * type -->
-  <param>
-    <name>...</name>
-    <key>...</key>
-    <type>...</type>
-  </param>
 
   <!-- Make one 'sink' node per input. Sub-nodes:
        * name (an identifier for the GUI)
@@ -22,8 +17,16 @@
        * vlen
        * optional (set to 1 for optional inputs) -->
   <sink>
-    <name>in</name>
-    <type><!-- e.g. int, float, complex, byte, short, xxx_vector, ...--></type>
+    <name>from_app</name>
+    <type>message</type>
+  </sink>
+  <sink>
+    <name>from_radar</name>
+    <type>message</type>
+  </sink>
+  <sink>
+    <name>from_ll</name>
+    <type>message</type>
   </sink>
 
   <!-- Make one 'source' node per output. Sub-nodes:
@@ -32,7 +35,11 @@
        * vlen
        * optional (set to 1 for optional inputs) -->
   <source>
-    <name>out</name>
-    <type><!-- e.g. int, float, complex, byte, short, xxx_vector, ...--></type>
+    <name>to_app</name>
+    <type>message</type>
+  </source>
+  <source>
+    <name>to_ll</name>
+    <type>message</type>
   </source>
 </block>

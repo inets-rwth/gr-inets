@@ -19,8 +19,13 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+import string
 import numpy
+import time
+import Queue
 from gnuradio import gr
+import pmt
+import threading
 
 class rrrm(gr.basic_block):
     """
@@ -50,56 +55,77 @@ class rrrm(gr.basic_block):
         self.set_msg_handler(pmt.intern('from_ll'), self.handle_ll_message)
         self.set_msg_handler(pmt.intern('from_radar'), self.handle_radar_message)
         self.app_queue = Queue.Queue()
-        self.state = STATE_RUN
-        self.curr_channel_id = 0;
+        self.state = self.STATE_RUN
+        self.curr_channel_id = 0
+        self.thread_lock = threading.Lock()        
 
 
     def handle_app_message(self, msg_pmt):  
-        if self.state == STATE_RUN:
-    
-        if self.state == STATE_SWITCH_CHANNEL:
-            self.app_queue.put(msg_pmt)
+        with self.thread_lock:
+            if self.state == self.STATE_RUN:
+                print 'RRRM: App message. Run state. Forwarding message'
+                self.send_data_message(msg_pmt)
+        
+            if self.state == self.STATE_WAIT_FOR_CHANNEL_SWITCH:
+                print 'RRRM: App message. Switch state. Buffering message'
+                self.app_queue.put(msg_pmt)
     
     def handle_radar_message(self, msg_pmt):
-        msg_str = get_data_str_from_pmt(msg_pmt)
-        
-        if msg_str == "ALERT": #come up with proper protocol here....
-            self.state = STATE_SWITCH_CHANNEL
-            #calculate new path
-            self.curr_channel_id = self.curr_channel_id + 1 
-            self.send_switch_command(self.curr_channel_id)
+        with self.thread_lock:
+            #msg_str = self.get_data_str_from_pmt(msg_pmt)
+            
+            #if msg_pmt == "ALERT": #come up with proper protocol here....
+                print 'RRRM: radar alert. Initiating switch'
+                self.state = self.STATE_WAIT_FOR_CHANNEL_SWITCH
+                #calculate new path
+                self.curr_channel_id = self.curr_channel_id + 1 
+                self.send_switch_command(self.curr_channel_id)
 
     def send_switch_command(self, new_channel_id):
-        packet_str = chr(PACKET_TYPE_SWITCH)
+        packet_str = chr(self.PACKET_TYPE_SWITCH)
         packet_str = packet_str + chr(new_channel_id)
         send_pmt = self.get_pmt_from_data_str(packet_str)  
         self.message_port_pub(pmt.intern('to_ll'), send_pmt) 
 
     def send_switch_accept(self):
-        packet_str = chr(PACKET_TYPE_SWITCH_ACCEPT)
+        packet_str = chr(self.PACKET_TYPE_SWITCH_ACCEPT)
         send_pmt = self.get_pmt_from_data_str(packet_str)  
         self.message_port_pub(pmt.intern('to_ll'), send_pmt) 
 
     def send_switch_reject(self):
-        packet_str = chr(PACKET_TYPE_SWITCH_REJECT)
+        packet_str = chr(self.PACKET_TYPE_SWITCH_REJECT)
         send_pmt = self.get_pmt_from_data_str(packet_str)  
         self.message_port_pub(pmt.intern('to_ll'), send_pmt) 
 
     def send_data_message(self, msg_pmt): 
         msg_str = self.get_data_str_from_pmt(msg_pmt)
-        msg_str = chr(PACKET_TYPE_DATA) + msg_str
+        msg_str = chr(self.PACKET_TYPE_DATA) + msg_str
         send_pmt = self.get_pmt_from_data_str(msg_str)
         self.message_port_pub(pmt.intern('to_ll'), send_pmt)
 
     def handle_ll_message(self, msg_pmt):
-        msg_str = get_data_str_from_pmt(msg_pmt)
-        msg_type, msg_data = self.parse_rrrm_message(msg_str)
-        if msg_type == MESSAGE_TYPE_DATA:
-            send_pmt = get_pmt_from_data_str(msg_data)
-            self.message_port_pub(pmt.intern('to_app'), send_pmt)
-        if msg_type == MESSAGE_TYPE_SWITCH:
-                         
+        with self.thread_lock:
+            msg_str = self.get_data_str_from_pmt(msg_pmt)
+            msg_type, msg_data = self.parse_rrrm_message(msg_str)
+            if msg_type == self.PACKET_TYPE_DATA:
+                print 'RRRM: forwarding incoming data packet'
+                send_pmt = self.get_pmt_from_data_str(msg_data)
+                self.message_port_pub(pmt.intern('to_app'), send_pmt)
+            if msg_type == self.PACKET_TYPE_SWITCH:
+                channel_id = ord(msg_data[0])
+                print 'RRRM: Processing channel switch to ',channel_id
+                self.send_switch_accept()
+                self.state = self.STATE_WAIT_FOR_CHANNEL_SWITCH
+            if msg_type == self.PACKET_TYPE_SWITCH_ACCEPT:
+                print 'RRRM: Switch accept'
+                #reposition antenna, start sending ping messages ???
 
+                while not self.app_queue.empty():
+                    self.send_data_message(self.app_queue.get())
+
+                self.state = self.STATE_RUN
+            
+                    
 
     def parse_rrrm_message(self, message_str):
         message_type = ord(message_str[0])
@@ -107,15 +133,15 @@ class rrrm(gr.basic_block):
         return (message_type, message_data)        
 
     ################ PMT helper functions #####################
-    def get_data_str_from_pmt(msg_pmt):
+    def get_data_str_from_pmt(self, msg_pmt):
         meta = pmt.to_python(pmt.car(msg_pmt))
         msg = pmt.cdr(msg_pmt)
         msg_str = "".join([chr(x) for x in pmt.u8vector_elements(msg)])
         return msg_str
 
-    def get_pmt_from_data_str(msg_str):
+    def get_pmt_from_data_str(self, msg_str):
         send_pmt = pmt.make_u8vector(len(msg_str), ord(' '))
-        for i in range(len(packet_str)):
+        for i in range(len(msg_str)):
             pmt.u8vector_set(send_pmt, i, ord(msg_str[i]))
         
         send_pmt = pmt.cons(pmt.PMT_NIL, send_pmt)
