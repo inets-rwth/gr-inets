@@ -140,7 +140,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(368, 291)</value>
+      <value>(368, 288)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -207,7 +207,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(368, 203)</value>
+      <value>(368, 179)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -332,7 +332,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(704, 291)</value>
+      <value>(672, 195)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -341,6 +341,49 @@
     <param>
       <key>id</key>
       <value>pad_sink_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>out</value>
+    </param>
+    <param>
+      <key>num_streams</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>optional</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>pad_sink</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(720, 251)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>pad_sink_1</value>
     </param>
     <param>
       <key>type</key>
@@ -375,7 +418,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(672, 219)</value>
+      <value>(728, 443)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -383,93 +426,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>pad_sink_0_0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>out</value>
-    </param>
-    <param>
-      <key>num_streams</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>optional</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-  </block>
-  <block>
-    <key>pad_sink</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(704, 323)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>pad_sink_1</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Payload Constellation</value>
-    </param>
-    <param>
-      <key>num_streams</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>optional</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-  </block>
-  <block>
-    <key>pad_sink</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(704, 395)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>pad_sink_1_0</value>
+      <value>pad_sink_2</value>
     </param>
     <param>
       <key>type</key>
@@ -504,7 +461,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(704, 355)</value>
+      <value>(784, 347)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -512,7 +469,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>pad_sink_1_0_0</value>
+      <value>pad_sink_3</value>
     </param>
     <param>
       <key>type</key>
@@ -547,7 +504,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(704, 443)</value>
+      <value>(720, 299)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -555,7 +512,93 @@
     </param>
     <param>
       <key>id</key>
-      <value>pad_sink_1_0_1</value>
+      <value>pad_sink_4</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Payload Constellation</value>
+    </param>
+    <param>
+      <key>num_streams</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>optional</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>pad_sink</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(784, 395)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>pad_sink_5</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Frequency offset</value>
+    </param>
+    <param>
+      <key>num_streams</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>optional</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>pad_sink</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(680, 491)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>pad_sink_6</value>
     </param>
     <param>
       <key>type</key>
@@ -590,7 +633,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, 219)</value>
+      <value>(176, 195)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -633,7 +676,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, 339)</value>
+      <value>(176, 363)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -641,7 +684,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>pad_source_0_0</value>
+      <value>pad_source_1</value>
     </param>
     <param>
       <key>label</key>
@@ -838,37 +881,43 @@
   </block>
   <connection>
     <source_block_id>inets_rx_phy_1</source_block_id>
-    <sink_block_id>pad_sink_1_0</sink_block_id>
-    <source_key>2</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>inets_rx_phy_1</source_block_id>
-    <sink_block_id>pad_sink_1_0_1</sink_block_id>
+    <sink_block_id>pad_sink_2</sink_block_id>
     <source_key>3</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>inets_rx_phy_1</source_block_id>
-    <sink_block_id>pad_sink_1_0_0</sink_block_id>
+    <sink_block_id>pad_sink_6</sink_block_id>
+    <source_key>4</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_rx_phy_1</source_block_id>
+    <sink_block_id>pad_sink_3</sink_block_id>
     <source_key>1</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>inets_rx_phy_1</source_block_id>
-    <sink_block_id>pad_sink_0</sink_block_id>
-    <source_key>out</source_key>
+    <sink_block_id>pad_sink_5</sink_block_id>
+    <source_key>2</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>inets_rx_phy_1</source_block_id>
     <sink_block_id>pad_sink_1</sink_block_id>
+    <source_key>out</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_rx_phy_1</source_block_id>
+    <sink_block_id>pad_sink_4</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>inets_tx_phy_0</source_block_id>
-    <sink_block_id>pad_sink_0_0</sink_block_id>
+    <sink_block_id>pad_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -879,7 +928,7 @@
     <sink_key>in</sink_key>
   </connection>
   <connection>
-    <source_block_id>pad_source_0_0</source_block_id>
+    <source_block_id>pad_source_1</source_block_id>
     <sink_block_id>inets_rx_phy_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
