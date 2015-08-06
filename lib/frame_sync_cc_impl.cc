@@ -53,36 +53,11 @@ namespace gr {
                         _state(STATE_DETECT),  _diff(1,0), _preamble(preamble)
     {
 
-      _len_preamble = _preamble.size();
-      /*
-                        _preamble[0] = gr_complex(-1, 0);
-                        _preamble[1] = gr_complex(-1, 0);
-                        _preamble[2] = gr_complex(-1, 0);
-                        _preamble[3] = gr_complex(-1, 0);
-                        _preamble[4] = gr_complex(-1, 0);
-                        _preamble[5] = gr_complex(1, 0);
-                        _preamble[6] = gr_complex(1, 0);
-                        _preamble[7] = gr_complex(-1, 0);
-                        _preamble[8] = gr_complex(-1, 0);
-                        _preamble[9] = gr_complex(1, 0);
-                        _preamble[10] = gr_complex(-1, 0);
-                        _preamble[11] = gr_complex(1, 0);
-                        _preamble[12] = gr_complex(-1, 0);
-
-                        int i,j;                
-                        for(i = 0;i < 2; i++) {
-                                for(j = 0; j < 13; j++) {
-                                        _preamble[(i + 1) * 13 + j] = _preamble[j];
-                                } 
-                        }
-      */
-                        //Preamble could have first sample only in our inputbuffer
-                        //therfore we need 12 samples as look ahead
-                        //set_history(13);
-                        set_tag_propagation_policy(TPP_DONT);
-                        set_output_multiple(1024);
-                        message_port_register_out(pmt::string_to_symbol("phase"));
-                }
+        _len_preamble = _preamble.size();
+        set_tag_propagation_policy(TPP_DONT);
+        set_output_multiple(1024);
+        message_port_register_out(pmt::string_to_symbol("phase"));
+    }
 
     /*
      * Our virtual destructor.
@@ -91,31 +66,11 @@ namespace gr {
     {
     }
 
-                void frame_sync_cc_impl::forecast(int noutput_items, gr_vector_int &ninput_items_required)
-                {
-
-      ninput_items_required[0] = noutput_items;
-      return;
-                        switch(_state) {
-                                case STATE_DETECT:
-                                        ninput_items_required[0] = noutput_items;
-                                        break;
-                                case STATE_PREAMBLE:
-                                        ninput_items_required[0] = noutput_items;
-                                        break;
-                                case STATE_PAYLOAD:
-                                        ninput_items_required[0] = noutput_items;
-                                        break;
-        case STATE_PROCESS_PREAMBLE:
-          ninput_items_required[0] = noutput_items;
-          break;
-        case STATE_SET_TRIGGER:
-          ninput_items_required[0] = noutput_items;
-                                default:
-                                        break;
-                        }
-                                
-                }
+    void frame_sync_cc_impl::forecast(int noutput_items, gr_vector_int &ninput_items_required)
+    {
+        ninput_items_required[0] = noutput_items;
+        return;
+    }
 
     int
     frame_sync_cc_impl::general_work(int noutput_items,
