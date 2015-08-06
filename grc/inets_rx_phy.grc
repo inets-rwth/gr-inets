@@ -924,7 +924,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, 307)</value>
+      <value>(168, 339)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1020,61 +1020,6 @@
     <param>
       <key>rev_pack</key>
       <value>True</value>
-    </param>
-  </block>
-  <block>
-    <key>fir_filter_xxx</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(144, 203)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>fir_filter_xxx_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>samp_delay</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>gnuradio.filter.firdes.root_raised_cosine(1,sps,1,0.8,sps*11)</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>ccc</value>
     </param>
   </block>
   <block>
@@ -1175,7 +1120,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(448, 328)</value>
+      <value>(416, 344)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1204,49 +1149,6 @@
     <param>
       <key>threshold</key>
       <value>threshold</value>
-    </param>
-  </block>
-  <block>
-    <key>inets_timing_recovery_cc</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(352, 211)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>inets_timing_recovery_cc_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>sps</key>
-      <value>sps</value>
     </param>
   </block>
   <block>
@@ -1476,7 +1378,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 371)</value>
+      <value>(696, 371)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1519,7 +1421,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 515)</value>
+      <value>(704, 515)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1562,7 +1464,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(696, 251)</value>
+      <value>(672, 275)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1648,7 +1550,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(24, 355)</value>
+      <value>(8, 387)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2050,12 +1952,6 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>fir_filter_xxx_0</source_block_id>
-    <sink_block_id>inets_timing_recovery_cc_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>inets_baseband_derotation_0</source_block_id>
     <sink_block_id>pad_sink_1</sink_block_id>
     <source_key>0</source_key>
@@ -2104,12 +2000,6 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>inets_timing_recovery_cc_0</source_block_id>
-    <sink_block_id>inets_frame_sync_cc_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>inets_variable_rotator_0</source_block_id>
     <sink_block_id>inets_baseband_derotation_0</sink_block_id>
     <source_key>0</source_key>
@@ -2118,12 +2008,6 @@
   <connection>
     <source_block_id>pad_source_0</source_block_id>
     <sink_block_id>digital_pfb_clock_sync_xxx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>pad_source_0</source_block_id>
-    <sink_block_id>fir_filter_xxx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
