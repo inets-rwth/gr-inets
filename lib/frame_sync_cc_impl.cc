@@ -21,14 +21,18 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+
 #include <boost/assign/std/vector.hpp> // for 'operator+=()'
 #include <boost/assert.hpp>
 #include <boost/assign/list_of.hpp>
-using namespace std;
-using namespace boost::assign; // bring 'operator+=()' into scope
 #include <gnuradio/io_signature.h>
 #include "frame_sync_cc_impl.h"
-# define M_PI           3.14159265358979323846
+
+#define M_PI 3.14159265358979323846
+
+using namespace std;
+using namespace boost::assign; // bring 'operator+=()' into scope
+
 namespace gr {
   namespace inets {
 
@@ -41,18 +45,17 @@ namespace gr {
 
     /*
      * The private constructor
-         * Needed to make preamble len a multiple of 8.
-         * Otherwise the gnuradio blocks packed_to_unpacked and unpacked_to_packed don't work
-         * beacuse the payload will not be byte aligned.        
+     * Needed to make preamble len a multiple of 8.
+     * Otherwise the gnuradio blocks packed_to_unpacked and unpacked_to_packed don't work
+     * beacuse the payload will not be byte aligned.        
      */
     frame_sync_cc_impl::frame_sync_cc_impl(const std::vector<gr_complex> &preamble, float threshold, const std::string &len_tag_key)
       : gr::block("frame_sync_cc",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::makev(4, 4, boost::assign::list_of(sizeof(gr_complex))(sizeof(gr_complex))(sizeof(unsigned char))(sizeof(float)))),
-                        _threshold(threshold), _len_tag_key(len_tag_key),
-                        _state(STATE_DETECT),  _diff(1,0), _preamble(preamble)
+        _threshold(threshold), _len_tag_key(len_tag_key),
+        _state(STATE_DETECT),  _diff(1,0), _preamble(preamble)
     {
-
         _len_preamble = _preamble.size();
         set_tag_propagation_policy(TPP_DONT);
         set_output_multiple(1024);
@@ -78,21 +81,20 @@ namespace gr {
                           gr_vector_const_void_star &input_items,
                           gr_vector_void_star &output_items)
     {
+
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];               
         gr_complex *corr_out = (gr_complex *) output_items[1];
         unsigned char *trig_out = (unsigned char *) output_items[2];
-
         float *f_offset_out = (float*) output_items[3];
-        int num_f_offset_prod = 0;
+
         // Do <+signal processing+>
-                
-        gr_complex sum = 0;
+        int num_f_offset_prod = 0;
         int consumed_items = 0;
         int produced_items = 0;
-
         int i, j; 
         int preamble_items_left = 0;
+        gr_complex sum = 0;
 
         for(i = 0; i < noutput_items - _len_preamble; i++) {
 
@@ -107,11 +109,12 @@ namespace gr {
             corr_out[i] = sum;
             
             if(_state == STATE_DETECT) {                    
-                if(std::abs(sum) > _threshold)
+                if(std::abs(sum) > _threshold) {
                     _state = STATE_PREAMBLE;
-            } else {
+                } else {
                     consumed_items++;
                     produced_items++;
+                }
             }
                                     
             if(_state == STATE_PREAMBLE) { 
