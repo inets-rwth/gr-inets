@@ -42,7 +42,9 @@ namespace gr {
       : gr::sync_decimator("timing_recovery_cc",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(gr_complex)), sps), _sps(sps)
-    {}
+    {
+        set_output_multiple(128*_sps);
+    }
 
     /*
      * Our virtual destructor.
@@ -58,27 +60,33 @@ namespace gr {
     {
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];
-		
+	
+        //std::cout << "[timing recovery] noutput_items = " << noutput_items << std::endl;	
+
         // Do <+signal processing+>
-		int i, j, opt_delay;
-		double energy, max_energy = 0;
-		
-		for(j = 0; j < _sps; j++) {
-			energy = 0;
-			for(i = j;i < (noutput_items * _sps) - _sps;i += _sps) {
-				energy += std::abs(in[i]);		
-			}
-			if(energy > max_energy) {
-				max_energy = energy;
-				opt_delay = j;
-			}
-		}
-//		std::cout << "opt delay = " << opt_delay << std::endl;
-		int index = 0;
-		for(j = opt_delay;j < (noutput_items * _sps) - _sps; j += _sps) {
-			out[index++] = in[j];
-		}
+	int i, j, opt_delay;
+        double energy = 0, max_energy = -1;
+	int output_count = 0;
+
+        for(j = 0; j < _sps; j++) {
+	    energy = 0;
+	    for(i = j; i < (noutput_items * _sps); i += _sps) {
+	        energy += std::pow(std::abs(in[i]), 2);		
+	    }
+	    if(energy > max_energy) {
+                max_energy = energy;
+                opt_delay = j;
+            }
+        }
+	int index = 0;
+        for(j = opt_delay; j < (noutput_items * _sps); j += _sps) {
+            out[index] = in[j];
+            index++;
+            output_count++;
+        }
+
         // Tell runtime system how many output items we produced.
+        //std::cout << "Produced "<< output_count << " samples. Opt delay = " << opt_delay << std::endl;
         return noutput_items;
     }
 
