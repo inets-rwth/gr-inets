@@ -20,6 +20,7 @@
 # 
 
 import string
+import csv
 import numpy
 import time
 import Queue
@@ -44,11 +45,13 @@ class stop_and_wait_arq(gr.basic_block):
             out_sig=[])
 	
         self.message_port_register_in(pmt.intern('from_app'))
+        self.message_port_register_in(pmt.intern('snr'))
         self.message_port_register_out(pmt.intern('to_app'))
         self.message_port_register_in(pmt.intern('from_phy'))
         self.message_port_register_out(pmt.intern('to_phy'))
         self.set_msg_handler(pmt.intern('from_app'), self.handle_app_message)
         self.set_msg_handler(pmt.intern('from_phy'), self.handle_phy_message)
+        self.set_msg_handler(pmt.intern('snr'), self.handle_snr_message)
         self.app_queue = Queue.Queue() 
         self.state = self.STATE_IDLE
         self.last_tx_time = 0
@@ -61,6 +64,21 @@ class stop_and_wait_arq(gr.basic_block):
         self.last_frag_index = 0
         self.tx_seq_num = 0
         self.thread_lock = threading.Lock()        
+        self.num_good_packets = 0
+        self.num_bad_packets = 0
+        self.per_window_size = 100
+        self.per_window = []
+        self.per_window_count = 0
+        self.snr_window = []
+        self.csv_fields = ['Date','SNR','PER']
+        with open('stop_and_wait_arq_log.csv','w+') as log_file:
+            csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
+            csv_writer.writeheader()
+        self.num_rx_packets = 0
+
+    def handle_snr_message(self, msg):
+        snr_pmt = pmt.to_python(msg)
+        self.snr_window.append(float(snr_pmt)) 
 
     def handle_app_message(self, msg_pmt):
         #print 'app interrupt'
@@ -110,22 +128,32 @@ class stop_and_wait_arq(gr.basic_block):
     def handle_phy_message(self, msg_pmt):        
         with self.thread_lock:
           print 'phy interrupt'
+          self.num_rx_packets += 1
+
           meta = pmt.to_python(pmt.car(msg_pmt))
           msg = pmt.cdr(msg_pmt)
           msg_str = "".join([chr(x) for x in pmt.u8vector_elements(msg)])
+          
           packet_str = digital.packet_utils.dewhiten(msg_str, 0)
           (ok, packet_str) = digital.crc.check_crc32(packet_str)
+          
           if not ok:
             print '#######################################################'
             print '################## ERROR: Bad CRC #####################'
-            print '#######################################################'
+            print '#######################################################'  
+            self.num_bad_packets = self.num_bad_packets + 1
+            self.calculate_per()
             return
+
           if ok:
+            self.num_good_packets = self.num_good_packets + 1
+            self.calculate_per()
             packet_rx_seq_byte = ord(packet_str[0])
             packet_str = packet_str[1:]
             packet_type_byte = ord(packet_str[0])
             packet_str = packet_str[1:]
-            print 'packet received. seq = ', packet_rx_seq_byte, ' type = ', packet_type_byte
+            print 'Packet received. seq = ', packet_rx_seq_byte, ' type = ', packet_type_byte
+            
             if packet_type_byte == self.PACKET_TYPE_DATA:
               if self.use_ack:
 	      	#send ACK packet
@@ -140,6 +168,31 @@ class stop_and_wait_arq(gr.basic_block):
               self.state = self.STATE_IDLE
               self.handle_queue()
     
+    def calculate_per(self):
+
+        if(self.per_window_count == self.per_window_size):
+            curr_per = float(self.num_bad_packets / float(self.num_good_packets + self.num_bad_packets))
+            self.per_window.append(curr_per)
+                        
+            avg_snr = 0.0
+            
+            for snr in self.snr_window:
+                avg_snr = avg_snr + snr
+
+            if len(self.snr_window) > 0:
+                avg_snr = avg_snr / len(self.snr_window)
+            
+            with open('stop_and_wait_arq_log.csv','wa') as log_file:
+                csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
+                csv_writer.writerow({'Date' : time.time(), 'SNR' : avg_snr, 'PER' : curr_per}) 
+            #self.log_file.flush()
+
+            self.num_bad_packets = 0
+            self.num_good_packets = 0
+            self.per_window_count = 0
+
+        self.per_window_count += 1  
+
     def generate_ack_packet_pdu(self, seq_num):
         packet_str = chr(seq_num)
         packet_str += chr(self.PACKET_TYPE_ACK) 

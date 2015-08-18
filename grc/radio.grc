@@ -332,7 +332,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(672, 195)</value>
+      <value>(624, 195)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -375,7 +375,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(720, 251)</value>
+      <value>(728, 243)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -418,7 +418,50 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 443)</value>
+      <value>(832, 283)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>pad_sink_1_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>message</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>snr</value>
+    </param>
+    <param>
+      <key>num_streams</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>optional</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>pad_sink</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(792, 475)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -461,7 +504,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(784, 347)</value>
+      <value>(816, 379)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -504,7 +547,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(720, 299)</value>
+      <value>(768, 331)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -547,7 +590,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(784, 395)</value>
+      <value>(792, 427)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -590,7 +633,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(680, 491)</value>
+      <value>(752, 539)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -676,7 +719,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, 363)</value>
+      <value>(176, 379)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -913,6 +956,12 @@
     <source_block_id>inets_rx_phy_1</source_block_id>
     <sink_block_id>pad_sink_4</sink_block_id>
     <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_rx_phy_1</source_block_id>
+    <sink_block_id>pad_sink_1_0</sink_block_id>
+    <source_key>snr</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
