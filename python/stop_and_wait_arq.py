@@ -73,24 +73,16 @@ class stop_and_wait_arq(gr.basic_block):
         self.total_num_rx_bad_packets = 0
         self.total_num_rx_good_packets = 0
         self.snr_log = []
-        self.rx_statistics_update_interval = 1000
+        self.rx_statistics_update_interval = 10000
+        numpy.random.seed(0)
+        self.test_data = numpy.random.randint(0, 256, 500)
         
-        self.csv_fields = ['Index', 'Date', 'SNR', '#BER / Packet', 'PER']
+        self.csv_fields = ['Date', 'SNR', '#BER / Bad Packet', 'BER', 'PER']
         curr_time = time.strftime("%d.%m.%Y-%H-%M-%S")
         self.log_file_name = '/home/inets/stop_and_wait_arq_log_'+curr_time+'.csv'
         with open(self.log_file_name,'w') as log_file:
             csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
             csv_writer.writeheader()
-
-        numpy.random.seed(0)
-        self.test_data = numpy.random.randint(0, 256, 500)
-        print self.test_data[0] 
-        if self.test_data[0] & 0x01:
-            self.test_data[0] = self.test_data[0] & (~0x01) #flip one bit
-        else:
-            self.test_data[0] = self.test_data[0] | 0x01
-        print self.test_data[0]
-
 
     def handle_snr_message(self, msg):
         snr_pmt = pmt.to_python(msg)
@@ -203,7 +195,9 @@ class stop_and_wait_arq(gr.basic_block):
         if self.total_num_rx_packets == self.rx_statistics_update_interval:
 
             ber = self.total_num_rx_bit_errors / float(self.total_num_rx_bits)
-            ber_per_packet = self.total_num_rx_bit_errors / float(self.total_num_rx_packets)
+            ber_per_bad_packet = 0
+            if self.total_num_rx_bad_packets > 0:
+                ber_per_bad_packet = self.total_num_rx_bit_errors / float(self.total_num_rx_bad_packets)
             per = self.total_num_rx_bad_packets / float(self.total_num_rx_packets)
             
             avg_snr = 0
@@ -214,7 +208,7 @@ class stop_and_wait_arq(gr.basic_block):
                     snr_avg_len += 1
                 avg_snr = avg_snr / snr_avg_len
 
-            self.write_rx_statistics(ber, per, avg_snr)
+            self.write_rx_statistics(ber_per_bad_packet, ber, per, avg_snr)
             
             self.total_num_rx_packets = 0
             self.total_num_rx_bits = 0
@@ -223,10 +217,14 @@ class stop_and_wait_arq(gr.basic_block):
             self.total_num_rx_bad_packets = 0
             self.total_num_rx_good_packets = 0
 
-    def write_rx_statistics(self, ber, per, snr):
+    def write_rx_statistics(self, ber_per_bad_packet, ber, per, snr):
         with open(self.log_file_name, 'a') as log_file:
             csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
-            csv_writer.writerow({'Index' : 0, 'Date' : time.time(), 'SNR' : snr, '#BER / Packet' : ber, 'PER' : per}) 
+            csv_writer.writerow({'Date' : time.strftime("%d.%m.%Y-%H-%M-%S"), 
+                    'SNR' : "{0:.2f}".format(snr), 
+                    '#BER / Bad Packet' : "{0:.2f}".format(ber_per_bad_packet), 
+                    'BER' : "{0:.8f}".format(ber), 
+                    'PER' : "{0:.8f}".format(per)}) 
 
     def calculate_bit_errors(self, payload_str, test_data):
         data = []
@@ -234,7 +232,6 @@ class stop_and_wait_arq(gr.basic_block):
             data.append(ord(x))
 
         bit_error_count = 0
-
         for i in range(0, len(data)):            
             count = 0
             mask = 1
@@ -248,50 +245,6 @@ class stop_and_wait_arq(gr.basic_block):
         print '# bit errors = ', bit_error_count
         return bit_error_count
  
-    def write_debug_log(self, rx_data, crc_ok):
-
-        rx_hex_str = ''
-        for byte in rx_data:
-            rx_hex_str += ("{0:02x}".format(ord(byte)) + " ")
-        rx_hex_str = rx_hex_str[:-1]
-        
-        payload_data = rx_data[3:-4]
-        payload_len = len(payload_data)
-        ber = self.get_num_wrong_bits(payload_data, self.test_data)
-        
-        self.num_bit_errors += ber
-        print 'Total num bit errors = ' + str(self.num_bit_errors)
-        if(self.per_window_count == self.per_window_size):
-            curr_per = float(self.num_bad_packets / float(self.num_good_packets + self.num_bad_packets))
-            self.per_window.append(curr_per)
-                        
-            avg_snr = 0.0
-            avg_ber = 0.0
-            avg_ber = self.num_bit_errors / (float(self.num_good_packets + self.num_bad_packets) * 500 * 8)
-
-            for snr in self.snr_window:
-                avg_snr = avg_snr + snr
-
-            if len(self.snr_window) > 0:
-                avg_snr = avg_snr / len(self.snr_window)
-            
-            with open(self.log_file_name, 'a') as log_file:
-                csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
-                #csv_writer.writerow({'Date' : time.time(), 'RX Data': '', 'TX Data' : '', 'Len' : payload_len, 'CRC' : crc_ok, 'SNR' : 0, 'PER' : 0, 'BER' : ber}) 
-                csv_writer.writerow({'Date' : time.time(), 'SNR' : avg_snr, 'PER' : curr_per, 'BER' : avg_ber, 'RX Data': '', 'TX Data' : '', 'Len' : payload_len, 'CRC' : ''}) 
-
-            self.num_bad_packets = 0
-            self.num_good_packets = 0
-            self.per_window_count = 0
-            self.num_bit_errors = 0
-        else:
-            if not crc_ok:
-                with open(self.log_file_name, 'a') as log_file:
-                    csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
-                    csv_writer.writerow({'Date' : time.time(), 'RX Data': '', 'TX Data' : '','Len' : payload_len, 'CRC' : crc_ok, 'SNR' : 0, 'PER' : 0, 'BER' : ber}) 
-        
-        self.per_window_count += 1  
-
     def generate_ack_packet_pdu(self, seq_num):
         packet_str = chr(seq_num)
         packet_str += chr(self.PACKET_TYPE_ACK) 
