@@ -42,7 +42,7 @@ namespace gr {
       : gr::sync_block("baseband_derotation",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(gr_complex))),
-      _error(0), _error_last(0), _mu(mu), _constellation(con)
+      _error(0), _mu(mu), _constellation(con)
     {}
 
     /*
@@ -59,8 +59,6 @@ namespace gr {
     {
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];
-        //_error = 0;
-        //_error_last = 0;
         // Do <+signal processing+>
 
         std::vector<tag_t> phi_tags;
@@ -71,7 +69,6 @@ namespace gr {
              if(phi_tags[j].offset == (nitems_written(0) + i)) {
                float phi = pmt::to_float(phi_tags[j].value);
                _error = 0;
-               _error_last = 0;
              }
           }
 
@@ -79,7 +76,7 @@ namespace gr {
           out[i] = in[i] * std::polar(1.0f, -1.0f * _error);
 
           float arg = std::arg(out[i]);
-          float error = 0;
+          float error = 0.0f;
            
           if(_constellation->points().size() == 2) {
             if(arg > M_PI / 2.0f || arg < -M_PI / 2.0f) {
@@ -108,11 +105,9 @@ namespace gr {
             }
           }
 
-          //std::cout << "curr error = " << error << std::endl;
-          _error = _error_last + _mu * error;
-          //std::cout << "error = " << _error << std::endl;
+          _error = _error + _mu * error;
+          //TODO wrap _error
         
-          _error_last = _error; 
         }
         // Tell runtime system how many output items we produced.
         return noutput_items;
