@@ -2,7 +2,7 @@
 <block>
   <name>packetizer_python</name>
   <key>inets_packetizer_python</key>
-  <category>INETS</category>
+  <category>iNets</category>
   <import>import inets</import>
   <make>inets.packetizer_python()</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
