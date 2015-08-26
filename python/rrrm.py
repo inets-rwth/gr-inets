@@ -26,6 +26,7 @@ import Queue
 from gnuradio import gr
 import pmt
 import threading
+import control
 
 class rrrm(gr.basic_block):
     """
@@ -58,7 +59,8 @@ class rrrm(gr.basic_block):
         self.state = self.STATE_RUN
         self.curr_channel_id = 0
         self.thread_lock = threading.Lock()        
-
+        self.antenna_control = control.control("/dev/ttyACM0")
+        self.antenna_control.open()
 
     def handle_app_message(self, msg_pmt):  
         with self.thread_lock:
@@ -73,13 +75,12 @@ class rrrm(gr.basic_block):
     def handle_radar_message(self, msg_pmt):
         with self.thread_lock:
             #msg_str = self.get_data_str_from_pmt(msg_pmt)
-            
             #if msg_pmt == "ALERT": #come up with proper protocol here....
-                print 'RRRM: radar alert. Initiating switch'
-                self.state = self.STATE_WAIT_FOR_CHANNEL_SWITCH
-                #calculate new path
-                self.curr_channel_id = self.curr_channel_id + 1 
-                self.send_switch_command(self.curr_channel_id)
+            print 'RRRM: radar alert. Initiating switch'
+            self.state = self.STATE_WAIT_FOR_CHANNEL_SWITCH
+            #calculate new path
+            self.curr_channel_id = self.curr_channel_id + 1 
+            self.send_switch_command(self.curr_channel_id)
 
     def send_switch_command(self, new_channel_id):
         packet_str = chr(self.PACKET_TYPE_SWITCH)
@@ -114,12 +115,13 @@ class rrrm(gr.basic_block):
             if msg_type == self.PACKET_TYPE_SWITCH:
                 channel_id = ord(msg_data[0])
                 print 'RRRM: Processing channel switch to ',channel_id
+                self.antenna_control.move_to(90)
                 self.send_switch_accept()
                 self.state = self.STATE_WAIT_FOR_CHANNEL_SWITCH
             if msg_type == self.PACKET_TYPE_SWITCH_ACCEPT:
                 print 'RRRM: Switch accept'
                 #reposition antenna, start sending ping messages ???
-
+                self.antenna_control.move_to(90)
                 while not self.app_queue.empty():
                     self.send_data_message(self.app_queue.get())
 
