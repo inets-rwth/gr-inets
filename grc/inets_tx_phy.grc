@@ -14,7 +14,7 @@
     </param>
     <param>
       <key>category</key>
-      <value>inets</value>
+      <value>iNets</value>
     </param>
     <param>
       <key>comment</key>
@@ -736,7 +736,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(440, 544)</value>
+      <value>(448, 544)</value>
     </param>
     <param>
       <key>_rotation</key>

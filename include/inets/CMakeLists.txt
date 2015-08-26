@@ -22,8 +22,6 @@
 ########################################################################
 install(FILES
     api.h
-    simple_framer_cc.h
-    simple_framer_bb.h
     frame_sync_cc.h
     timing_recovery_cc.h
     packetizer.h

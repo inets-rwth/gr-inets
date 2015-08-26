@@ -2,7 +2,7 @@
 <block>
   <name>stop_and_wait_arq</name>
   <key>inets_stop_and_wait_arq</key>
-  <category>inets</category>
+  <category>iNets</category>
   <import>import inets</import>
   <make>inets.stop_and_wait_arq($ack_timeout, $max_mtu, $use_ack)</make>
   <param>
@@ -31,6 +31,10 @@
   </sink>
   <sink>
     <name>from_phy</name>
+    <type>message</type>
+  </sink>
+  <sink>
+    <name>snr</name>
     <type>message</type>
   </sink>
 

@@ -24,10 +24,7 @@ include(GrPlatform) #define LIB_SUFFIX
 
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
-
 list(APPEND inets_sources
-    simple_framer_cc_impl.cc
-    simple_framer_bb_impl.cc
     frame_sync_cc_impl.cc
     timing_recovery_cc_impl.cc
     packetizer_impl.cc

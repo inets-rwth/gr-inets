@@ -2,9 +2,14 @@
 <block>
   <name>rrrm</name>
   <key>inets_rrrm</key>
-  <category>inets</category>
+  <category>iNets</category>
   <import>import inets</import>
-  <make>inets.rrrm()</make>
+  <make>inets.rrrm($channel_map)</make>
+  <param>
+    <name>Channel Map</name>
+    <key>channel_map</key>
+    <type>raw</type>
+  </param>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name

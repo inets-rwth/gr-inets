@@ -14,7 +14,7 @@
     </param>
     <param>
       <key>category</key>
-      <value>Custom</value>
+      <value>iNets</value>
     </param>
     <param>
       <key>comment</key>
@@ -209,7 +209,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>5e9</value>
+      <value>2e9</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -335,7 +335,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>12</value>
+      <value>18</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -343,7 +343,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(632, 11)</value>
+      <value>(624, 11)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -651,7 +651,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(808, 576)</value>
+      <value>(728, 608)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -694,7 +694,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(808, 544)</value>
+      <value>(728, 576)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -741,7 +741,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(616, 768)</value>
+      <value>(800, 840)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -784,7 +784,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(496, 283)</value>
+      <value>(496, 243)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -976,7 +976,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(488, 387)</value>
+      <value>(488, 363)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1000,7 +1000,7 @@
     </param>
     <param>
       <key>use_ack</key>
-      <value>True</value>
+      <value>False</value>
     </param>
   </block>
   <block>
@@ -1058,7 +1058,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(808, 619)</value>
+      <value>(912, 659)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1074,7 +1074,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>qtgui_const_sink_x_0</value>
+      <value>qtgui_const_sink_x_0_0</value>
     </param>
     <param>
       <key>legend</key>
@@ -1322,7 +1322,7 @@
     </param>
     <param>
       <key>name</key>
-      <value>""</value>
+      <value>"Payload"</value>
     </param>
     <param>
       <key>nconnections</key>
@@ -1409,7 +1409,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(992, 531)</value>
+      <value>(912, 563)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1768,7 +1768,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(808, 699)</value>
+      <value>(856, 739)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -3697,7 +3697,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(192, 563)</value>
+      <value>(208, 579)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3876,7 +3876,7 @@
   </connection>
   <connection>
     <source_block_id>inets_radio_0</source_block_id>
-    <sink_block_id>qtgui_const_sink_x_0</sink_block_id>
+    <sink_block_id>qtgui_const_sink_x_0_0</sink_block_id>
     <source_key>3</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -3903,6 +3903,12 @@
     <sink_block_id>inets_stop_and_wait_arq_0</sink_block_id>
     <source_key>out</source_key>
     <sink_key>from_phy</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_radio_0</source_block_id>
+    <sink_block_id>inets_stop_and_wait_arq_0</sink_block_id>
+    <source_key>snr</source_key>
+    <sink_key>snr</sink_key>
   </connection>
   <connection>
     <source_block_id>inets_stop_and_wait_arq_0</source_block_id>
