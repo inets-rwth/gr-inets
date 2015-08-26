@@ -43,7 +43,7 @@ namespace gr {
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(gr_complex)), sps), _sps(sps)
     {
-        set_output_multiple(128*_sps);
+        set_output_multiple(32*_sps);
     }
 
     /*
@@ -61,7 +61,7 @@ namespace gr {
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];
 	
-        //std::cout << "[timing recovery] noutput_items = " << noutput_items << std::endl;	
+        std::cout << "[timing recovery] noutput_items = " << noutput_items << std::endl;	
 
         // Do <+signal processing+>
 	int i, j, opt_delay;
@@ -86,7 +86,7 @@ namespace gr {
         }
 
         // Tell runtime system how many output items we produced.
-        //std::cout << "Produced "<< output_count << " samples. Opt delay = " << opt_delay << std::endl;
+        std::cout << "Produced "<< output_count << " samples. Opt delay = " << opt_delay << std::endl;
         return noutput_items;
     }
 
