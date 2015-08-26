@@ -38,7 +38,7 @@ class stop_and_wait_arq(gr.basic_block):
     PACKET_TYPE_DATA = 0
     PACKET_TYPE_ACK = 1
 
-    def __init__(self, ack_timeout, max_mtu_size, use_ack):
+    def __init__(self, ack_timeout, max_mtu_size, use_ack, stat_update_interval):
         gr.basic_block.__init__(self,
             name="stop_and_wait_arq",
             in_sig=[],
@@ -73,7 +73,7 @@ class stop_and_wait_arq(gr.basic_block):
         self.total_num_rx_bad_packets = 0
         self.total_num_rx_good_packets = 0
         self.snr_log = []
-        self.rx_statistics_update_interval = 10000
+        self.rx_statistics_update_interval = stat_update_interval
         numpy.random.seed(0)
         self.test_data = numpy.random.randint(0, 256, 500)
         

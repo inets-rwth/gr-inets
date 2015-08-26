@@ -4,11 +4,16 @@
   <key>inets_stop_and_wait_arq</key>
   <category>iNets</category>
   <import>import inets</import>
-  <make>inets.stop_and_wait_arq($ack_timeout, $max_mtu, $use_ack)</make>
+  <make>inets.stop_and_wait_arq($ack_timeout, $max_mtu, $use_ack, $stat_update_interval)</make>
   <param>
     <name>Use ACK</name>
     <key>use_ack</key>
     <type>bool</type>
+  </param>
+  <param>
+    <name>Statistics Update Interval (#Packets)</name>
+    <key>stat_update_interval</key>
+    <type>int</type>
   </param>
   <param>
     <name>ACK Timeout</name>
