@@ -40,12 +40,13 @@ class rrrm(gr.basic_block):
     PACKET_TYPE_SWITCH_ACCEPT = 2
     PACKET_TYPE_SWITCH_REJECT = 3
 
-    def __init__(self):
+    def __init__(self, channel_map):
         gr.basic_block.__init__(self,
             name="rrrm",
             in_sig=[],
             out_sig=[])
 
+	self.channel_map = channel_map
         self.message_port_register_in(pmt.intern('from_app'))
         self.message_port_register_out(pmt.intern('to_app'))
         self.message_port_register_in(pmt.intern('from_radar'))
@@ -58,10 +59,13 @@ class rrrm(gr.basic_block):
         self.app_queue = Queue.Queue()
         self.state = self.STATE_RUN
         self.curr_channel_id = 0
-        self.thread_lock = threading.Lock()        
-        self.antenna_control = control.control("/dev/ttyACM0")
-        self.antenna_control.open()
-
+        self.thread_lock = threading.Lock()
+        try:
+	    self.antenna_control = control.control("/dev/ttyACM0")
+            self.antenna_control.open()
+        except:
+            print 'could not open serial port'
+        
     def handle_app_message(self, msg_pmt):  
         with self.thread_lock:
             if self.state == self.STATE_RUN:
@@ -115,19 +119,19 @@ class rrrm(gr.basic_block):
             if msg_type == self.PACKET_TYPE_SWITCH:
                 channel_id = ord(msg_data[0])
                 print 'RRRM: Processing channel switch to ',channel_id
-                self.antenna_control.move_to(90)
+                if self.antenna_control != None:
+                    self.antenna_control.move_to(90)
                 self.send_switch_accept()
                 self.state = self.STATE_WAIT_FOR_CHANNEL_SWITCH
             if msg_type == self.PACKET_TYPE_SWITCH_ACCEPT:
                 print 'RRRM: Switch accept'
                 #reposition antenna, start sending ping messages ???
-                self.antenna_control.move_to(90)
+                if self.antenna_control != None:
+                    self.antenna_control.move_to(90)
                 while not self.app_queue.empty():
                     self.send_data_message(self.app_queue.get())
 
                 self.state = self.STATE_RUN
-            
-                    
 
     def parse_rrrm_message(self, message_str):
         message_type = ord(message_str[0])

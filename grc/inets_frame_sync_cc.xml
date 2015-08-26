@@ -1,7 +1,7 @@
 <block>
   <name>Frame sync cc</name>
   <key>inets_frame_sync_cc</key>
-  <category>INETS</category>
+  <category>iNets</category>
   <import>import inets</import>
   <make>inets.frame_sync_cc($preamble, $threshold, $len_tag_key)</make>
   <param>

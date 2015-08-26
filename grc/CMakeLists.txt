@@ -16,16 +16,12 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-
 install(FILES
-    inets_simple_framer_cc.xml
-    inets_simple_framer_bb.xml
     inets_frame_sync_cc.xml
     inets_timing_recovery_cc.xml
     inets_packetizer.xml
     inets_packetizer_python.xml
     inets_unmake_packet_python.xml
-    inets_modem.xml
     inets_variable_rotator.xml
     inets_baseband_derotation.xml
     inets_stop_and_wait_arq.xml

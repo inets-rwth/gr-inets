@@ -335,7 +335,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>18</value>
+      <value>12</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -343,7 +343,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(624, 11)</value>
+      <value>(632, 11)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -651,7 +651,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 608)</value>
+      <value>(808, 576)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -694,7 +694,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 576)</value>
+      <value>(808, 544)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -741,7 +741,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(800, 840)</value>
+      <value>(616, 768)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -784,7 +784,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(496, 243)</value>
+      <value>(512, 155)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -821,6 +821,65 @@
     <param>
       <key>type</key>
       <value>"UDP_CLIENT"</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_socket_pdu</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(288, 259)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>host</key>
+      <value>localhost</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_socket_pdu_1</value>
+    </param>
+    <param>
+      <key>mtu</key>
+      <value>10000</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>port</key>
+      <value>52003</value>
+    </param>
+    <param>
+      <key>tcp_no_delay</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>"TCP_SERVER"</value>
     </param>
   </block>
   <block>
@@ -953,6 +1012,49 @@
     </param>
   </block>
   <block>
+    <key>inets_rrrm</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>channel_map</key>
+      <value>[0, 45]</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(496, 256)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>inets_rrrm_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>inets_stop_and_wait_arq</key>
     <param>
       <key>ack_timeout</key>
@@ -976,7 +1078,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(488, 363)</value>
+      <value>(488, 371)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1000,7 +1102,7 @@
     </param>
     <param>
       <key>use_ack</key>
-      <value>False</value>
+      <value>True</value>
     </param>
   </block>
   <block>
@@ -1058,7 +1160,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(912, 659)</value>
+      <value>(808, 619)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1074,7 +1176,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>qtgui_const_sink_x_0_0</value>
+      <value>qtgui_const_sink_x_0</value>
     </param>
     <param>
       <key>legend</key>
@@ -1322,7 +1424,7 @@
     </param>
     <param>
       <key>name</key>
-      <value>"Payload"</value>
+      <value>""</value>
     </param>
     <param>
       <key>nconnections</key>
@@ -1409,7 +1511,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(912, 563)</value>
+      <value>(992, 531)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1768,7 +1870,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(856, 739)</value>
+      <value>(808, 699)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -3697,7 +3799,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(208, 579)</value>
+      <value>(192, 563)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3858,9 +3960,15 @@
   </connection>
   <connection>
     <source_block_id>blocks_socket_pdu_0</source_block_id>
-    <sink_block_id>inets_stop_and_wait_arq_0</sink_block_id>
+    <sink_block_id>inets_rrrm_0</sink_block_id>
     <source_key>pdus</source_key>
     <sink_key>from_app</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_socket_pdu_1</source_block_id>
+    <sink_block_id>inets_rrrm_0</sink_block_id>
+    <source_key>pdus</source_key>
+    <sink_key>from_radar</sink_key>
   </connection>
   <connection>
     <source_block_id>inets_radio_0</source_block_id>
@@ -3876,7 +3984,7 @@
   </connection>
   <connection>
     <source_block_id>inets_radio_0</source_block_id>
-    <sink_block_id>qtgui_const_sink_x_0_0</sink_block_id>
+    <sink_block_id>qtgui_const_sink_x_0</sink_block_id>
     <source_key>3</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -3911,10 +4019,22 @@
     <sink_key>snr</sink_key>
   </connection>
   <connection>
-    <source_block_id>inets_stop_and_wait_arq_0</source_block_id>
+    <source_block_id>inets_rrrm_0</source_block_id>
     <sink_block_id>blocks_socket_pdu_0</sink_block_id>
     <source_key>to_app</source_key>
     <sink_key>pdus</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_rrrm_0</source_block_id>
+    <sink_block_id>inets_stop_and_wait_arq_0</sink_block_id>
+    <source_key>to_ll</source_key>
+    <sink_key>from_app</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_stop_and_wait_arq_0</source_block_id>
+    <sink_block_id>inets_rrrm_0</sink_block_id>
+    <source_key>to_app</source_key>
+    <sink_key>from_ll</sink_key>
   </connection>
   <connection>
     <source_block_id>inets_stop_and_wait_arq_0</source_block_id>
