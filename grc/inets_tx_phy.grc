@@ -650,7 +650,7 @@
     </param>
     <param>
       <key>packet_len</key>
-      <value>64</value>
+      <value>256</value>
     </param>
     <param>
       <key>type</key>
@@ -705,7 +705,7 @@
     </param>
     <param>
       <key>packet_len</key>
-      <value>64</value>
+      <value>128</value>
     </param>
     <param>
       <key>type</key>
@@ -850,7 +850,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(136, 203)</value>
+      <value>(168, 203)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1121,7 +1121,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>encoder</key>
@@ -1129,7 +1129,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(40, 371)</value>
+      <value>(40, 427)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1300,7 +1300,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(8, 251)</value>
+      <value>(8, 299)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1524,6 +1524,12 @@
     <sink_block_id>digital_constellation_modulator_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>pad_source_0</source_block_id>
+    <sink_block_id>blocks_pdu_to_tagged_stream_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>pdus</sink_key>
   </connection>
   <connection>
     <source_block_id>pad_source_0</source_block_id>
