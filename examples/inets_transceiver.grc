@@ -132,7 +132,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(184, 139)</value>
+      <value>(8, 427)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -145,6 +145,33 @@
     <param>
       <key>value</key>
       <value>range_freq</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(184, 171)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>modulation</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>gnuradio.digital.constellation_qpsk().base()</value>
     </param>
   </block>
   <block>
@@ -601,7 +628,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>20</value>
+      <value>50</value>
     </param>
   </block>
   <block>
@@ -784,7 +811,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(496, 243)</value>
+      <value>(496, 211)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -820,7 +847,7 @@
     </param>
     <param>
       <key>type</key>
-      <value>"UDP_CLIENT"</value>
+      <value>"UDP_SERVER"</value>
     </param>
   </block>
   <block>
@@ -839,7 +866,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1000, 91)</value>
+      <value>(1000, 59)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -870,7 +897,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1000, 43)</value>
+      <value>(1000, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -897,7 +924,7 @@
     </param>
     <param>
       <key>constellation</key>
-      <value>gnuradio.digital.constellation_qpsk().base()</value>
+      <value>modulation</value>
     </param>
     <param>
       <key>affinity</key>
@@ -976,7 +1003,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(488, 363)</value>
+      <value>(424, 344)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -999,6 +1026,10 @@
       <value>0</value>
     </param>
     <param>
+      <key>stat_update_interval</key>
+      <value>10000</value>
+    </param>
+    <param>
       <key>use_ack</key>
       <value>False</value>
     </param>
@@ -1019,7 +1050,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(264, 139)</value>
+      <value>(184, 123)</value>
     </param>
     <param>
       <key>_rotation</key>
