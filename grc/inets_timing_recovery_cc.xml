@@ -1,7 +1,7 @@
 <block>
   <name>Timing recovery cc</name>
   <key>inets_timing_recovery_cc</key>
-  <category>INETS</category>
+  <category>iNets</category>
   <import>import inets</import>
   <make>inets.timing_recovery_cc($sps)</make>
   <param>
