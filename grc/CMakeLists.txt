@@ -17,8 +17,6 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 install(FILES
-    inets_simple_framer_cc.xml
-    inets_simple_framer_bb.xml
     inets_frame_sync_cc.xml
     inets_timing_recovery_cc.xml
     inets_packetizer.xml
