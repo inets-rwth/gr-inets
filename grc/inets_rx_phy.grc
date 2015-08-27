@@ -245,7 +245,7 @@
     </param>
     <param>
       <key>decay_rate</key>
-      <value>5</value>
+      <value>10</value>
     </param>
     <param>
       <key>_enabled</key>
