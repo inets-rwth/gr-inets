@@ -108,7 +108,7 @@ namespace gr {
           }
 	  //check for jumps in error signal. May indicate a decision error due to noise.
           //Implement a D component in feedback loop to prevent decision erroros to destroy phase sync.
-	  d_error =  error - prev_error;
+	  float d_error =  error - prev_error;
           prev_error = error;
           if(prev_error != 0) {
             std::cout << "delta error = " << d_error << std::endl;
