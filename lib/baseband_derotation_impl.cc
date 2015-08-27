@@ -59,10 +59,8 @@ namespace gr {
     {
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];
-        
         // Do <+signal processing+>
-        float prev_error = 0.0f;
-        
+
         std::vector<tag_t> phi_tags;
         get_tags_in_window(phi_tags, 0, 0, noutput_items, pmt::intern("phi"));
         for(int i = 0; i < noutput_items; i++) {
@@ -79,7 +77,7 @@ namespace gr {
 
           float arg = std::arg(out[i]);
           float error = 0.0f;
-   
+           
           if(_constellation->points().size() == 2) {
             if(arg > M_PI / 2.0f || arg < -M_PI / 2.0f) {
                 if(arg < 0) {
@@ -106,13 +104,7 @@ namespace gr {
               error = (M_PI/4.0f) + arg;
             }
           }
-	  //check for jumps in error signal. May indicate a decision error due to noise.
-          //Implement a D component in feedback loop to prevent decision erroros to destroy phase sync.
-	  d_error =  error - prev_error;
-          prev_error = error;
-          if(prev_error != 0) {
-            std::cout << "delta error = " << d_error << std::endl;
-          }
+
           _error = _error + _mu * error;
           //TODO wrap _error
         
