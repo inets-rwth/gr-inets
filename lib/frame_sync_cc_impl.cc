@@ -28,8 +28,6 @@
 #include <gnuradio/io_signature.h>
 #include "frame_sync_cc_impl.h"
 
-#define M_PI 3.14159265358979323846
-
 using namespace std;
 using namespace boost::assign; // bring 'operator+=()' into scope
 
@@ -37,10 +35,10 @@ namespace gr {
   namespace inets {
 
     frame_sync_cc::sptr
-    frame_sync_cc::make(const std::vector<gr_complex> &preamble, float threshold, const std::string &len_tag_key)
+    frame_sync_cc::make(const std::vector<int> &preamble, gr::digital::constellation_sptr constellation, float threshold, const std::string &len_tag_key)
     {
       return gnuradio::get_initial_sptr
-        (new frame_sync_cc_impl(preamble, threshold, len_tag_key));
+        (new frame_sync_cc_impl(preamble, constellation, threshold, len_tag_key));
     }
 
     /*
@@ -49,14 +47,23 @@ namespace gr {
      * Otherwise the gnuradio blocks packed_to_unpacked and unpacked_to_packed don't work
      * beacuse the payload will not be byte aligned.        
      */
-    frame_sync_cc_impl::frame_sync_cc_impl(const std::vector<gr_complex> &preamble, float threshold, const std::string &len_tag_key)
+    frame_sync_cc_impl::frame_sync_cc_impl(const std::vector<int> &preamble, gr::digital::constellation_sptr constellation, float threshold, const std::string &len_tag_key)
       : gr::block("frame_sync_cc",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::makev(4, 4, boost::assign::list_of(sizeof(gr_complex))(sizeof(gr_complex))(sizeof(unsigned char))(sizeof(float)))),
         _threshold(threshold), _len_tag_key(len_tag_key),
-        _state(STATE_DETECT),  _diff(1,0), _preamble(preamble)
+        _state(STATE_DETECT),  _diff(1,0), _preamble(preamble), _constellation(constellation)
     {
         _len_preamble = _preamble.size();
+        int bits_per_sym = constellation->bits_per_symbol();
+        for(int i = 0; i < _len_preamble; i+= bits_per_sym) {
+            int val = 0;
+            for(int j = 0; j < bits_per_sym; j++) {
+                val += (_preamble[i + ((bits_per_sym - 1) - j)] << j); 
+            }
+            _mod_preamble.push_back(constellation->points()[val]);
+        }
+        _len_preamble = _mod_preamble.size();
         set_tag_propagation_policy(TPP_DONT);
         set_output_multiple(1024);
         message_port_register_out(pmt::string_to_symbol("phase"));
@@ -100,10 +107,12 @@ namespace gr {
 
             trig_out[i] = 0;
 
+	        //Look for preamble. Use differentially encoded preamble for increased detection range
             sum = 0;
             for(j = 1; j < _len_preamble; j++) {
-                sum += std::conj(_preamble[j]) * in[i + j] * std::conj(in[i + j - 1]) * _preamble[j - 1];
+                sum += std::conj(_mod_preamble[j]) * in[i + j] * std::conj(in[i + j - 1]) * _mod_preamble[j - 1];
                 //sum += std::conj(in[i + j]) * in[i + j + (_len_preamble / 2)];   
+                //sum += std::conj(in[i + j]) * _mod_preamble[j];
             }
 
             corr_out[i] = sum;
@@ -130,35 +139,42 @@ namespace gr {
                 
                 if(preamble_items_left == _len_preamble) {
                     
-                    _d_f = calculate_fd(&in[i],&_preamble[0], _len_preamble / 2, _len_preamble);
-                   
-                     _d_phi = std::arg(_preamble[_len_preamble - 1] / ((1.0f/std::abs(in[i + (_len_preamble - 1)])) * in[i + (_len_preamble - 1) ]));
-                    
+                    _d_f = calculate_fd(&in[i], &_mod_preamble[0], _len_preamble / 2, _len_preamble);
+                    //_d_phi = _mod_preamble[_len_preamble - 1] / in[i + (_len_preamble - 1)];
                     f_offset_out[num_f_offset_prod] = _d_f;
                     num_f_offset_prod++;
+                    
+                    std::complex<float> curr_d_phi(0,0);
+                    for(int j = 0; j < _len_preamble ; j++) {
+                        std::complex<float> curr_pre_item = in[j + i] * std::polar(1.0f, (float)(-2.0 * M_PI * _d_f * (float)j));
+                        curr_d_phi += _mod_preamble[j] / curr_pre_item;
+                    }
+                    curr_d_phi = curr_d_phi * (1.0f / std::abs(curr_d_phi));
+                    _d_phi = curr_d_phi;
+                    //_d_phi = std::complex<float>(0,0);
                 }
 
                 consumed_items++;
                 produced_items++;
                 preamble_items_left--;
-                                                    
+ 
                 if(preamble_items_left == 0) {
                     _state = STATE_SET_TRIGGER;
                     continue;
                 }                           
             }
-            
+ 
             if(_state == STATE_SET_TRIGGER) {
                 trig_out[i] = 1;
                 add_item_tag(0, nitems_written(0) + i, pmt::intern("fd"), pmt::from_float(_d_f));          
-                add_item_tag(0, nitems_written(0) + i, pmt::intern("phi"), pmt::from_float(_d_phi));
+                add_item_tag(0, nitems_written(0) + i, pmt::intern("phi"), pmt::from_float(std::arg(_d_phi)));
                  _state = STATE_DETECT;
                 consumed_items++;
                 produced_items++;
             }
 
         }
-         
+
         for(i = 0; i < produced_items; i++) {
             out[i] = in[i];
         }
@@ -189,7 +205,10 @@ namespace gr {
         return phi;
     }
 
-
+    /*
+     * Data aided frequency offset estimation.
+     * See Eq. #8 in "Data-Aided Frequency Estimation for Burst Digital Transmission" by Mengali and Morelli 
+     */
     float frame_sync_cc_impl::calculate_fd(const gr_complex* x,const gr_complex* c, int N, int L0)
     {
         double w_div =(float)N * (4.0f * (float)N * (float)N - 6.0f * (float)N * (float)L0 + 3.0f * (float)L0 * (float)L0 - 1.0f);
@@ -200,20 +219,16 @@ namespace gr {
         }
 
         double sum = 0;
-        //std::complex<double> sum = 0;
         for(int i = 1; i <= N; i++) {
             double w = (3.0f * ((float)(L0 - i) * (float)(L0 - i + 1) - (float)N * (float)(L0 - N))) / w_div;
             double c1 = std::arg(calculate_R(i, z, L0));
             double c2 = std::arg(calculate_R(i - 1, z, L0));
             double c3 = c1 - c2;
             c3 = wrap_phase(c3);
-            //TODO wrap c3 to [-pi,pi)
             sum += w * c3;
-            //sum += calculate_R(i, z, L0);
         }
         delete[] z; 
         return ((float)sum / (2.0f * M_PI));
-        //return (std::arg(sum) / (M_PI * (N + 1.0)));
     }
     
     std::complex<double> frame_sync_cc_impl::calculate_R(int m, const std::complex<double>* z, int L0)
@@ -222,13 +237,10 @@ namespace gr {
         for(int i = m; i < L0; i++) {
             float x = std::arg(z[i]) - std::arg(z[i - m]);
             std::complex<float> x2 = std::polar(1.0f, x);
-            //std::complex<double> x = z[i] * std::conj(z[i - m]);
             sum += x2;
         }
         return ((1.0/(double)(L0 - m)) * sum); 
     }
-
-
 
   } /* namespace inets */
 } /* namespace gr */

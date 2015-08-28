@@ -1,13 +1,18 @@
 <block>
-  <name>Frame sync cc</name>
+  <name>Frame Sync</name>
   <key>inets_frame_sync_cc</key>
   <category>iNets</category>
   <import>import inets</import>
-  <make>inets.frame_sync_cc($preamble, $threshold, $len_tag_key)</make>
+  <make>inets.frame_sync_cc($preamble, $constellation, $threshold, $len_tag_key)</make>
   <param>
     <name>Preamble</name>
     <key>preamble</key>
-    <type>complex_vector</type>
+    <type>int_vector</type>
+  </param>
+  <param>
+    <name>Constellation</name>
+    <key>constellation</key>
+    <type>raw</type>
   </param>
   <param>
     <name>Threshold</name>
@@ -17,7 +22,7 @@
   <param>
     <name>Len_tag_key</name>
     <key>len_tag_key</key>
-    <value> "packet_len"</value>
+    <value>"packet_len"</value>
     <type>string</type>
   </param>
   <sink>

@@ -24,6 +24,7 @@
 
 #include <inets/api.h>
 #include <gnuradio/sync_block.h>
+#include <gnuradio/digital/constellation.h>
 
 namespace gr {
   namespace inets {
@@ -46,7 +47,7 @@ namespace gr {
        * class. inets::frame_sync_cc::make is the public interface for
        * creating new instances.
        */
-      static sptr make(const std::vector<gr_complex> &preamble, float threshold, const std::string &len_tag_key = "packet_len");
+      static sptr make(const std::vector<int> &preamble, gr::digital::constellation_sptr constellation, float threshold, const std::string &len_tag_key = "packet_len");
     };
 
   } // namespace inets
