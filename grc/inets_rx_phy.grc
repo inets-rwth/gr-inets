@@ -253,7 +253,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(88, 251)</value>
+      <value>(128, 283)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -286,53 +286,6 @@
     <param>
       <key>type</key>
       <value>complex</value>
-    </param>
-  </block>
-  <block>
-    <key>analog_feedforward_agc_cc</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(88, 243)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>analog_feedforward_agc_cc_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>num_samples</key>
-      <value>256</value>
-    </param>
-    <param>
-      <key>reference</key>
-      <value>1.0</value>
     </param>
   </block>
   <block>
@@ -532,7 +485,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(688, 627)</value>
+      <value>(712, 555)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -638,7 +591,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(104, 587)</value>
+      <value>(104, 571)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -830,7 +783,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(472, 635)</value>
+      <value>(472, 563)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1042,7 +995,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(872, 635)</value>
+      <value>(928, 563)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1085,7 +1038,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(216, 331)</value>
+      <value>(288, 267)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1156,7 +1109,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(464, 672)</value>
+      <value>(480, 648)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1320,7 +1273,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(856, 267)</value>
+      <value>(920, 235)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1354,6 +1307,10 @@
       <value></value>
     </param>
     <param>
+      <key>constellation</key>
+      <value>constellation</value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -1363,7 +1320,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(472, 312)</value>
+      <value>(520, 280)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1414,7 +1371,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(680, 275)</value>
+      <value>(760, 243)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1434,7 +1391,7 @@
     </param>
     <param>
       <key>num_delay</key>
-      <value>1</value>
+      <value>len(preamble) // constellation.bits_per_symbol()</value>
     </param>
   </block>
   <block>
@@ -1578,7 +1535,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1112, 675)</value>
+      <value>(768, 643)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1621,7 +1578,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1104, 323)</value>
+      <value>(1160, 275)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1664,7 +1621,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(736, 339)</value>
+      <value>(800, 307)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1707,7 +1664,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(640, 531)</value>
+      <value>(808, 467)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1750,7 +1707,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(472, 259)</value>
+      <value>(520, 227)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1793,7 +1750,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(784, 483)</value>
+      <value>(848, 411)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1836,7 +1793,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 371)</value>
+      <value>(0, 315)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2051,7 +2008,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1104, 275)</value>
+      <value>(1160, 219)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2078,7 +2035,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(784, 427)</value>
+      <value>(848, 363)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2149,12 +2106,6 @@
   </block>
   <connection>
     <source_block_id>analog_agc2_xx_0</source_block_id>
-    <sink_block_id>digital_pfb_clock_sync_xxx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>analog_feedforward_agc_cc_0</source_block_id>
     <sink_block_id>digital_pfb_clock_sync_xxx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -2336,12 +2287,6 @@
   <connection>
     <source_block_id>pad_source_0</source_block_id>
     <sink_block_id>analog_agc2_xx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>pad_source_0</source_block_id>
-    <sink_block_id>analog_feedforward_agc_cc_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
