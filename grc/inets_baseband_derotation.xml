@@ -1,5 +1,5 @@
 <block>
-  <name>Baseband derotation</name>
+  <name>Baseband Derotation</name>
   <key>inets_baseband_derotation</key>
   <category>iNets</category>
   <import>import inets</import>

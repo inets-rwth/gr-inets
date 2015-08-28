@@ -1,5 +1,5 @@
 <block>
-  <name>Variable rotator</name>
+  <name>Variable Rotator</name>
   <key>inets_variable_rotator</key>
   <category>INETS</category>
   <import>import inets</import>

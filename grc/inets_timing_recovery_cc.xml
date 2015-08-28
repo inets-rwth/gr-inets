@@ -1,5 +1,5 @@
 <block>
-  <name>Timing recovery cc</name>
+  <name>Timing Recovery</name>
   <key>inets_timing_recovery_cc</key>
   <category>iNets</category>
   <import>import inets</import>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>stop_and_wait_arq</name>
+  <name>Stop and Wait Arq</name>
   <key>inets_stop_and_wait_arq</key>
   <category>iNets</category>
   <import>import inets</import>
