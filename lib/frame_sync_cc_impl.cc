@@ -103,14 +103,18 @@ namespace gr {
         int preamble_items_left = 0;
         gr_complex sum = 0;
 
+        std::complex<float>* curr_correlation_buffer = new std::complex<float>[_len_preamble];
+        
         for(i = 0; i < noutput_items - _len_preamble; i++) {
 
             trig_out[i] = 0;
 
 	        //Look for preamble. Use differentially encoded preamble for increased detection range
             sum = 0;
-            for(j = 1; j < _len_preamble; j++) {
-                sum += std::conj(_mod_preamble[j]) * in[i + j] * std::conj(in[i + j - 1]) * _mod_preamble[j - 1];
+            for(j = 1; j < (_len_preamble / 2); j++) {
+                std::complex<float> x = std::conj(_mod_preamble[j]) * in[i + j]; 
+                curr_correlation_buffer[j - 1] = x; 
+                sum += x  * std::conj(in[i + j - 1]) * _mod_preamble[j - 1];
                 //sum += std::conj(in[i + j]) * in[i + j + (_len_preamble / 2)];   
                 //sum += std::conj(in[i + j]) * _mod_preamble[j];
             }
@@ -145,7 +149,7 @@ namespace gr {
                     num_f_offset_prod++;
                     
                     std::complex<float> curr_d_phi(0,0);
-                    for(int j = 0; j < _len_preamble ; j++) {
+                    for(int j = 0; j < (_len_preamble / 4); j++) {
                         std::complex<float> curr_pre_item = in[j + i] * std::polar(1.0f, (float)(-2.0 * M_PI * _d_f * (float)j));
                         curr_d_phi += _mod_preamble[j] / curr_pre_item;
                     }
