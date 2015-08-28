@@ -148,7 +148,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(608, 11)</value>
+      <value>(1056, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -595,7 +595,7 @@
     </param>
     <param>
       <key>packet_len</key>
-      <value>len(preamble)</value>
+      <value>len(preamble)/8</value>
     </param>
     <param>
       <key>type</key>
@@ -1371,7 +1371,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>[0]</value>
+      <value>[]</value>
     </param>
   </block>
   <block>
