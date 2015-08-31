@@ -47,8 +47,8 @@ namespace gr {
         static const int STATE_PROCESS_PREAMBLE = 2;
         static const int STATE_SET_TRIGGER = 4;
         
-        float calculate_fd(const gr_complex* x, const gr_complex* c, int N, int L0);
-        std::complex<double> calculate_R(int m, const std::complex<double>* z, int L0);
+        float calculate_fd(const gr_complex* z, const gr_complex* x, const gr_complex* c, int N, int L0);
+        std::complex<double> calculate_R(int m, const gr_complex* z, int L0);
         float wrap_phase(float phi);
       
       public:

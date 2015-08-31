@@ -111,10 +111,15 @@ namespace gr {
 
 	        //Look for preamble. Use differentially encoded preamble for increased detection range
             sum = 0;
-            for(j = 1; j < (_len_preamble / 2); j++) {
+            for(j = 0; j < _len_preamble; j++) {
                 std::complex<float> x = std::conj(_mod_preamble[j]) * in[i + j]; 
-                curr_correlation_buffer[j - 1] = x; 
-                sum += x  * std::conj(in[i + j - 1]) * _mod_preamble[j - 1];
+                curr_correlation_buffer[j] = x; 
+                
+                //Differential detection for better freq. offset agnostic
+                //sum += x * conj(x_prev)
+                if(j >= 1) {
+                    sum += curr_correlation_buffer[j] * std::conj(curr_correlation_buffer[j - 1]);
+                }
                 //sum += std::conj(in[i + j]) * in[i + j + (_len_preamble / 2)];   
                 //sum += std::conj(in[i + j]) * _mod_preamble[j];
             }
@@ -143,7 +148,7 @@ namespace gr {
                 
                 if(preamble_items_left == _len_preamble) {
                     
-                    _d_f = calculate_fd(&in[i], &_mod_preamble[0], _len_preamble / 2, _len_preamble);
+                    _d_f = calculate_fd(curr_correlation_buffer, &in[i], &_mod_preamble[0], _len_preamble / 2, _len_preamble);
                     //_d_phi = _mod_preamble[_len_preamble - 1] / in[i + (_len_preamble - 1)];
                     f_offset_out[num_f_offset_prod] = _d_f;
                     num_f_offset_prod++;
@@ -183,6 +188,7 @@ namespace gr {
             out[i] = in[i];
         }
 
+        delete[] curr_correlation_buffer;
         consume_each(consumed_items); 
         produce(0, produced_items);
         produce(1, produced_items);
@@ -213,15 +219,15 @@ namespace gr {
      * Data aided frequency offset estimation.
      * See Eq. #8 in "Data-Aided Frequency Estimation for Burst Digital Transmission" by Mengali and Morelli 
      */
-    float frame_sync_cc_impl::calculate_fd(const gr_complex* x,const gr_complex* c, int N, int L0)
+    float frame_sync_cc_impl::calculate_fd(const gr_complex* z, const gr_complex* x,const gr_complex* c, int N, int L0)
     {
         double w_div =(float)N * (4.0f * (float)N * (float)N - 6.0f * (float)N * (float)L0 + 3.0f * (float)L0 * (float)L0 - 1.0f);
         //z(k) = x(k) * conj(c(k))   
-        std::complex<double>* z = new std::complex<double>[L0];
-        for(int i = 0; i < L0; i++) {
-            z[i] = (1 / std::abs(x[i])) * x[i] * std::conj(c[i]);
-        }
-
+        //std::complex<double>* z = new std::complex<double>[L0];
+        //for(int i = 0; i < L0; i++) {
+        //    z[i] = (1 / std::abs(x[i])) * x[i] * std::conj(c[i]);
+        //}
+ 
         double sum = 0;
         for(int i = 1; i <= N; i++) {
             double w = (3.0f * ((float)(L0 - i) * (float)(L0 - i + 1) - (float)N * (float)(L0 - N))) / w_div;
@@ -231,11 +237,10 @@ namespace gr {
             c3 = wrap_phase(c3);
             sum += w * c3;
         }
-        delete[] z; 
         return ((float)sum / (2.0f * M_PI));
     }
     
-    std::complex<double> frame_sync_cc_impl::calculate_R(int m, const std::complex<double>* z, int L0)
+    std::complex<double> frame_sync_cc_impl::calculate_R(int m, const gr_complex* z, int L0)
     {
         std::complex<double> sum = 0;
         for(int i = m; i < L0; i++) {
