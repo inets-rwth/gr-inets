@@ -178,7 +178,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1e6</value>
+      <value>250e3</value>
     </param>
   </block>
   <block>
@@ -711,7 +711,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(816, 91)</value>
+      <value>(768, 51)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -794,7 +794,7 @@
     </param>
     <param>
       <key>noise_voltage</key>
-      <value>0.1</value>
+      <value>0.3</value>
     </param>
     <param>
       <key>seed</key>
@@ -946,11 +946,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(720, 475)</value>
+      <value>(704, 603)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1021,7 +1021,7 @@
     </param>
     <param>
       <key>preamble</key>
-      <value>preamble_0[0:64]</value>
+      <value>preamble_0</value>
     </param>
     <param>
       <key>threshold</key>
@@ -1718,7 +1718,7 @@
     </param>
     <param>
       <key>size</key>
-      <value>1024</value>
+      <value>10000</value>
     </param>
     <param>
       <key>srate</key>
@@ -2077,7 +2077,7 @@
     </param>
     <param>
       <key>size</key>
-      <value>256</value>
+      <value>1024</value>
     </param>
     <param>
       <key>srate</key>
@@ -2297,12 +2297,6 @@
   <connection>
     <source_block_id>inets_variable_rotator_0</source_block_id>
     <sink_block_id>inets_baseband_derotation_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>inets_variable_rotator_0</source_block_id>
-    <sink_block_id>qtgui_const_sink_x_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

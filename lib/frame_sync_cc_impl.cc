@@ -27,7 +27,7 @@
 #include <boost/assign/list_of.hpp>
 #include <gnuradio/io_signature.h>
 #include "frame_sync_cc_impl.h"
-
+#include <volk/volk.h>
 using namespace std;
 using namespace boost::assign; // bring 'operator+=()' into scope
 
@@ -64,6 +64,7 @@ namespace gr {
             _mod_preamble.push_back(constellation->points()[val]);
         }
         _len_preamble = _mod_preamble.size();
+        std::cout << "Using preamble of len " << _len_preamble << std::endl;
         set_tag_propagation_policy(TPP_DONT);
         set_output_multiple(1024);
         message_port_register_out(pmt::string_to_symbol("phase"));
@@ -82,6 +83,11 @@ namespace gr {
         return;
     }
 
+    std::complex<float>* curr_correlation_buffer; // = (gr_complex*)volk_malloc(sizeof(gr_complex)*256, volk_get_alignment()); 
+    std::complex<float>* ab =  (gr_complex*)volk_malloc(sizeof(gr_complex)*256, volk_get_alignment());
+    std::complex<float>* ab_conj =(gr_complex*)volk_malloc(sizeof(gr_complex)*256, volk_get_alignment());
+    std::complex<float>* cd = (gr_complex*)volk_malloc(sizeof(gr_complex)*256, volk_get_alignment());
+    
     int
     frame_sync_cc_impl::general_work(int noutput_items,
                           gr_vector_int &ninput_items,
@@ -103,7 +109,6 @@ namespace gr {
         int preamble_items_left = 0;
         gr_complex sum = 0;
 
-        std::complex<float>* curr_correlation_buffer = new std::complex<float>[_len_preamble];
         
         for(i = 0; i < noutput_items - _len_preamble; i++) {
 
@@ -111,19 +116,29 @@ namespace gr {
 
 	        //Look for preamble. Use differentially encoded preamble for increased detection range
             sum = 0;
-            for(j = 0; j < _len_preamble; j++) {
-                std::complex<float> x = std::conj(_mod_preamble[j]) * in[i + j]; 
-                curr_correlation_buffer[j] = x; 
+            
+            //volk_32fc_x2_conjugate_dot_prod_32fc(&sum, &in[i], &_mod_preamble[0], _len_preamble);
+            volk_32fc_x2_multiply_conjugate_32fc(ab, &in[i], &_mod_preamble[0], _len_preamble);
+            volk_32fc_conjugate_32fc(ab_conj, ab, _len_preamble);
+            volk_32fc_x2_multiply_32fc(cd, &ab[1], ab_conj, _len_preamble - 1);
+            curr_correlation_buffer = ab;
+            
+            //volk_32fc_x2_multiply_conjugate_32fc(cd, &_mod_buffer[0], &in[i - 1], _len_preamble);
+             
+            for(j = 0; j < _len_preamble - 1; j++) {
+                //std::complex<float> x = std::conj(_mod_preamble[j]) * in[i + j]; 
+                //curr_correlation_buffer[j] = x; 
                 
                 //Differential detection for better freq. offset agnostic
                 //sum += x * conj(x_prev)
-                if(j >= 1) {
-                    sum += curr_correlation_buffer[j] * std::conj(curr_correlation_buffer[j - 1]);
-                }
+                //if(j >= 1) {
+                //    sum += curr_correlation_buffer[j] * std::conj(curr_correlation_buffer[j - 1]);
+                //}
                 //sum += std::conj(in[i + j]) * in[i + j + (_len_preamble / 2)];   
                 //sum += std::conj(in[i + j]) * _mod_preamble[j];
+                sum += cd[j];
             }
-
+            
             corr_out[i] = sum;
             
             if(_state == STATE_DETECT) {                    
@@ -188,7 +203,6 @@ namespace gr {
             out[i] = in[i];
         }
 
-        delete[] curr_correlation_buffer;
         consume_each(consumed_items); 
         produce(0, produced_items);
         produce(1, produced_items);
