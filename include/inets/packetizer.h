@@ -46,7 +46,7 @@ namespace gr {
        * class. inets::packetizer::make is the public interface for
        * creating new instances.
        */
-      static sptr make();
+      static sptr make(const std::vector<unsigned char> &preamble, int padding);
     };
 
   } // namespace inets

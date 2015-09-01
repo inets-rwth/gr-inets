@@ -1,17 +1,27 @@
 <block>
   <name>Packetizer</name>
   <key>inets_packetizer</key>
-  <category>INETS</category>
+  <category>iNets</category>
   <import>import inets</import>
-  <make>inets.packetizer()</make>
+  <make>inets.packetizer($preamble, $padding)</make>
+  <param>
+    <name>Preamble</name>
+    <key>preamble</key>
+    <type>int_vector</type>
+  </param>
+  <param>
+    <name>Padding</name>
+    <key>padding</key>
+    <type>int</type>
+  </param>
   <sink>
-		<name>payload_in</name>
+    <name>payload_in</name>
     <type>message</type>
     <optional>1</optional>
   </sink>
   <source>
-		<name>packet_out</name>
+    <name>packet_out</name>
     <type>message</type>
     <optional>1</optional>
-	</source>
+  </source>
 </block>
