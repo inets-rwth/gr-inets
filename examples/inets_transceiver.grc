@@ -601,7 +601,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1e6</value>
+      <value>4e6</value>
     </param>
   </block>
   <block>
@@ -655,7 +655,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>50</value>
+      <value>500</value>
     </param>
   </block>
   <block>
@@ -2940,7 +2940,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(808, 427)</value>
+      <value>(816, 419)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3076,7 +3076,7 @@
     </param>
     <param>
       <key>sync</key>
-      <value></value>
+      <value>pc_clock</value>
     </param>
     <param>
       <key>otw</key>
@@ -3755,7 +3755,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(208, 579)</value>
+      <value>(200, 571)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3895,7 +3895,7 @@
     </param>
     <param>
       <key>sync</key>
-      <value></value>
+      <value>pc_clock</value>
     </param>
     <param>
       <key>otw</key>
