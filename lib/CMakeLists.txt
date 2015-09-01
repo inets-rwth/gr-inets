@@ -39,7 +39,7 @@ if(NOT inets_sources)
 endif(NOT inets_sources)
 
 add_library(gnuradio-inets SHARED ${inets_sources})
-target_link_libraries(gnuradio-inets ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES})
+target_link_libraries(gnuradio-inets ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${UHD_LIBRARIES})
 set_target_properties(gnuradio-inets PROPERTIES DEFINE_SYMBOL "gnuradio_inets_EXPORTS")
 
 if(APPLE)

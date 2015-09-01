@@ -24,6 +24,8 @@
 
 #include <gnuradio/io_signature.h>
 #include "packetizer_impl.h"
+#include <sys/time.h>
+#include <uhd/types/time_spec.hpp>
 
 namespace gr {
   namespace inets {
@@ -54,7 +56,7 @@ namespace gr {
               gr::io_signature::make(0, 0, 0),
               gr::io_signature::make(0, 0, 0)), 
         _header_generator(gr::digital::packet_header_default::make(32, "packet_len", "packet_num", 1)),
-        _preamble(preamble), _padding(padding)
+        _preamble(preamble), _padding(padding), _last_tx_time(0)
     {
         _random = std::vector<unsigned char>(_random_array, _random_array + 128);
 
@@ -78,7 +80,7 @@ namespace gr {
     packetizer_impl::~packetizer_impl()
     {
     }
-
+    int delay_counter = 0;
     void packetizer_impl::receive(pmt::pmt_t msg)
     {
 
@@ -109,8 +111,27 @@ namespace gr {
                 packet.insert(packet.end(), payload.begin(), payload.end());
                 packet.insert(packet.end(), _random.begin(), _random.end());
 
+                static const pmt::pmt_t time_key = pmt::string_to_symbol("tx_time");
+                struct timeval t;
+                gettimeofday(&t, NULL);
+                double tx_time = t.tv_sec + t.tv_usec / 1000000.0;
+                double min_time_diff = 2000 * 8.0 / (double)2e6; 
+                if(tx_time <= _last_tx_time || (tx_time - _last_tx_time) <= min_time_diff) {
+                    tx_time = _last_tx_time + min_time_diff;
+                }
+                //std::cout << "tx time = " << std::fixed << tx_time << std::endl;
+                _last_tx_time = tx_time;
+                uhd::time_spec_t now = uhd::time_spec_t(tx_time)
+                    + uhd::time_spec_t(0.01);
+
+                const pmt::pmt_t time_value = pmt::make_tuple(
+                    pmt::from_uint64(now.get_full_secs()),
+                    pmt::from_double(now.get_frac_secs())
+                );
                 pmt::pmt_t out_pmt_vector = pmt::init_u8vector(packet.size(), packet);
-                pmt::pmt_t pdu = pmt::cons(pmt::PMT_NIL, out_pmt_vector);
+                pmt::pmt_t meta = pmt::make_dict();
+                meta = pmt::dict_add(meta, pmt::mp("tx_time"), time_value);
+                pmt::pmt_t pdu = pmt::cons(meta, out_pmt_vector);
 
                 message_port_pub(pmt::mp("packet_out"), pdu);
             } else { std::cout << "no u8 vector " << std::endl; }

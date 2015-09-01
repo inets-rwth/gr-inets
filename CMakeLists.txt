@@ -63,6 +63,7 @@ if(NOT Boost_FOUND)
     message(FATAL_ERROR "Boost required to compile inets")
 endif()
 
+find_package(UHD)
 ########################################################################
 # Install directories
 ########################################################################
@@ -105,7 +106,6 @@ endif(APPLE)
 ########################################################################
 find_package(CppUnit)
 find_package(Doxygen)
-
 # Search for GNU Radio and its components and versions. Add any
 # components required to the list of GR_REQUIRED_COMPONENTS (in all
 # caps such as FILTER or FFT) and change the version to the minimum
@@ -137,12 +137,14 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
     ${CPPUNIT_INCLUDE_DIRS}
     ${GNURADIO_ALL_INCLUDE_DIRS}
+    ${UHD_INCLUDE_DIRS}
 )
 
 link_directories(
     ${Boost_LIBRARY_DIRS}
     ${CPPUNIT_LIBRARY_DIRS}
     ${GNURADIO_RUNTIME_LIBRARY_DIRS}
+    ${UHD_LIBRARY_DIRS}
 )
 
 # Set component parameters
