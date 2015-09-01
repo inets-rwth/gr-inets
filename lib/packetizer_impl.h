@@ -29,19 +29,17 @@ namespace gr {
 
     class packetizer_impl : public packetizer
     {
-			private:
-				gr::digital::packet_header_default::sptr _header_generator;
-
-		  	std::vector< unsigned char > _random;
-				std::vector< unsigned char > _preamble;
-				
-				static const unsigned char _random_array[128];
-				static const unsigned char _preamble_array_packed[5];
-     
-			public:
-      	packetizer_impl();
-      	~packetizer_impl();
-				void receive(pmt::pmt_t msg);
+      private:
+        gr::digital::packet_header_default::sptr _header_generator;
+        std::vector< unsigned char > _random;
+        std::vector< unsigned char > _preamble;
+        std::vector< unsigned char > _preamble_packed;
+        int _padding;
+        static const unsigned char _random_array[128];
+      public:
+        packetizer_impl(const std::vector< unsigned char > &preamble, int padding);
+        ~packetizer_impl();
+        void receive(pmt::pmt_t msg);
     };
 
   } // namespace inets
