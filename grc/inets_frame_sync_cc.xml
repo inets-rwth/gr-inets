@@ -4,6 +4,7 @@
   <category>iNets</category>
   <import>import inets</import>
   <make>inets.frame_sync_cc($preamble, $constellation, $threshold, $len_tag_key)</make>
+  <callback>set_constellation($constellation)</callback>
   <param>
     <name>Preamble</name>
     <key>preamble</key>

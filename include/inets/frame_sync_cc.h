@@ -48,6 +48,9 @@ namespace gr {
        * creating new instances.
        */
       static sptr make(const std::vector<int> &preamble, gr::digital::constellation_sptr constellation, float threshold, const std::string &len_tag_key = "packet_len");
+
+      virtual void set_constellation(gr::digital::constellation_sptr constellation) = 0;
+    
     };
 
   } // namespace inets
