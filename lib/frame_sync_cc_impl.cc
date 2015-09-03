@@ -55,14 +55,7 @@ namespace gr {
         _state(STATE_DETECT),  _diff(1,0), _preamble(preamble), _constellation(constellation)
     {
         _len_preamble = _preamble.size();
-        int bits_per_sym = constellation->bits_per_symbol();
-        for(int i = 0; i < _len_preamble; i+= bits_per_sym) {
-            int val = 0;
-            for(int j = 0; j < bits_per_sym; j++) {
-                val += (_preamble[i + ((bits_per_sym - 1) - j)] << j); 
-            }
-            _mod_preamble.push_back(constellation->points()[val]);
-        }
+        modulate_preamble();
         _len_preamble = _mod_preamble.size();
         std::cout << "Using preamble of len " << _len_preamble << std::endl;
         set_tag_propagation_policy(TPP_DONT);
@@ -75,6 +68,27 @@ namespace gr {
      */
     frame_sync_cc_impl::~frame_sync_cc_impl()
     {
+    }
+
+    void frame_sync_cc_impl::set_constellation(gr::digital::constellation_sptr constellation)
+    {
+        boost::lock_guard<boost::mutex> guard(_set_lock);
+        _constellation = constellation;
+        modulate_preamble();
+    }
+
+    void frame_sync_cc_impl::modulate_preamble()
+    {    
+        _mod_preamble.clear();
+        int bits_per_sym = _constellation->bits_per_symbol();
+        //Use Big Endian (MSB first) to be compatible with constellation modulator block
+        for(int i = 0; i < _len_preamble; i+= bits_per_sym) {
+            int val = 0;
+            for(int j = 0; j < bits_per_sym; j++) {
+                val += (_preamble[i + ((bits_per_sym - 1) - j)] << j); 
+            }
+            _mod_preamble.push_back(_constellation->points()[val]);
+        }
     }
 
     void frame_sync_cc_impl::forecast(int noutput_items, gr_vector_int &ninput_items_required)
@@ -94,6 +108,9 @@ namespace gr {
                           gr_vector_const_void_star &input_items,
                           gr_vector_void_star &output_items)
     {
+
+        boost::lock_guard<boost::mutex> guard(_set_lock);
+        
 
         const gr_complex *in = (const gr_complex *) input_items[0];
         gr_complex *out = (gr_complex *) output_items[0];               

@@ -22,6 +22,7 @@
 #define INCLUDED_INETS_FRAME_SYNC_CC_IMPL_H
 
 #include <inets/frame_sync_cc.h>
+#include <boost/thread.hpp>
 
 namespace gr {
   namespace inets {
@@ -40,6 +41,7 @@ namespace gr {
         float _last_corr;
         std::complex<float> _diff;
         gr::digital::constellation_sptr _constellation;        
+        boost::mutex _set_lock;
         
         static const int STATE_DETECT = 0;
         static const int STATE_PREAMBLE = 1;
@@ -50,11 +52,14 @@ namespace gr {
         float calculate_fd(const gr_complex* z, const gr_complex* x, const gr_complex* c, int N, int L0);
         std::complex<double> calculate_R(int m, const gr_complex* z, int L0);
         float wrap_phase(float phi);
-      
+        void modulate_preamble(); 
+
       public:
         frame_sync_cc_impl(const std::vector<int> &preamble, gr::digital::constellation_sptr constellation, float threshold, const std::string &len_tag_key);
         ~frame_sync_cc_impl();
-        
+
+        void set_constellation(gr::digital::constellation_sptr constellation); 
+
         void forecast(int noutput_items, gr_vector_int &ninput_items_required);
         // Where all the action really happens
         int general_work(int noutput_items,
