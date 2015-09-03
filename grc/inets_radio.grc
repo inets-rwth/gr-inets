@@ -207,7 +207,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(368, 179)</value>
+      <value>(368, 187)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -228,10 +228,6 @@
     <param>
       <key>preamble</key>
       <value>preamble</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
     </param>
     <param>
       <key>sps</key>

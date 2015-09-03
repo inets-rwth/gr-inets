@@ -175,7 +175,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 11)</value>
+      <value>(760, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -202,7 +202,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(680, 11)</value>
+      <value>(784, 75)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -241,7 +241,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 459)</value>
+      <value>(816, 459)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -316,6 +316,65 @@
     </param>
   </block>
   <block>
+    <key>blocks_repack_bits_bb</key>
+    <param>
+      <key>k</key>
+      <value>8</value>
+    </param>
+    <param>
+      <key>l</key>
+      <value>constellation.bits_per_symbol()</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>endianness</key>
+      <value>gr.GR_MSB_FIRST</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(136, 531)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_repack_bits_bb_0</value>
+    </param>
+    <param>
+      <key>len_tag_key</key>
+      <value>"packet_len"</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>align_output</key>
+      <value>False</value>
+    </param>
+  </block>
+  <block>
     <key>blocks_tagged_stream_multiply_length</key>
     <param>
       <key>alias</key>
@@ -335,7 +394,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(448, 448)</value>
+      <value>(544, 448)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -351,7 +410,7 @@
     </param>
     <param>
       <key>c</key>
-      <value>4*sps</value>
+      <value>sps</value>
     </param>
     <param>
       <key>lengthtagname</key>
@@ -386,7 +445,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(480, 11)</value>
+      <value>(456, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -433,7 +492,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(928, 427)</value>
+      <value>(960, 427)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -477,7 +536,7 @@
     </param>
   </block>
   <block>
-    <key>digital_constellation_modulator</key>
+    <key>digital_chunks_to_symbols_xx</key>
     <param>
       <key>alias</key>
       <value></value>
@@ -487,28 +546,20 @@
       <value></value>
     </param>
     <param>
-      <key>constellation</key>
-      <value>constellation</value>
-    </param>
-    <param>
       <key>affinity</key>
       <value></value>
     </param>
     <param>
-      <key>differential</key>
-      <value>False</value>
+      <key>dimension</key>
+      <value>1</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>excess_bw</key>
-      <value>0.8</value>
-    </param>
-    <param>
       <key>_coordinate</key>
-      <value>(208, 419)</value>
+      <value>(280, 435)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -516,11 +567,11 @@
     </param>
     <param>
       <key>id</key>
-      <value>digital_constellation_modulator_0</value>
+      <value>digital_chunks_to_symbols_xx_0</value>
     </param>
     <param>
-      <key>log</key>
-      <value>False</value>
+      <key>in_type</key>
+      <value>byte</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -531,12 +582,16 @@
       <value>0</value>
     </param>
     <param>
-      <key>samples_per_symbol</key>
-      <value>sps</value>
+      <key>num_ports</key>
+      <value>1</value>
     </param>
     <param>
-      <key>verbose</key>
-      <value>False</value>
+      <key>out_type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>symbol_table</key>
+      <value>constellation.points()</value>
     </param>
   </block>
   <block>
@@ -610,7 +665,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(192, 107)</value>
+      <value>(8, 139)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -828,7 +883,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(8, 139)</value>
+      <value>(352, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -856,7 +911,11 @@
     </param>
   </block>
   <block>
-    <key>parameter</key>
+    <key>root_raised_cosine_filter</key>
+    <param>
+      <key>alpha</key>
+      <value>0.8</value>
+    </param>
     <param>
       <key>alias</key>
       <value></value>
@@ -866,36 +925,60 @@
       <value></value>
     </param>
     <param>
-      <key>_enabled</key>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>decim</key>
       <value>1</value>
     </param>
     <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>interp_fir_filter_ccf</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(192, 11)</value>
+      <value>(400, 555)</value>
     </param>
     <param>
       <key>_rotation</key>
       <value>0</value>
     </param>
     <param>
+      <key>gain</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>id</key>
-      <value>samp_rate</value>
+      <value>root_raised_cosine_filter_0</value>
     </param>
     <param>
-      <key>label</key>
-      <value>Sample Rate</value>
+      <key>interp</key>
+      <value>sps</value>
     </param>
     <param>
-      <key>short_id</key>
-      <value></value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>eng_float</value>
-    </param>
-    <param>
-      <key>value</key>
+      <key>maxoutbuf</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>ntaps</key>
+      <value>11*sps</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>sps</value>
+    </param>
+    <param>
+      <key>sym_rate</key>
+      <value>1.0</value>
     </param>
   </block>
   <block>
@@ -914,7 +997,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(320, 11)</value>
+      <value>(192, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -954,6 +1037,12 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>blocks_repack_bits_bb_0</source_block_id>
+    <sink_block_id>digital_chunks_to_symbols_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>blocks_tagged_stream_multiply_length_0</source_block_id>
     <sink_block_id>blocks_multiply_const_vxx_0</sink_block_id>
     <source_key>0</source_key>
@@ -966,8 +1055,8 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>digital_constellation_modulator_0</source_block_id>
-    <sink_block_id>blocks_tagged_stream_multiply_length_0</sink_block_id>
+    <source_block_id>digital_chunks_to_symbols_xx_0</source_block_id>
+    <sink_block_id>root_raised_cosine_filter_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -985,7 +1074,7 @@
   </connection>
   <connection>
     <source_block_id>packet_out</source_block_id>
-    <sink_block_id>digital_constellation_modulator_0</sink_block_id>
+    <sink_block_id>blocks_repack_bits_bb_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1000,5 +1089,11 @@
     <sink_block_id>inets_packetizer_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>payload_in</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>root_raised_cosine_filter_0</source_block_id>
+    <sink_block_id>blocks_tagged_stream_multiply_length_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
   </connection>
 </flow_graph>
