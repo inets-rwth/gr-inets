@@ -58,7 +58,7 @@ namespace gr {
         _header_generator(gr::digital::packet_header_default::make(32, "packet_len", "packet_num", 1)),
         _preamble(preamble), _padding(padding), _last_tx_time(0)
     {
-        _random = std::vector<unsigned char>(_random_array, _random_array + 128);
+        _random = std::vector<unsigned char>(_random_array, _random_array + 64);
 
         message_port_register_in(pmt::mp("payload_in"));
         set_msg_handler(pmt::mp("payload_in"), boost::bind(&packetizer_impl::receive, this, _1 ));
@@ -80,7 +80,8 @@ namespace gr {
     packetizer_impl::~packetizer_impl()
     {
     }
-    int delay_counter = 0;
+    
+
     void packetizer_impl::receive(pmt::pmt_t msg)
     {
 
@@ -115,14 +116,16 @@ namespace gr {
                 struct timeval t;
                 gettimeofday(&t, NULL);
                 double tx_time = t.tv_sec + t.tv_usec / 1000000.0;
-                double min_time_diff = 2000 * 8.0 / (double)2e6; 
-                if(tx_time <= _last_tx_time || (tx_time - _last_tx_time) <= min_time_diff) {
+                double min_time_diff = 600 * 8.0 / (double)2e6; //Max packet len [bit] / bit rate 
+                if((tx_time - _last_tx_time) <= min_time_diff) {
                     tx_time = _last_tx_time + min_time_diff;
+                } else {
+                    //std::cout << "in time packet" << std::endl;
                 }
                 //std::cout << "tx time = " << std::fixed << tx_time << std::endl;
                 _last_tx_time = tx_time;
                 uhd::time_spec_t now = uhd::time_spec_t(tx_time)
-                    + uhd::time_spec_t(0.01);
+                    + uhd::time_spec_t(0.05);
 
                 const pmt::pmt_t time_value = pmt::make_tuple(
                     pmt::from_uint64(now.get_full_secs()),
