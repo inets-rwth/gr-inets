@@ -51,7 +51,7 @@ namespace gr {
     /*
      * The private constructor
      */
-    packetizer_impl::packetizer_impl(const std::vector<unsigned char> &preamble, int paddingi, double bps)
+    packetizer_impl::packetizer_impl(const std::vector<unsigned char> &preamble, int padding, double bps)
       : gr::block("packetizer",
               gr::io_signature::make(0, 0, 0),
               gr::io_signature::make(0, 0, 0)), 
@@ -116,7 +116,7 @@ namespace gr {
                 struct timeval t;
                 gettimeofday(&t, NULL);
                 double tx_time = t.tv_sec + t.tv_usec / 1000000.0;
-                double min_time_diff = (1000 * 8.0) / bps; //Max packet len [bit] / bit rate 
+                double min_time_diff = (1000 * 8.0) / _bps; //Max packet len [bit] / bit rate 
                 if((tx_time - _last_tx_time) <= min_time_diff) {
                     tx_time = _last_tx_time + min_time_diff;
                 } else {
