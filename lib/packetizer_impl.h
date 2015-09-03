@@ -36,9 +36,10 @@ namespace gr {
         std::vector< unsigned char > _preamble_packed;
         int _padding;
         double _last_tx_time;
+        double _bps;
         static const unsigned char _random_array[128];
       public:
-        packetizer_impl(const std::vector< unsigned char > &preamble, int padding);
+        packetizer_impl(const std::vector< unsigned char > &preamble, int padding, double bps);
         ~packetizer_impl();
         void receive(pmt::pmt_t msg);
     };

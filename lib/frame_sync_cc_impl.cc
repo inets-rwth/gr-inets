@@ -72,6 +72,7 @@ namespace gr {
 
     void frame_sync_cc_impl::set_constellation(gr::digital::constellation_sptr constellation)
     {
+        std::cout << "[Frame Sync] setting constellation" << std::endl;
         boost::lock_guard<boost::mutex> guard(_set_lock);
         _constellation = constellation;
         modulate_preamble();

@@ -3,7 +3,7 @@
   <key>inets_packetizer</key>
   <category>iNets</category>
   <import>import inets</import>
-  <make>inets.packetizer($preamble, $padding)</make>
+  <make>inets.packetizer($preamble, $padding, $bps)</make>
   <param>
     <name>Preamble</name>
     <key>preamble</key>
@@ -13,6 +13,11 @@
     <name>Padding</name>
     <key>padding</key>
     <type>int</type>
+  </param>
+  <param>
+    <name>Bitrate</name>
+    <key>bps</key>
+    <type>real</type>
   </param>
   <sink>
     <name>payload_in</name>

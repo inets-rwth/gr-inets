@@ -42,21 +42,21 @@ namespace gr {
     };
         
     packetizer::sptr
-    packetizer::make(const std::vector<unsigned char> &preamble, int padding)
+    packetizer::make(const std::vector<unsigned char> &preamble, int padding, double bps)
     {
       return gnuradio::get_initial_sptr
-        (new packetizer_impl(preamble, padding));
+        (new packetizer_impl(preamble, padding, bps));
     }
 
     /*
      * The private constructor
      */
-    packetizer_impl::packetizer_impl(const std::vector<unsigned char> &preamble, int padding)
+    packetizer_impl::packetizer_impl(const std::vector<unsigned char> &preamble, int paddingi, double bps)
       : gr::block("packetizer",
               gr::io_signature::make(0, 0, 0),
               gr::io_signature::make(0, 0, 0)), 
         _header_generator(gr::digital::packet_header_default::make(32, "packet_len", "packet_num", 1)),
-        _preamble(preamble), _padding(padding), _last_tx_time(0)
+        _preamble(preamble), _padding(padding), _last_tx_time(0), _bps(bps)
     {
         _random = std::vector<unsigned char>(_random_array, _random_array + 64);
 
@@ -93,7 +93,7 @@ namespace gr {
                 const std::vector< unsigned char > payload = pmt::u8vector_elements(payload_pmt);
                 std::vector< unsigned char > packet;
                 
-                packet.insert(packet.end(), _random.begin(), _random.end());
+                packet.insert(packet.end(), _random.begin(), _random.begin() + _padding);
                 packet.insert(packet.end(), _preamble_packed.begin(), _preamble_packed.end());
     
                 unsigned char hdr[32]; 
@@ -110,13 +110,13 @@ namespace gr {
 
                 packet.insert(packet.end(), hdr_packed.begin(), hdr_packed.end());
                 packet.insert(packet.end(), payload.begin(), payload.end());
-                packet.insert(packet.end(), _random.begin(), _random.end());
+                packet.insert(packet.end(), _random.begin(), _random.begin() + _padding);
 
                 static const pmt::pmt_t time_key = pmt::string_to_symbol("tx_time");
                 struct timeval t;
                 gettimeofday(&t, NULL);
                 double tx_time = t.tv_sec + t.tv_usec / 1000000.0;
-                double min_time_diff = 600 * 8.0 / (double)2e6; //Max packet len [bit] / bit rate 
+                double min_time_diff = (1000 * 8.0) / bps; //Max packet len [bit] / bit rate 
                 if((tx_time - _last_tx_time) <= min_time_diff) {
                     tx_time = _last_tx_time + min_time_diff;
                 } else {
