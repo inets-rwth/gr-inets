@@ -270,7 +270,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>2e9</value>
+      <value>3e9</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -278,11 +278,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(744, 11)</value>
+      <value>(736, 11)</value>
     </param>
     <param>
       <key>gui_hint</key>
-      <value></value>
+      <value>0,0,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -294,7 +294,7 @@
     </param>
     <param>
       <key>label</key>
-      <value>Freq</value>
+      <value>IF Frequency</value>
     </param>
     <param>
       <key>min_len</key>
@@ -306,7 +306,7 @@
     </param>
     <param>
       <key>start</key>
-      <value>1.2e9</value>
+      <value>2.5e9</value>
     </param>
     <param>
       <key>step</key>
@@ -314,7 +314,7 @@
     </param>
     <param>
       <key>stop</key>
-      <value>5e9</value>
+      <value>3.5e9</value>
     </param>
     <param>
       <key>rangeType</key>
@@ -333,7 +333,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>0.8</value>
+      <value>0.4</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -345,7 +345,7 @@
     </param>
     <param>
       <key>gui_hint</key>
-      <value></value>
+      <value>2,0,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -357,7 +357,7 @@
     </param>
     <param>
       <key>label</key>
-      <value>Mu</value>
+      <value>BB Derotation Gain</value>
     </param>
     <param>
       <key>min_len</key>
@@ -408,7 +408,7 @@
     </param>
     <param>
       <key>gui_hint</key>
-      <value></value>
+      <value>1,0,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -471,7 +471,7 @@
     </param>
     <param>
       <key>gui_hint</key>
-      <value></value>
+      <value>1,1,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -700,7 +700,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>77e9-range_freq</value>
+      <value>"{:2.1f} GHz".format(float((77e9-range_freq))/1e9)</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -712,11 +712,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1000, 107)</value>
+      <value>(1024, 107)</value>
     </param>
     <param>
       <key>gui_hint</key>
-      <value></value>
+      <value>0,1,1,1</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -732,7 +732,7 @@
     </param>
     <param>
       <key>type</key>
-      <value>real</value>
+      <value>string</value>
     </param>
   </block>
   <block>
@@ -943,7 +943,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1000, 59)</value>
+      <value>(1024, 59)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -974,7 +974,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1000, 11)</value>
+      <value>(1024, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
