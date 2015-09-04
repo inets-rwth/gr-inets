@@ -532,7 +532,7 @@
     </param>
     <param>
       <key>window</key>
-      <value>gnuradio.fft.window.hanning(256)</value>
+      <value>gnuradio.fft.window.hanning(1024)</value>
     </param>
   </block>
   <block>

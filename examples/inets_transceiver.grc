@@ -270,7 +270,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>2e9</value>
+      <value>3e9</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -306,7 +306,7 @@
     </param>
     <param>
       <key>start</key>
-      <value>1.2e9</value>
+      <value>2.5e9</value>
     </param>
     <param>
       <key>step</key>
@@ -314,7 +314,7 @@
     </param>
     <param>
       <key>stop</key>
-      <value>5e9</value>
+      <value>3.5e9</value>
     </param>
     <param>
       <key>rangeType</key>
@@ -924,7 +924,7 @@
     </param>
     <param>
       <key>type</key>
-      <value>"UDP_CLIENT"</value>
+      <value>"UDP_SERVER"</value>
     </param>
   </block>
   <block>
