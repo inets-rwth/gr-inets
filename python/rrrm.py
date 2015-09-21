@@ -171,7 +171,7 @@ class rrrm(gr.basic_block):
 
                 self.switch_ack_received = True
                 if (self.switch_ack_thread != None and self.switch_ack_thread.isAlive()):
-                    self.switch_acK_thread.join()
+                    self.switch_ack_thread.join()
                 self.switch_ack_thread = None
 
                 if self.antenna_control != None:
