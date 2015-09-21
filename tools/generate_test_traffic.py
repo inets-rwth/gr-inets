@@ -16,5 +16,5 @@ print len(payload)
 while True:
 	num = s.sendto(payload.tostring()[0::8], (IP,PORT))
 	print 'send '+str(num)+' bytes'
-	time.sleep(0.1)
+	time.sleep(2)
 

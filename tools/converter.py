@@ -157,10 +157,10 @@ if __name__ == '__main__':
     cc.open()
 
     cc.print_info()
-    cc.set_tx_freq(77e9)
-    cc.set_rx_freq(87e9)
-    cc.set_tx_on(True)
-    cc.set_rx_on(True)
-    cc.store()
+#   cc.set_tx_freq(77e9)
+#   cc.set_rx_freq(87e9)
+#   cc.set_tx_on(True)
+#   cc.set_rx_on(True)
+#   cc.store()
 
     cc.close()

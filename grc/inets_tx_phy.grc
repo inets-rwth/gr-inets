@@ -724,7 +724,7 @@
     </param>
     <param>
       <key>padding</key>
-      <value>128</value>
+      <value>64</value>
     </param>
     <param>
       <key>preamble</key>

@@ -1103,12 +1103,16 @@
       <value>0</value>
     </param>
     <param>
+      <key>node_id</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>stat_update_interval</key>
       <value>10000</value>
     </param>
     <param>
       <key>use_ack</key>
-      <value>False</value>
+      <value>True</value>
     </param>
   </block>
   <block>

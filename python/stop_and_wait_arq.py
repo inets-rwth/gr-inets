@@ -38,7 +38,7 @@ class stop_and_wait_arq(gr.basic_block):
     PACKET_TYPE_DATA = 0
     PACKET_TYPE_ACK = 1
 
-    def __init__(self, ack_timeout, max_mtu_size, use_ack, stat_update_interval):
+    def __init__(self, node_id, ack_timeout, max_mtu_size, use_ack, stat_update_interval):
         gr.basic_block.__init__(self,
             name="stop_and_wait_arq",
             in_sig=[],
@@ -58,13 +58,14 @@ class stop_and_wait_arq(gr.basic_block):
         self.last_tx_packet = 0
         self.ack_timeout = ack_timeout #in fractional seconds
         self.max_mtu_size = max_mtu_size
-	self.use_ack = use_ack
+    	self.use_ack = use_ack
         self.wait_for_frag = False
         self.packet_buffer = []
         self.last_frag_index = 0
         self.tx_seq_num = 0
         self.thread_lock = threading.Lock()        
-        
+        self.node_id = node_id        
+
         #statistics
         self.total_num_rx_packets = 0
         self.total_num_rx_bits = 0
@@ -93,7 +94,8 @@ class stop_and_wait_arq(gr.basic_block):
         with self.thread_lock:
           packets_str = self.fragment_packet(msg_pmt)
           for packet_str in packets_str:
-            packet_str_total = chr(self.tx_seq_num)
+            packet_str_total = chr(self.node_id)
+            packet_str_total += chr(self.tx_seq_num)
             
             if self.tx_seq_num < 255:
               self.tx_seq_num = self.tx_seq_num + 1
@@ -154,11 +156,15 @@ class stop_and_wait_arq(gr.basic_block):
             return
 
           if ok:
-            packet_rx_seq_byte = ord(packet_str[0])
-            packet_str = packet_str[1:]
+            packet_node_id_byte = ord(packet_str[0])
+            if packet_node_id_byte == self.node_id:
+                print 'discarding own packet'
+                return
+            packet_rx_seq_byte = ord(packet_str[1])
+            packet_str = packet_str[2:]
             packet_type_byte = ord(packet_str[0])
             packet_str = packet_str[1:]
-            print 'Packet received. seq = ', packet_rx_seq_byte, ' type = ', packet_type_byte
+            print 'Packet received. node id = ', packet_node_id_byte, ' seq = ', packet_rx_seq_byte, ' type = ', packet_type_byte
              
             if packet_type_byte == self.PACKET_TYPE_DATA:
               if self.use_ack:
@@ -250,8 +256,8 @@ class stop_and_wait_arq(gr.basic_block):
         packet_str += chr(self.PACKET_TYPE_ACK) 
         #add dummy data. Otherwise FEC will make problems
         packet_str += 'aaa'
-        #packet_str = digital.crc.gen_and_append_crc32(packet_str)
-        packet_str = digital.packet_utils.whiten(packet_str, 0)
+        packet_str = digital.crc.gen_and_append_crc32(packet_str)
+        #packet_str = digital.packet_utils.whiten(packet_str, 0)
          
         send_pmt = pmt.make_u8vector(len(packet_str), ord(' '))
         
