@@ -101,8 +101,9 @@ class rrrm(gr.basic_block):
 
             self.next_channel_pos = self.channel_map[self.next_channel_id]
             self.switch_ack_received = False
-            self.switch_ack_thread = threading.threrad(target=self.do_wait_for_switch_ack)
+            self.switch_ack_thread = threading.thread(target=self.do_wait_for_switch_ack)
             self.switch_ack_thread.daemon = True
+            self.switch_ack_thread.start()
 
     def do_wait_for_switch_ack(self):
         count = 0

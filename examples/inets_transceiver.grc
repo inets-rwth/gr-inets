@@ -270,7 +270,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>3e9</value>
+      <value>3.5e9</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -314,7 +314,7 @@
     </param>
     <param>
       <key>stop</key>
-      <value>3.5e9</value>
+      <value>4e9</value>
     </param>
     <param>
       <key>rangeType</key>
