@@ -252,7 +252,8 @@ class stop_and_wait_arq(gr.basic_block):
         return bit_error_count
  
     def generate_ack_packet_pdu(self, seq_num):
-        packet_str = chr(seq_num)
+        packet_str = chr(self.node_id)
+        packet_str += chr(seq_num)
         packet_str += chr(self.PACKET_TYPE_ACK) 
         #add dummy data. Otherwise FEC will make problems
         packet_str += 'aaa'
