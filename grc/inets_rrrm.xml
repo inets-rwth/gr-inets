@@ -10,41 +10,26 @@
     <key>channel_map</key>
     <type>raw</type>
   </param>
-  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
-       Sub-nodes:
-       * name
-       * key (makes the value accessible as $keyname, e.g. in the make node)
-       * type -->
-
-  <!-- Make one 'sink' node per input. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
+  
   <sink>
-    <name>from_app</name>
+    <name>payload_in</name>
     <type>message</type>
   </sink>
   <sink>
-    <name>from_radar</name>
+    <name>radar_in</name>
     <type>message</type>
   </sink>
   <sink>
-    <name>from_ll</name>
+    <name>rrrm_in</name>
     <type>message</type>
   </sink>
-
-  <!-- Make one 'source' node per output. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
+  
   <source>
-    <name>to_app</name>
+    <name>payload_out</name>
     <type>message</type>
   </source>
   <source>
-    <name>to_ll</name>
+    <name>rrrm_out</name>
     <type>message</type>
   </source>
 </block>
