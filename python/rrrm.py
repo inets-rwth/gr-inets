@@ -41,6 +41,8 @@ class rrrm(gr.basic_block):
     PACKET_TYPE_SWITCH = 1
     PACKET_TYPE_SWITCH_ACCEPT = 2
     PACKET_TYPE_SWITCH_REJECT = 3
+    PACKET_TYPE_PING = 4
+
 
     def __init__(self, node_id, channel_map):
         gr.basic_block.__init__(self,
@@ -68,6 +70,15 @@ class rrrm(gr.basic_block):
         self.thread_lock = threading.Lock()
         self.switch_ack_thread = None
         self.switch_ack_received = False
+        self.last_ping_time = 0
+
+        self.ping_thread = threading.Thread(target=self.do_send_ping)
+        self.ping_thread.daemon = True
+        self.ping_thread.start()
+
+        self.ping_monitor_thread = threading.Thread(target=self.do_check_ping)
+        self.ping_monitor_thread.daemon = True
+        self.ping_monitor_thread.start()
 
         try:
             self.antenna_control = control.control("/dev/ttyACM0")
@@ -108,6 +119,39 @@ class rrrm(gr.basic_block):
             self.switch_ack_thread = threading.Thread(target=self.do_wait_for_switch_ack)
             self.switch_ack_thread.daemon = True
             self.switch_ack_thread.start()
+
+    def do_send_ping(self):
+        while True:
+            with self.thread_lock:
+                if self.state == self.STATE_FORWARD_PAYLOAD:
+                   self.send_ping_message()
+                   time.sleep(0.5)
+
+    def do_check_ping(self):
+        while True:
+            if self.last_ping_time != 0:
+                if (time.time() - self.last_ping_time) > 2.0:
+                    with self.thread_lock:
+                        #link broken. change path
+
+                        #calculate new path
+                        if self.curr_channel_id == 0:
+                            self.next_channel_id = 1
+                        else:
+                            self.next_channel_id = 0
+
+                        print ('RRRM: Link broken. Changing path. Curr chan = '+
+                            str(self.curr_channel_id)+" next chan = "+str(self.next_channel_id))
+
+                        self.next_channel_pos = self.channel_map[self.next_channel_id]
+
+                        if self.antenna_control != None:
+                            try:
+                                self.antenna_control.move_to(self.next_channel_pos)
+                            except:
+                                pass
+
+                        self.curr_channel_id = self.next_channel_id
 
     def do_wait_for_switch_ack(self):
         count = 0
@@ -161,6 +205,11 @@ class rrrm(gr.basic_block):
         send_pmt = self.build_link_layer_packet(msg_str)
         self.message_port_pub(pmt.intern('rrrm_out'), send_pmt)
 
+    def send_ping_message(self):
+        msg_str = chr(self.PACKET_TYPE_PING)
+        send_pmt = self.build_link_layer_packet(msg_str)
+        self.message_port_pub(pmt.intern('rrrm_out'), send_pmt)
+
     def handle_rrrm_message(self, msg_pmt):
         with self.thread_lock:
             print 'RRRM: rrrm_in'
@@ -181,6 +230,9 @@ class rrrm(gr.basic_block):
             if msg_type == self.PACKET_TYPE_DATA:
                 send_pmt = self.get_pmt_from_data_str(msg_data)
                 self.message_port_pub(pmt.intern('payload_out'), send_pmt)
+
+            if msg_type == self.PACKET_TYPE_PING:
+                self.last_ping_time = time.time()
 
             if msg_type == self.PACKET_TYPE_SWITCH:
 
