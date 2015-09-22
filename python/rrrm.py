@@ -113,9 +113,24 @@ class rrrm(gr.basic_block):
         count = 0
         while (self.switch_ack_received == False and count < 3):
             self.send_switch_command(self.next_channel_id)
-            time.sleep(0.1)
+            time.sleep(0.2)
             count += 1
-        print 'RRRM: FATAL: Missing SWITCH ACK'
+
+        if count >= 3:
+            print 'RRRM: FATAL: Missing SWITCH ACK'
+
+            self.switch_ack_received = True
+            self.switch_ack_thread = None
+
+            if self.antenna_control != None:
+                try:
+                    self.antenna_control.move_to(self.next_channel_pos)
+                except:
+                    pass
+
+            self.curr_channel_id = self.next_channel_id
+
+            self.state = self.STATE_FORWARD_PAYLOAD
 
     def build_link_layer_packet(self, msg_str):
         msg_str = chr(self.node_id) + msg_str
@@ -176,7 +191,8 @@ class rrrm(gr.basic_block):
                     if self.antenna_control != None:
                         self.antenna_control.move_to(self.next_channel_pos)
                 except:
-                    print 'RRRM: FATAL: Error in antenna control'
+                    pass
+
                 self.curr_channel_id = self.next_channel_id
 
                 #make sure switch ack reaches other side before turning antenna
@@ -199,7 +215,10 @@ class rrrm(gr.basic_block):
                 self.switch_ack_thread = None
 
                 if self.antenna_control != None:
-                    self.antenna_control.move_to(self.next_channel_pos)
+                    try:
+                        self.antenna_control.move_to(self.next_channel_pos)
+                    except:
+                        pass
 
                 self.curr_channel_id = self.next_channel_id
 
