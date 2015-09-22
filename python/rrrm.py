@@ -122,10 +122,10 @@ class rrrm(gr.basic_block):
 
     def do_send_ping(self):
         while True:
-            with self.thread_lock:
-                if self.state == self.STATE_FORWARD_PAYLOAD:
-                   self.send_ping_message()
-                   time.sleep(0.5)
+            if self.state == self.STATE_FORWARD_PAYLOAD:
+                with self.thread_lock:
+                    self.send_ping_message()
+                time.sleep(0.5)
 
     def do_check_ping(self):
         while True:
