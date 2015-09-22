@@ -71,6 +71,7 @@ class rrrm(gr.basic_block):
         self.switch_ack_thread = None
         self.switch_ack_received = False
         self.last_ping_time = 0
+        self.last_message_tx_time = 0
 
         self.ping_thread = threading.Thread(target=self.do_send_ping)
         self.ping_thread.daemon = True
@@ -123,8 +124,9 @@ class rrrm(gr.basic_block):
     def do_send_ping(self):
         while True:
             if self.state == self.STATE_FORWARD_PAYLOAD:
-                with self.thread_lock:
-                    self.send_ping_message()
+                if(time.time() - self.last_message_tx_time > 0.5):
+                    with self.thread_lock:
+                        self.send_ping_message()
                 time.sleep(0.5)
 
     def do_check_ping(self):
@@ -190,27 +192,32 @@ class rrrm(gr.basic_block):
         msg_str = chr(self.PACKET_TYPE_SWITCH)
         msg_str = msg_str + chr(new_channel_id)
         send_pmt = self.build_link_layer_packet(msg_str)
+        self.last_message_tx_time = time.time()
         self.message_port_pub(pmt.intern('rrrm_out'), send_pmt)
 
     def send_switch_accept(self):
         msg_str = chr(self.PACKET_TYPE_SWITCH_ACCEPT)
         send_pmt = self.build_link_layer_packet(msg_str)
+        self.last_message_tx_time = time.time()
         self.message_port_pub(pmt.intern('rrrm_out'), send_pmt)
 
     def send_switch_reject(self):
         msg_str = chr(self.PACKET_TYPE_SWITCH_REJECT)
         send_pmt = self.build_link_layer_packet(msg_str)
+        self.last_message_tx_time = time.time()
         self.message_port_pub(pmt.intern('rrrm_out'), send_pmt)
 
     def send_data_message(self, msg_pmt):
         msg_str = self.get_data_str_from_pmt(msg_pmt)
         msg_str = chr(self.PACKET_TYPE_DATA) + msg_str
         send_pmt = self.build_link_layer_packet(msg_str)
+        self.last_message_tx_time = time.time()
         self.message_port_pub(pmt.intern('rrrm_out'), send_pmt)
 
     def send_ping_message(self):
         msg_str = chr(self.PACKET_TYPE_PING)
         send_pmt = self.build_link_layer_packet(msg_str)
+        self.last_message_tx_time = time.time()
         self.message_port_pub(pmt.intern('rrrm_out'), send_pmt)
 
     def handle_rrrm_message(self, msg_pmt):
@@ -224,11 +231,11 @@ class rrrm(gr.basic_block):
                 print 'RRRM: Bad CRC'
                 return
 
-            print 'RRRM: Message: node_id = ' + str(node_id) + ' type = ' + str(msg_type)
-
             if node_id == self.node_id:
-                print 'RRRM: discarding... '
                 return
+
+            print 'RRRM: Message: node_id = ' + str(node_id) + ' type = ' + str(msg_type)
+            self.last_ping_time = time.time()
 
             if msg_type == self.PACKET_TYPE_DATA:
                 send_pmt = self.get_pmt_from_data_str(msg_data)
