@@ -130,7 +130,7 @@ class rrrm(gr.basic_block):
     def do_check_ping(self):
         while True:
             if self.last_ping_time != 0:
-                if (time.time() - self.last_ping_time) > 2.0:
+                if (time.time() - self.last_ping_time) > 5.0:
                     with self.thread_lock:
                         #link broken. change path
 
@@ -151,7 +151,9 @@ class rrrm(gr.basic_block):
                             except:
                                 pass
 
+                        self.last_ping_time = time.time()
                         self.curr_channel_id = self.next_channel_id
+
             time.sleep(2)
 
     def do_wait_for_switch_ack(self):
