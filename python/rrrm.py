@@ -172,9 +172,11 @@ class rrrm(gr.basic_block):
                 channel_id = ord(msg_data[0])
                 print 'RRRM: SWITCH REQ: ' + str(channel_id)
 
-                if self.antenna_control != None:
-                    self.antenna_control.move_to(self.next_channel_pos)
-
+                try:
+                    if self.antenna_control != None:
+                        self.antenna_control.move_to(self.next_channel_pos)
+                except:
+                    print 'RRRM: FATAL: Error in antenna control'
                 self.curr_channel_id = self.next_channel_id
 
                 #make sure switch ack reaches other side before turning antenna
