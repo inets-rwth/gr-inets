@@ -152,6 +152,7 @@ class rrrm(gr.basic_block):
                                 pass
 
                         self.curr_channel_id = self.next_channel_id
+            time.sleep(2)
 
     def do_wait_for_switch_ack(self):
         count = 0
@@ -232,6 +233,7 @@ class rrrm(gr.basic_block):
                 self.message_port_pub(pmt.intern('payload_out'), send_pmt)
 
             if msg_type == self.PACKET_TYPE_PING:
+                print 'RRRM: Ping message. time = ' + str(time.time())
                 self.last_ping_time = time.time()
 
             if msg_type == self.PACKET_TYPE_SWITCH:
