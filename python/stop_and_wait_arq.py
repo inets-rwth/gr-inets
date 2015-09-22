@@ -140,9 +140,8 @@ class stop_and_wait_arq(gr.basic_block):
 
             self.update_rx_statistics(packet_str[3:], self.test_data, True)
 
-            packet_rx_seq_byte = ord(packet_str[1])
-            packet_str = packet_str[2:]
-            packet_type_byte = ord(packet_str[0])
+            packet_rx_seq_byte = ord(packet_str[0])
+            packet_type_byte = ord(packet_str[1])
             packet_str = packet_str[1:]
 
             print 'SAW: Packet received. seq = ', packet_rx_seq_byte, ' type = ', packet_type_byte
