@@ -1157,6 +1157,10 @@
       <key>minoutbuf</key>
       <value>0</value>
     </param>
+    <param>
+      <key>node_id</key>
+      <value>0</value>
+    </param>
   </block>
   <block>
     <key>inets_stop_and_wait_arq</key>
@@ -1202,10 +1206,6 @@
     </param>
     <param>
       <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>node_id</key>
       <value>0</value>
     </param>
     <param>
