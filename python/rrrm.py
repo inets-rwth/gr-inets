@@ -124,15 +124,15 @@ class rrrm(gr.basic_block):
     def do_send_ping(self):
         while True:
             if self.state == self.STATE_FORWARD_PAYLOAD:
-                if(time.time() - self.last_message_tx_time > 0.5):
+                if(time.time() - self.last_message_tx_time > 0.1):
                     with self.thread_lock:
                         self.send_ping_message()
-                time.sleep(0.5)
+                time.sleep(0.1)
 
     def do_check_ping(self):
         while True:
             if self.last_ping_time != 0:
-                if (time.time() - self.last_ping_time) > 2.0:
+                if (time.time() - self.last_ping_time) > 0.5:
                     with self.thread_lock:
                         #link broken. change path
 
@@ -156,7 +156,7 @@ class rrrm(gr.basic_block):
                         self.last_ping_time = time.time() + 5.0 #give other side some time
                         self.curr_channel_id = self.next_channel_id
 
-            time.sleep(1)
+            time.sleep(0.2)
 
     def do_wait_for_switch_ack(self):
         count = 0
