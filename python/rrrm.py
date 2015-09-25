@@ -133,29 +133,27 @@ class rrrm(gr.basic_block):
         while True:
             if self.last_ping_time != 0:
                 if (time.time() - self.last_ping_time) > 0.3 and self.state == self.STATE_FORWARD_PAYLOAD:
-                    with self.thread_lock:
-                        #link broken. change path
+                    #link broken. change path
+                    #calculate new path
+                    if self.curr_channel_id == 0:
+                        self.next_channel_id = 1
+                    else:
+                        self.next_channel_id = 0
 
-                        #calculate new path
-                        if self.curr_channel_id == 0:
-                            self.next_channel_id = 1
-                        else:
-                            self.next_channel_id = 0
+                    print ('RRRM: Link broken. Changing path. Curr chan = '+
+                        str(self.curr_channel_id)+" next chan = "+str(self.next_channel_id))
 
-                        print ('RRRM: Link broken. Changing path. Curr chan = '+
-                            str(self.curr_channel_id)+" next chan = "+str(self.next_channel_id))
+                    self.next_channel_pos = self.channel_map[self.next_channel_id]
 
-                        self.next_channel_pos = self.channel_map[self.next_channel_id]
+                    if self.antenna_control != None:
+                        try:
+                            self.antenna_control.move_to(self.next_channel_pos)
+                            time.sleep(5)
+                        except:
+                            pass
 
-                        if self.antenna_control != None:
-                            try:
-                                self.antenna_control.move_to(self.next_channel_pos)
-                                time.sleep(5)
-                            except:
-                                pass
-
-                        self.curr_channel_id = self.next_channel_id
-                        self.last_ping_time = time.time()
+                    self.curr_channel_id = self.next_channel_id
+                    self.last_ping_time = time.time()
 
             time.sleep(0.1)
 
