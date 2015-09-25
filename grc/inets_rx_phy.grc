@@ -1129,7 +1129,7 @@
     </param>
     <param>
       <key>msg_nsamples</key>
-      <value>100</value>
+      <value>10000</value>
     </param>
     <param>
       <key>type</key>

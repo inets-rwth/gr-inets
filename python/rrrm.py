@@ -132,7 +132,7 @@ class rrrm(gr.basic_block):
     def do_check_ping(self):
         while True:
             if self.last_ping_time != 0:
-                if (time.time() - self.last_ping_time) > 0.3 and self.state == self.STATE_FORWARD_PAYLOAD:
+                if (time.time() - self.last_ping_time) > 0.5 and self.state == self.STATE_FORWARD_PAYLOAD:
                     #link broken. change path
                     #calculate new path
                     if self.curr_channel_id == 0:

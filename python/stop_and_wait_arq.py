@@ -76,6 +76,7 @@ class stop_and_wait_arq(gr.basic_block):
         self.snr_log = []
         self.curr_packet_len = 0
         self.curr_packet_seq = 0
+        self.last_snr = 0
 
         self.num_ack_timeouts = 0
         self.num_acks_received = 0
@@ -85,7 +86,7 @@ class stop_and_wait_arq(gr.basic_block):
         numpy.random.seed(0)
         self.test_data = numpy.random.randint(0, 256, 500)
 
-        self.csv_fields = ['Timestamp', 'TX/RX' , 'Packet Type', 'Packet Length', 'Packet Seq #']
+        self.csv_fields = ['Timestamp', 'TX/RX' , 'Packet Type', 'Packet Length', 'Packet Seq #', 'SNR']
         curr_time = time.strftime("%d.%m.%Y-%H-%M-%S")
 
         self.log_file_name = '/home/inets/stop_and_wait_arq_log.csv'
@@ -97,6 +98,7 @@ class stop_and_wait_arq(gr.basic_block):
     def handle_snr_message(self, msg):
         snr_pmt = pmt.to_python(msg)
         self.snr_log.append(float(snr_pmt))
+        self.last_snr = float(snr_pmt)
 
     def handle_app_message(self, msg_pmt):
         #print 'app interrupt'
@@ -138,7 +140,7 @@ class stop_and_wait_arq(gr.basic_block):
                 self.state = self.STATE_WAIT_FOR_ACK
 
             self.num_data_packets_send += 1
-            self.log_packet("TX", 0, self.curr_packet_len, self.curr_packet_seq)
+            self.log_packet("TX", 0, self.curr_packet_len, self.curr_packet_seq, self.last_snr)
             self.message_port_pub(pmt.intern('to_phy'), self.last_tx_packet)
 
         elif self.state == self.STATE_WAIT_FOR_ACK:
@@ -149,7 +151,7 @@ class stop_and_wait_arq(gr.basic_block):
             self.last_tx_time = time.time()
             self.num_ack_timeouts += 1
             self.num_data_packets_send += 1
-            self.log_packet("TX", 0, self.curr_packet_len, self.curr_packet_seq)
+            self.log_packet("TX", 0, self.curr_packet_len, self.curr_packet_seq, self.last_snr)
             self.message_port_pub(pmt.intern('to_phy'), self.last_tx_packet)
 
     def handle_phy_message(self, msg_pmt):
@@ -175,7 +177,7 @@ class stop_and_wait_arq(gr.basic_block):
 
             print 'SAW: Packet received. seq = ', packet_rx_seq_byte, ' type = ', packet_type_byte
 
-            self.log_packet("RX", packet_type_byte, len(packet_str) - 1, packet_rx_seq_byte) #remove frag hdr
+            self.log_packet("RX", packet_type_byte, len(packet_str) - 1, packet_rx_seq_byte, self.last_snr) #remove frag hdr
 
             self.last_seq_num = packet_rx_seq_byte
 
@@ -239,14 +241,15 @@ class stop_and_wait_arq(gr.basic_block):
             self.total_num_rx_bad_packets = 0
             self.total_num_rx_good_packets = 0
 
-    def log_packet(self, tx_rx, packet_type, packet_len, seq):
+    def log_packet(self, tx_rx, packet_type, packet_len, seq, snr):
         with open(self.log_file_name, 'a') as log_file:
             csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
             csv_writer.writerow({'Timestamp' : time.time(),
                     'TX/RX' : tx_rx,
                     'Packet Type' : packet_type,
                     'Packet Length' : packet_len,
-                    'Packet Seq #' : seq})
+                    'Packet Seq #' : seq,
+                    'SNR' : snr})
 
     def write_rx_statistics(self, ber_per_bad_packet, ber, per, snr):
         with open(self.log_file_name, 'a') as log_file:
