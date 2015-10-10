@@ -35,5 +35,7 @@ from packetizer_python import packetizer_python
 from unmake_packet_python import unmake_packet_python
 from stop_and_wait_arq import stop_and_wait_arq
 from rrrm import rrrm
+from per_logger import per_logger
+
 
 #
