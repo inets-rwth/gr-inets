@@ -59,13 +59,15 @@ class per_logger(gr.basic_block):
         self.log = False
         self.curr_snr = 0
         self.num_rec_packets = 0
+        self.sum_snr = 0
         self.avg_snr = 0
+        self.per = 0
         self.num_packet_errors = 0
 
         numpy.random.seed(0)
         self.payload = numpy.random.randint(0, 256, 500) #500 byte payload
-        print '[per_logger] using payload:'
-        print self.payload
+        #print '[per_logger] using payload:'
+        #print self.payload
 
     def handle_payload_message(self, msg_pmt):
         if not self.log:
@@ -76,7 +78,7 @@ class per_logger(gr.basic_block):
         msg_data = pmt.u8vector_elements(msg)
 
         self.num_rec_packets += 1
-        self.avg_snr += self.curr_snr
+        self.sum_snr += self.curr_snr
         ok = True
         
         print '[per_logger] got message. Total = ' + str(self.num_rec_packets)
@@ -84,20 +86,35 @@ class per_logger(gr.basic_block):
         
         bit_errors = self.compare_lists(list(msg_data), self.payload)
 
-        if  bit_errors > 0:
+        if bit_errors > 0:
             self.num_packet_errors += 1
-            print '[per_logger] Packet error. Byte errors = ' + str(bit_errors)
+            print '[per_logger] Packet error. Byte errors = ' + str(bit_errors) + " Total = " + str(self.num_packet_errors)
             ok = False
 
         self.log_packet(ok, self.curr_snr)
 
-        if self.num_rec_packets == 10000:
-            snr = sefl.avg_snr / self.num_rec_packets
-            per = self.num_packet_errors / self.num_rec_packets
-            self.num_rec_packets = 0
-            self.avg_snr = 0
-            self.log = False
-            self.log_stats(snr, per)
+#        if self.num_rec_packets == 10000:
+#            snr = sefl.avg_snr / self.num_rec_packets
+#            per = self.num_packet_errors / self.num_rec_packets
+#            self.num_rec_packets = 0
+#            self.avg_snr = 0
+#            self.log = False
+#            self.log_stats(snr, per)
+
+
+    def stop_per_meas(self):
+        self.log = False
+        self.per = self.num_packet_errors / float(self.num_rec_packets)
+        self.avg_snr = self.sum_snr / float(self.num_rec_packets)
+        print 'stopping. errors = ' + str(self.num_packet_errors) + ' PER = ' + str( float(self.per))
+        self.log_stats(self.avg_snr, self.per)
+  
+    def start_per_meas(self):
+        self.log = False
+        self.sum_snr = 0
+        self.num_rec_packets = 0
+        self.num_packet_errors = 0
+        self.log = True
 
     def log_packet(self, ok, snr):
         with open(self.log_file_name, 'a') as log_file:
@@ -106,7 +123,7 @@ class per_logger(gr.basic_block):
                     'OK' : ok,
                     'SNR' : snr})
 
-    def log_stats(self, ok, snr):
+    def log_stats(self, snr, per):
         with open(self.stats_log_file_name, 'a') as log_file:
             csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields_stats)
             csv_writer.writerow({'Timestamp' : time.time(),
@@ -117,7 +134,6 @@ class per_logger(gr.basic_block):
         snr_pmt = pmt.to_python(msg)
         snr = float(snr_pmt)
         self.curr_snr = snr
-        self.log = True
 
     def compare_lists(self, list1, list2):
         byte_errors = 0
