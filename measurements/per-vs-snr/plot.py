@@ -28,5 +28,5 @@ data = np.array(meas_points)
 
 #plt.figure(figsize=(128, 128))
 
-plt.plot(data[:,0], data[:,1])
+plt.plot(data[:,0], data[:,2], 'bo')
 plt.savefig('test.svg', dpi=3600, bbox_inches='tight')
