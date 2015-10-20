@@ -27,7 +27,11 @@ from gnuradio import gr
 from gnuradio import digital
 import pmt
 import threading
-import control
+try:
+    import control
+except ImportError:
+    HAS_TURNTABLE = False
+
 import threading
 
 class rrrm(gr.basic_block):
@@ -86,11 +90,12 @@ class rrrm(gr.basic_block):
         self.ping_frequency = 500
         self.max_message_timeout = 10000
 
-        try:
-            self.antenna_control = control.control("/dev/ttyACM0")
-            self.antenna_control.open()
-        except:
-            print 'could not open serial port'
+        if HAS_TURNTABLE:
+            try:
+                self.antenna_control = control.control("/dev/ttyACM0")
+                self.antenna_control.open()
+            except:
+                print 'could not open serial port'
 
     def handle_payload_message(self, msg_pmt):
         with self.thread_lock:
@@ -258,20 +263,20 @@ class rrrm(gr.basic_block):
                 channel_id = ord(msg_data[0])
                 print 'RRRM: SWITCH REQ: ' + str(channel_id)
 
-                try:
-                    if self.antenna_control != None:
-                        self.antenna_control.move_to(self.next_channel_pos)
-                except:
-                    pass
-
                 self.curr_channel_id = self.next_channel_id
-
+                self.next_channel_pos = self.channel_map[self.next_channel_id]
                 #make sure switch ack reaches other side before turning antenna
                 self.send_switch_accept()
                 time.sleep(0.01)
                 self.send_switch_accept()
                 time.sleep(0.01)
                 self.send_switch_accept()
+                
+                try:
+                    if self.antenna_control != None:
+                        self.antenna_control.move_to(self.next_channel_pos)
+                except:
+                    pass
 
                 self.state = self.STATE_FORWARD_PAYLOAD
 
