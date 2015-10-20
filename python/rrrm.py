@@ -186,7 +186,7 @@ class rrrm(gr.basic_block):
             self.send_switch_command(self.next_channel_id)
             self.log_file.write("{:.5f}".format(time.time()) + ";Send Switch;"+str(self.next_channel_id)+";\r\n")
             self.log_file.flush()
-            time.sleep(1.0/self.ping_frequency)
+            time.sleep(0.2)
             count += 1
 
         if count >= 3:
@@ -275,16 +275,17 @@ class rrrm(gr.basic_block):
 
             if msg_type == self.PACKET_TYPE_SWITCH:
 
-                self.state = self.STATE_SWITCH
-
                 channel_id = ord(msg_data[0])
+                if self.curr_channel_id == channel_id:
+                    return
+
+                self.state = self.STATE_SWITCH
 
                 print 'RRRM: SWITCH REQ: ' + str(channel_id)
                 self.log_file.write("{:.5f}".format(time.time()) + ";Got Switch;" + str(channel_id) + ";" + str(meta["packet_num"]) +";\r\n")
                 self.log_file.flush()
 
-                self.curr_channel_id = self.next_channel_id
-                self.next_channel_pos = self.channel_map[self.next_channel_id]
+                self.next_channel_pos = self.channel_map[channel_id]
                 #make sure switch ack reaches other side before turning antenna
                 self.send_switch_accept()
                 time.sleep(1.0/self.ping_frequency)
@@ -299,6 +300,8 @@ class rrrm(gr.basic_block):
                         self.log_file.write("{:.5f}".format(time.time()) + ";Steer End;\r\n")
                 except:
                     pass
+
+                self.curr_channel_id = channel_id
 
                 self.last_ping_time = time.time() + 2.0*self.max_message_timeout
                 self.state = self.STATE_FORWARD_PAYLOAD
