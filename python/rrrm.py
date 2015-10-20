@@ -239,6 +239,7 @@ class rrrm(gr.basic_block):
             #print 'RRRM: rrrm_in ###############################################'
 
             msg_str = self.get_data_str_from_pmt(msg_pmt)
+            meta = self.get_meta_dict_from_pmt(msg_pmt)
             ok, node_id, msg_type, msg_data = self.parse_rrrm_message(msg_str)
 
             if not ok:
@@ -252,12 +253,12 @@ class rrrm(gr.basic_block):
             self.last_ping_time = time.time()
 
             if msg_type == self.PACKET_TYPE_DATA:
-                self.log_file.write("{:.5f}".format(time.time()) + ";PD;\r\n")
+                self.log_file.write("{:.5f}".format(time.time()) + ";PD;"+str(meta["packet_num"])+";\r\n")
                 send_pmt = self.get_pmt_from_data_str(msg_data)
                 self.message_port_pub(pmt.intern('payload_out'), send_pmt)
 
             if msg_type == self.PACKET_TYPE_PING:
-                self.log_file.write("{:.5f}".format(time.time()) + ";PP;\r\n")
+                self.log_file.write("{:.5f}".format(time.time()) + ";PP;"+str(meta["packet_num"])+";\r\n")
                 #print 'RRRM: Ping message. time = ' + str(time.time())
                 self.last_ping_time = time.time()
 
@@ -317,6 +318,11 @@ class rrrm(gr.basic_block):
         return (True, node_id, msg_type, msg_str)
 
     ################ PMT helper functions #####################
+    def get_meta_dict_from_pmt(self, msg_pmt):
+        meta = pmt.to_python(pmt.car(msg_pmt))
+        return meta
+
+
     def get_data_str_from_pmt(self, msg_pmt):
         meta = pmt.to_python(pmt.car(msg_pmt))
         msg = pmt.cdr(msg_pmt)
