@@ -317,16 +317,19 @@ class rrrm(gr.basic_block):
                 self.switch_ack_received = True
                 if (self.switch_ack_thread != None and self.switch_ack_thread.isAlive()):
                     self.switch_ack_thread.join()
+
                 self.switch_ack_thread = None
 
                 if self.antenna_control != None:
                     try:
+                        self.log_file.write("{:.5f}".format(time.time()) + ";Steer Start;\r\n")
                         self.antenna_control.move_to(self.next_channel_pos)
+                        self.log_file.write("{:.5f}".format(time.time()) + ";Steer Stop;\r\n")
                     except:
                         pass
 
                 self.curr_channel_id = self.next_channel_id
-
+                self.last_ping_time = time.time() + 2.0*self.max_message_timeout
                 self.state = self.STATE_FORWARD_PAYLOAD
 
     def parse_link_layer_packet(self, msg_str):
