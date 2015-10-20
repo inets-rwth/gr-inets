@@ -107,6 +107,8 @@ class rrrm(gr.basic_block):
 
             if self.state == self.STATE_SWITCH:
                 print 'RRRM: payload_in. Switch state. Discarding message'
+                self.log_file.write("{:.5f}".format(time.time()) + ";Discarding;\r\n")
+                self.log_file.flush()
 
     def handle_radar_message(self, msg_pmt):
         with self.thread_lock:
@@ -182,7 +184,7 @@ class rrrm(gr.basic_block):
         count = 0
         while (self.switch_ack_received == False and count < 3):
             self.send_switch_command(self.next_channel_id)
-            self.log_file.write("{:.5f}".format(time.time()) + ";Send Switch;"+self.next_channel_id+";\r\n")
+            self.log_file.write("{:.5f}".format(time.time()) + ";Send Switch;"+str(self.next_channel_id)+";\r\n")
             self.log_file.flush()
             time.sleep(1.0/self.ping_frequency)
             count += 1
