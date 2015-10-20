@@ -257,7 +257,7 @@ class rrrm(gr.basic_block):
                 self.message_port_pub(pmt.intern('payload_out'), send_pmt)
 
             if msg_type == self.PACKET_TYPE_PING:
-                self.log_file.write(str(time.time()) + ";PP;\r\n")
+                self.log_file.write("{:.5f}".format(time.time()) + ";PP;\r\n")
                 #print 'RRRM: Ping message. time = ' + str(time.time())
                 self.last_ping_time = time.time()
 
