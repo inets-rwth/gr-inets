@@ -273,7 +273,10 @@ class rrrm(gr.basic_block):
 
             if msg_type == self.PACKET_TYPE_SWITCH:
 
+                self.state = self.STATE_SWITCH
+
                 channel_id = ord(msg_data[0])
+
                 print 'RRRM: SWITCH REQ: ' + str(channel_id)
                 self.log_file.write("{:.5f}".format(time.time()) + ";Got Switch;" + str(channel_id) + ";" + str(meta["packet_num"]) +";\r\n")
                 self.log_file.flush()
@@ -282,9 +285,9 @@ class rrrm(gr.basic_block):
                 self.next_channel_pos = self.channel_map[self.next_channel_id]
                 #make sure switch ack reaches other side before turning antenna
                 self.send_switch_accept()
-                time.sleep(0.01)
+                time.sleep(1.0/self.ping_frequency)
                 self.send_switch_accept()
-                time.sleep(0.01)
+                time.sleep(1.0/self.ping_frequency)
                 self.send_switch_accept()
 
                 try:
@@ -295,6 +298,7 @@ class rrrm(gr.basic_block):
                 except:
                     pass
 
+                self.last_ping_time = time.time() + 2.0*self.max_message_timeout
                 self.state = self.STATE_FORWARD_PAYLOAD
 
             if msg_type == self.PACKET_TYPE_SWITCH_ACCEPT:
