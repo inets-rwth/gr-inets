@@ -156,13 +156,15 @@ class rrrm(gr.basic_block):
 
                     self.next_channel_pos = self.channel_map[self.next_channel_id]
                     self.log_file.write("{:.5f}".format(time.time()) + ";LB;New Channel = " + str(self.next_channel_id) + "\r\n")
-
+                    self.log_file.flush()
                     if self.antenna_control != None:
                         try:
                             print 'Moving to ' + str(self.next_channel_pos)
                             self.log_file.write("{:.5f}".format(time.time()) + ";SS;\r\n")
+                            self.log_file.flush()
                             self.antenna_control.move_to(self.next_channel_pos)
                             self.log_file.write("{:.5f}".format(time.time()) + ";SD;\r\n")
+                            self.log_file.flush()
                             print(str(time.time()) + " :: antenna in pos")
                         except:
                             time.sleep(5)
@@ -254,11 +256,13 @@ class rrrm(gr.basic_block):
 
             if msg_type == self.PACKET_TYPE_DATA:
                 self.log_file.write("{:.5f}".format(time.time()) + ";PD;"+str(meta["packet_num"])+";\r\n")
+                self.log_file.flush()
                 send_pmt = self.get_pmt_from_data_str(msg_data)
                 self.message_port_pub(pmt.intern('payload_out'), send_pmt)
 
             if msg_type == self.PACKET_TYPE_PING:
                 self.log_file.write("{:.5f}".format(time.time()) + ";PP;"+str(meta["packet_num"])+";\r\n")
+                self.log_file.flush()
                 #print 'RRRM: Ping message. time = ' + str(time.time())
                 self.last_ping_time = time.time()
 
