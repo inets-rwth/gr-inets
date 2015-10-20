@@ -81,6 +81,11 @@ class rrrm(gr.basic_block):
         self.ping_monitor_thread.daemon = True
         self.ping_monitor_thread.start()
 
+        self.logfile = open('rrrm_log.txt','w')
+
+        self.ping_frequency = 500
+        self.max_message_timeout = 10000
+
         try:
             self.antenna_control = control.control("/dev/ttyACM0")
             self.antenna_control.open()
@@ -124,10 +129,10 @@ class rrrm(gr.basic_block):
     def do_send_ping(self):
         while True:
             if self.state == self.STATE_FORWARD_PAYLOAD:
-                if(time.time() - self.last_message_tx_time > 0.3):
+                if(time.time() - self.last_message_tx_time > (1.0 / self.ping_frequency)):
                     with self.thread_lock:
                         self.send_ping_message()
-                time.sleep(0.1)
+                time.sleep(0.5*(1.0 / self.ping_frequency))
 
     def do_check_ping(self):
         while True:
@@ -144,10 +149,13 @@ class rrrm(gr.basic_block):
                         str(self.curr_channel_id)+" next chan = "+str(self.next_channel_id))
 
                     self.next_channel_pos = self.channel_map[self.next_channel_id]
+                    self.log_file.write(str(time.time()) + ";Link Breakage Detected. New Channel = " + str(self.next_channel_id))
 
                     if self.antenna_control != None:
                         try:
+                            self.log_file.write(str(time.time()) + ";Steering")
                             self.antenna_control.move_to(self.next_channel_pos)
+                            self.log_file.write(str(time.time()) + ";Steering Done")
                             time.sleep(5)
                         except:
                             pass
@@ -234,6 +242,7 @@ class rrrm(gr.basic_block):
                 return
 
             print 'RRRM: Message: node_id = ' + str(node_id) + ' type = ' + str(msg_type)
+            self.log_file.write(str(time.time) + ";Packet Received")
             self.last_ping_time = time.time()
 
             if msg_type == self.PACKET_TYPE_DATA:
