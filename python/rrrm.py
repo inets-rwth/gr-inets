@@ -77,11 +77,11 @@ class rrrm(gr.basic_block):
         self.switch_ack_received = False
         self.last_ping_time = 0
         self.last_message_tx_time = 0
-        
+
         self.log_file = open('rrrm_log.txt','w')
 
-        self.ping_frequency = 250
-        self.max_message_timeout = 10000
+        self.ping_frequency = 100
+        self.max_message_timeout = 0.1
 
         if HAS_TURNTABLE:
             try:
@@ -138,7 +138,7 @@ class rrrm(gr.basic_block):
             if self.state == self.STATE_FORWARD_PAYLOAD:
                 if(time.time() - self.last_message_tx_time > (1.0 / self.ping_frequency)):
                         self.send_ping_message()
-                        print str(time.time()) + "sending ping"
+                        #print str(time.time()) + "sending ping"
                 time.sleep(0.5*(1.0 / self.ping_frequency))
 
     def do_check_ping(self):
@@ -152,8 +152,7 @@ class rrrm(gr.basic_block):
                     else:
                         self.next_channel_id = 0
 
-                    print ('RRRM: Link broken. Changing path. Curr chan = '+
-                        str(self.curr_channel_id)+" next chan = "+str(self.next_channel_id))
+                    print str(time.time()) + ' :: Link broken. Last ping = ' + str(self.last_ping_time)
 
                     self.next_channel_pos = self.channel_map[self.next_channel_id]
                     self.log_file.write(str(time.time()) + ";LB;New Channel = " + str(self.next_channel_id))
@@ -163,12 +162,13 @@ class rrrm(gr.basic_block):
                             self.log_file.write(str(time.time()) + ";SS")
                             self.antenna_control.move_to(self.next_channel_pos)
                             self.log_file.write(str(time.time()) + ";SD")
+                            print(str(time.time()) + " :: antenna in pos")
                         except:
                             time.sleep(5)
 
                     #time.sleep(5)
                     self.curr_channel_id = self.next_channel_id
-                    self.last_ping_time = time.time() + self.max_message_timeout 
+                    self.last_ping_time = time.time() + 2.0*self.max_message_timeout
 
             time.sleep(0.5 * self.max_message_timeout)
 
@@ -257,7 +257,7 @@ class rrrm(gr.basic_block):
 
             if msg_type == self.PACKET_TYPE_PING:
                 self.log_file.write(str(time.time) + ";PP")
-                print 'RRRM: Ping message. time = ' + str(time.time())
+                #print 'RRRM: Ping message. time = ' + str(time.time())
                 self.last_ping_time = time.time()
 
             if msg_type == self.PACKET_TYPE_SWITCH:
@@ -273,7 +273,7 @@ class rrrm(gr.basic_block):
                 self.send_switch_accept()
                 time.sleep(0.01)
                 self.send_switch_accept()
-                
+
                 try:
                     if self.antenna_control != None:
                         self.antenna_control.move_to(self.next_channel_pos)
