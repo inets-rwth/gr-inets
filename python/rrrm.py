@@ -29,6 +29,7 @@ import pmt
 import threading
 try:
     import control
+    HAS_TURNTABLE = True
 except ImportError:
     HAS_TURNTABLE = False
 
@@ -76,15 +77,7 @@ class rrrm(gr.basic_block):
         self.switch_ack_received = False
         self.last_ping_time = 0
         self.last_message_tx_time = 0
-
-        self.ping_thread = threading.Thread(target=self.do_send_ping)
-        self.ping_thread.daemon = True
-        self.ping_thread.start()
-
-        self.ping_monitor_thread = threading.Thread(target=self.do_check_ping)
-        self.ping_monitor_thread.daemon = True
-        self.ping_monitor_thread.start()
-
+        
         self.logfile = open('rrrm_log.txt','w')
 
         self.ping_frequency = 500
@@ -96,6 +89,15 @@ class rrrm(gr.basic_block):
                 self.antenna_control.open()
             except:
                 print 'could not open serial port'
+
+        self.ping_thread = threading.Thread(target=self.do_send_ping)
+        self.ping_thread.daemon = True
+        self.ping_thread.start()
+
+        self.ping_monitor_thread = threading.Thread(target=self.do_check_ping)
+        self.ping_monitor_thread.daemon = True
+        self.ping_monitor_thread.start()
+
 
     def handle_payload_message(self, msg_pmt):
         with self.thread_lock:
@@ -137,6 +139,7 @@ class rrrm(gr.basic_block):
                 if(time.time() - self.last_message_tx_time > (1.0 / self.ping_frequency)):
                     with self.thread_lock:
                         self.send_ping_message()
+                        print str(time.time()) + "sending ping"
                 time.sleep(0.5*(1.0 / self.ping_frequency))
 
     def do_check_ping(self):
