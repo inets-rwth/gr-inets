@@ -78,7 +78,7 @@ class rrrm(gr.basic_block):
         self.last_ping_time = 0
         self.last_message_tx_time = 0
         
-        self.logfile = open('rrrm_log.txt','w')
+        self.log_file = open('rrrm_log.txt','w')
 
         self.ping_frequency = 250
         self.max_message_timeout = 10000
@@ -137,7 +137,6 @@ class rrrm(gr.basic_block):
         while True:
             if self.state == self.STATE_FORWARD_PAYLOAD:
                 if(time.time() - self.last_message_tx_time > (1.0 / self.ping_frequency)):
-                    with self.thread_lock:
                         self.send_ping_message()
                         print str(time.time()) + "sending ping"
                 time.sleep(0.5*(1.0 / self.ping_frequency))
@@ -145,7 +144,7 @@ class rrrm(gr.basic_block):
     def do_check_ping(self):
         while True:
             if self.last_ping_time != 0:
-                if (time.time() - self.last_ping_time) > 0.6 and self.state == self.STATE_FORWARD_PAYLOAD:
+                if (time.time() - self.last_ping_time) > self.max_message_timeout and self.state == self.STATE_FORWARD_PAYLOAD:
                     #link broken. change path
                     #calculate new path
                     if self.curr_channel_id == 0:
@@ -157,21 +156,21 @@ class rrrm(gr.basic_block):
                         str(self.curr_channel_id)+" next chan = "+str(self.next_channel_id))
 
                     self.next_channel_pos = self.channel_map[self.next_channel_id]
-                    self.log_file.write(str(time.time()) + ";Link Breakage Detected. New Channel = " + str(self.next_channel_id))
+                    self.log_file.write(str(time.time()) + ";LB;New Channel = " + str(self.next_channel_id))
 
                     if self.antenna_control != None:
                         try:
-                            self.log_file.write(str(time.time()) + ";Steering")
+                            self.log_file.write(str(time.time()) + ";SS")
                             self.antenna_control.move_to(self.next_channel_pos)
-                            self.log_file.write(str(time.time()) + ";Steering Done")
-                            time.sleep(5)
+                            self.log_file.write(str(time.time()) + ";SD")
                         except:
-                            pass
+                            time.sleep(5)
 
+                    #time.sleep(5)
                     self.curr_channel_id = self.next_channel_id
-                    self.last_ping_time = time.time()
+                    self.last_ping_time = time.time() + self.max_message_timeout 
 
-            time.sleep(0.1)
+            time.sleep(0.5 * self.max_message_timeout)
 
     def do_wait_for_switch_ack(self):
         count = 0
@@ -236,8 +235,7 @@ class rrrm(gr.basic_block):
         self.message_port_pub(pmt.intern('rrrm_out'), send_pmt)
 
     def handle_rrrm_message(self, msg_pmt):
-        with self.thread_lock:
-            print 'RRRM: rrrm_in'
+            #print 'RRRM: rrrm_in ###############################################'
 
             msg_str = self.get_data_str_from_pmt(msg_pmt)
             ok, node_id, msg_type, msg_data = self.parse_rrrm_message(msg_str)
@@ -249,15 +247,16 @@ class rrrm(gr.basic_block):
             if node_id == self.node_id:
                 return
 
-            print 'RRRM: Message: node_id = ' + str(node_id) + ' type = ' + str(msg_type)
-            self.log_file.write(str(time.time) + ";Packet Received")
+            #print 'RRRM: Message: node_id = ' + str(node_id) + ' type = ' + str(msg_type)
             self.last_ping_time = time.time()
 
             if msg_type == self.PACKET_TYPE_DATA:
+                self.log_file.write(str(time.time) + ";PD")
                 send_pmt = self.get_pmt_from_data_str(msg_data)
                 self.message_port_pub(pmt.intern('payload_out'), send_pmt)
 
             if msg_type == self.PACKET_TYPE_PING:
+                self.log_file.write(str(time.time) + ";PP")
                 print 'RRRM: Ping message. time = ' + str(time.time())
                 self.last_ping_time = time.time()
 
