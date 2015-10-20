@@ -80,8 +80,8 @@ class rrrm(gr.basic_block):
 
         self.log_file = open('rrrm_log.txt','w')
 
-        self.ping_frequency = 6
-        self.max_message_timeout = 1
+        self.ping_frequency = 100
+        self.max_message_timeout = 0.01
 
         if HAS_TURNTABLE:
             try:
