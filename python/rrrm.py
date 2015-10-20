@@ -299,7 +299,7 @@ class rrrm(gr.basic_block):
                         self.antenna_control.move_to(self.next_channel_pos)
                         self.log_file.write("{:.5f}".format(time.time()) + ";Steer End;\r\n")
                 except:
-                    pass
+                    time.sleep(4)
 
                 self.curr_channel_id = channel_id
 
