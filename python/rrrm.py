@@ -80,8 +80,8 @@ class rrrm(gr.basic_block):
 
         self.log_file = open('rrrm_log.txt','w')
 
-        self.ping_frequency = 100
-        self.max_message_timeout = 0.1
+        self.ping_frequency = 6
+        self.max_message_timeout = 1
 
         if HAS_TURNTABLE:
             try:
@@ -159,6 +159,7 @@ class rrrm(gr.basic_block):
 
                     if self.antenna_control != None:
                         try:
+                            print 'Moving to ' + str(self.next_channel_pos)
                             self.log_file.write(str(time.time()) + ";SS")
                             self.antenna_control.move_to(self.next_channel_pos)
                             self.log_file.write(str(time.time()) + ";SD")
