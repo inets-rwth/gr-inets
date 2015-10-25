@@ -287,10 +287,14 @@ class rrrm(gr.basic_block):
                 self.next_channel_pos = self.channel_map[channel_id]
                 #make sure switch ack reaches other side before turning antenna
                 self.send_switch_accept()
+                self.log_file.write("{:.5f}".format(time.time()) + ";Send Accept;;;\r\n")
                 time.sleep(1.0/self.ping_frequency)
                 self.send_switch_accept()
+                self.log_file.write("{:.5f}".format(time.time()) + ";Send Accept;;;\r\n")
                 time.sleep(1.0/self.ping_frequency)
                 self.send_switch_accept()
+                self.log_file.write("{:.5f}".format(time.time()) + ";Send Accept;;;\r\n")
+                self.log_file.flush()
 
                 try:
                     if self.antenna_control != None:
