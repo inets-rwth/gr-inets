@@ -187,6 +187,7 @@ class rrrm(gr.basic_block):
             self.send_switch_command(self.next_channel_id)
             self.log_file.write("{:.5f}".format(time.time()) + ";Send Switch;"+str(self.next_channel_id)+";\r\n")
             self.log_file.flush()
+            self.last_ping_time = time.time() + 200*self.max_message_timeout
             self.state = self.STATE_FORWARD_PAYLOAD
             time.sleep(0.2)
             count += 1
@@ -297,7 +298,7 @@ class rrrm(gr.basic_block):
                 self.send_switch_accept()
                 self.log_file.write("{:.5f}".format(time.time()) + ";Send Accept;;;\r\n")
                 self.log_file.flush()
-                
+
                 self.curr_channel_id = channel_id
                 self.last_ping_time = time.time() + 200*self.max_message_timeout
                 self.state = self.STATE_FORWARD_PAYLOAD
@@ -323,10 +324,9 @@ class rrrm(gr.basic_block):
                     self.switch_ack_thread.join()
 
                 self.switch_ack_thread = None
-                
+
                 self.curr_channel_id = self.next_channel_id
-                self.last_ping_time = time.time() + 200*self.max_message_timeout
-                
+
                 threading.Thread(target=self.steer_antenna)
                 self.switch_ack_thread.daemon = True
                 self.switch_ack_thread.start()
