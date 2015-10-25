@@ -187,6 +187,7 @@ class rrrm(gr.basic_block):
             self.send_switch_command(self.next_channel_id)
             self.log_file.write("{:.5f}".format(time.time()) + ";Send Switch;"+str(self.next_channel_id)+";\r\n")
             self.log_file.flush()
+            self.state = self.STATE_FORWARD_PAYLOAD
             time.sleep(0.2)
             count += 1
 
@@ -325,16 +326,19 @@ class rrrm(gr.basic_block):
                 
                 self.curr_channel_id = self.next_channel_id
                 self.last_ping_time = time.time() + 200*self.max_message_timeout
-                self.state = self.STATE_FORWARD_PAYLOAD
+                
+                threading.Thread(target=self.steer_antenna)
+                self.switch_ack_thread.daemon = True
+                self.switch_ack_thread.start()
 
-                if self.antenna_control != None:
-                    try:
-                        self.log_file.write("{:.5f}".format(time.time()) + ";Steer Start;\r\n")
-                        self.antenna_control.move_to(self.next_channel_pos)
-                        self.log_file.write("{:.5f}".format(time.time()) + ";Steer Stop;\r\n")
-                    except:
-                        pass
-
+    def steer_antenna(self):
+        if self.antenna_control != None:
+            try:
+                self.log_file.write("{:.5f}".format(time.time()) + ";Steer Start;\r\n")
+                self.antenna_control.move_to(self.next_channel_pos)
+                self.log_file.write("{:.5f}".format(time.time()) + ";Steer Stop;\r\n")
+            except:
+                pass
 
     def parse_link_layer_packet(self, msg_str):
         (ok, msg_str) = digital.crc.check_crc32(msg_str)
