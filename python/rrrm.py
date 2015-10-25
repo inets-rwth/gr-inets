@@ -148,8 +148,8 @@ class rrrm(gr.basic_block):
 
     def do_check_ping(self):
         while True:
-            if self.last_ping_time != 0:
-                if (time.time() - self.last_ping_time) > self.max_message_timeout and self.state == self.STATE_FORWARD_PAYLOAD:
+            if self.last_ping_time != 0 and self.state == self.STATE_FORWARD_PAYLOAD:
+                if (time.time() - self.last_ping_time) > self.max_message_timeout:
                     #link broken. change path
                     #calculate new path
                     if self.curr_channel_id == 0:
@@ -176,7 +176,7 @@ class rrrm(gr.basic_block):
 
                     #time.sleep(5)
                     self.curr_channel_id = self.next_channel_id
-                    self.last_ping_time = time.time() + 2.0*self.max_message_timeout
+                    self.last_ping_time = time.time() + 20*self.max_message_timeout
 
             time.sleep(0.5 * self.max_message_timeout)
 
@@ -202,7 +202,7 @@ class rrrm(gr.basic_block):
                     pass
 
             self.curr_channel_id = self.next_channel_id
-            self.last_ping_time = time.time() + 2.0*self.max_message_timeout
+            self.last_ping_time = time.time() + 20*self.max_message_timeout
             self.state = self.STATE_FORWARD_PAYLOAD
 
     def build_link_layer_packet(self, msg_str):
@@ -259,7 +259,8 @@ class rrrm(gr.basic_block):
                 return
 
             #print 'RRRM: Message: node_id = ' + str(node_id) + ' type = ' + str(msg_type)
-            self.last_ping_time = time.time()
+            if self.last_ping_time < time.time():
+                self.last_ping_time = time.time()
 
             if msg_type == self.PACKET_TYPE_DATA:
                 self.log_file.write("{:.5f}".format(time.time()) + ";Got Data;"+str(meta["packet_num"])+";\r\n")
@@ -270,8 +271,6 @@ class rrrm(gr.basic_block):
             if msg_type == self.PACKET_TYPE_PING:
                 self.log_file.write("{:.5f}".format(time.time()) + ";Got Ping;"+str(meta["packet_num"])+";\r\n")
                 self.log_file.flush()
-                #print 'RRRM: Ping message. time = ' + str(time.time())
-                self.last_ping_time = time.time()
 
             if msg_type == self.PACKET_TYPE_SWITCH:
 
@@ -303,7 +302,7 @@ class rrrm(gr.basic_block):
 
                 self.curr_channel_id = channel_id
 
-                self.last_ping_time = time.time() + 2.0*self.max_message_timeout
+                self.last_ping_time = time.time() + 20*self.max_message_timeout
                 self.state = self.STATE_FORWARD_PAYLOAD
 
             if msg_type == self.PACKET_TYPE_SWITCH_ACCEPT:
@@ -329,7 +328,7 @@ class rrrm(gr.basic_block):
                         pass
 
                 self.curr_channel_id = self.next_channel_id
-                self.last_ping_time = time.time() + 2.0*self.max_message_timeout
+                self.last_ping_time = time.time() + 200*self.max_message_timeout
                 self.state = self.STATE_FORWARD_PAYLOAD
 
     def parse_link_layer_packet(self, msg_str):
