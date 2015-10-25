@@ -88,6 +88,7 @@ class rrrm(gr.basic_block):
                 self.antenna_control = control.control("/dev/ttyACM0")
                 self.antenna_control.open()
             except:
+                self.antenna_control = None
                 print 'could not open serial port'
 
         self.ping_thread = threading.Thread(target=self.do_send_ping)
@@ -295,6 +296,10 @@ class rrrm(gr.basic_block):
                 self.send_switch_accept()
                 self.log_file.write("{:.5f}".format(time.time()) + ";Send Accept;;;\r\n")
                 self.log_file.flush()
+                
+                self.curr_channel_id = channel_id
+                self.last_ping_time = time.time() + 200*self.max_message_timeout
+                self.state = self.STATE_FORWARD_PAYLOAD
 
                 try:
                     if self.antenna_control != None:
@@ -302,12 +307,7 @@ class rrrm(gr.basic_block):
                         self.antenna_control.move_to(self.next_channel_pos)
                         self.log_file.write("{:.5f}".format(time.time()) + ";Steer End;\r\n")
                 except:
-                    time.sleep(4)
-
-                self.curr_channel_id = channel_id
-
-                self.last_ping_time = time.time() + 20*self.max_message_timeout
-                self.state = self.STATE_FORWARD_PAYLOAD
+                    pass
 
             if msg_type == self.PACKET_TYPE_SWITCH_ACCEPT:
 
@@ -322,6 +322,10 @@ class rrrm(gr.basic_block):
                     self.switch_ack_thread.join()
 
                 self.switch_ack_thread = None
+                
+                self.curr_channel_id = self.next_channel_id
+                self.last_ping_time = time.time() + 200*self.max_message_timeout
+                self.state = self.STATE_FORWARD_PAYLOAD
 
                 if self.antenna_control != None:
                     try:
@@ -331,9 +335,6 @@ class rrrm(gr.basic_block):
                     except:
                         pass
 
-                self.curr_channel_id = self.next_channel_id
-                self.last_ping_time = time.time() + 200*self.max_message_timeout
-                self.state = self.STATE_FORWARD_PAYLOAD
 
     def parse_link_layer_packet(self, msg_str):
         (ok, msg_str) = digital.crc.check_crc32(msg_str)
