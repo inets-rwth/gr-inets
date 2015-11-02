@@ -327,9 +327,9 @@ class rrrm(gr.basic_block):
 
                 self.curr_channel_id = self.next_channel_id
 
-                threading.Thread(target=self.steer_antenna)
-                self.switch_ack_thread.daemon = True
-                self.switch_ack_thread.start()
+                self.antenna_thread = threading.Thread(target=self.steer_antenna)
+                self.antenna_thread.daemon = True
+                self.antenna_thread.start()
 
     def steer_antenna(self):
         if self.antenna_control != None:

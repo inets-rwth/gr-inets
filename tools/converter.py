@@ -10,20 +10,23 @@ class converter:
     def __init__(self, com):
         self.com_port = com
         self.ser = serial.Serial()
-        self.ser.baudrate = 921600 
+        self.ser.baudrate = 921600
         self.ser.port = self.com_port
         self.ser.bytesize = serial.EIGHTBITS
         self.ser.parity = serial.PARITY_NONE
         self.ser.stopbits = serial.STOPBITS_ONE
-        self.ser.timeout = 0
+        #self.ser.timeout = 5
         self.operation_in_progress = False
         self.curr_ans = ''
 
     def open(self):
         self.ser.open()
+        if not self.ser.isOpen():
+            print 'ALERT: Serial port not open'
+
         self.run_input_thread = True
         self.input_thread = threading.Thread(target=self.monitor_input)
-        self.input_thread.daemon = False
+        self.input_thread.daemon = True
         self.input_thread.start()
 
     def close(self):
@@ -42,7 +45,7 @@ class converter:
         print '############### Info ################'
         self.send_command('CONV:VERS?')
         self.send_command('VERS?')
-        
+
         print self.get_tx_on()
         print self.get_rx_on()
         print self.get_tx_freq()
@@ -117,7 +120,7 @@ class converter:
 
         if len(hex_string) == 5:
             hex_string = '0' + hex_string
-        
+
         return hex_string
 
     def get_freq_from_hex(self, hex_str):
@@ -126,7 +129,7 @@ class converter:
         num = num * self.LO_STEP
         return int(num)
 
-    def send_command(self, command): 
+    def send_command(self, command):
         print 'command: ' + command
         self.operation_in_progress = True
         self.ser.write(command+'\r\n')
@@ -136,8 +139,9 @@ class converter:
     def monitor_input(self):
         curr_line = ''
         while self.run_input_thread and self.ser.isOpen():
-            try:    
-                 curr_byte = self.ser.read()
+            try:
+                 curr_byte = self.ser.read(1)
+                 print curr_byte
                  if curr_byte != '':
                      if curr_byte != '\n' and curr_byte != '\r':
                          curr_line += str(curr_byte)
@@ -146,9 +150,12 @@ class converter:
                          self.operation_in_progress = False
                          self.curr_ans = curr_line
                          curr_line = ""
-            except:
+            except Exception as e:
+                print 'ALERT: could not read serial port',e
                 break
 
+        print self.ser.isOpen()
+        print self.run_input_thread
         print 'exiting input thread'
 
 
@@ -163,4 +170,4 @@ if __name__ == '__main__':
 #   cc.set_rx_on(True)
 #   cc.store()
 
-    cc.close()
+#    cc.close()
