@@ -42,14 +42,14 @@ class per_logger(gr.basic_block):
         self.message_port_register_in(pmt.intern('snr_in'))
         self.set_msg_handler(pmt.intern('snr_in'), self.handle_snr_message)
 
-        self.csv_fields = ['Timestamp', 'OK', 'SNR']
+        self.csv_fields = ['Timestamp', 'OK', 'SNR', 'Byte Errors', 'Bit Errors', 'Packet #']
         self.log_file_name = '/home/inets/per_log.csv'
 
         with open(self.log_file_name,'w') as log_file:
             csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
             csv_writer.writeheader()
         
-        self.csv_fields_stats = ['Timestamp', 'SNR', 'PER']
+        self.csv_fields_stats = ['Timestamp', 'SNR', 'PER', 'BER']
         self.stats_log_file_name = '/home/inets/per_stats_log.csv'
 
         with open(self.stats_log_file_name,'w') as log_file:
@@ -63,6 +63,7 @@ class per_logger(gr.basic_block):
         self.avg_snr = 0
         self.per = 0
         self.num_packet_errors = 0
+        self.num_bit_errors = 0
 
         numpy.random.seed(0)
         self.payload = numpy.random.randint(0, 256, 500) #500 byte payload
@@ -70,10 +71,13 @@ class per_logger(gr.basic_block):
         #print self.payload
 
     def handle_payload_message(self, msg_pmt):
-        if not self.log:
-            return
+        #if not self.log:
+        #    return
 
         meta = pmt.to_python(pmt.car(msg_pmt))
+        packet_num = meta["packet_num"]
+        #packet_num = pmt.to_double(pmt.dict_values(meta)[0])
+        #print 'num = '+str(packet_num)
         msg = pmt.cdr(msg_pmt)
         msg_data = pmt.u8vector_elements(msg)
 
@@ -84,14 +88,14 @@ class per_logger(gr.basic_block):
         print '[per_logger] got message. Total = ' + str(self.num_rec_packets)
         #print list(msg_data)
         
-        bit_errors = self.compare_lists(list(msg_data), self.payload)
+        byte_errors, bit_errors = self.compare_lists(list(msg_data), self.payload)
 
         if bit_errors > 0:
             self.num_packet_errors += 1
-            print '[per_logger] Packet error. Byte errors = ' + str(bit_errors) + " Total = " + str(self.num_packet_errors)
+            print '[per_logger] Packet error. Byte errors = ' + str(bit_errors) + " Bit errors = " + str(bit_errors) + " Total = " + str(self.num_packet_errors)
             ok = False
 
-        self.log_packet(ok, self.curr_snr)
+        self.log_packet(ok, self.curr_snr, byte_errors, bit_errors, packet_num)
 
 #        if self.num_rec_packets == 10000:
 #            snr = sefl.avg_snr / self.num_rec_packets
@@ -105,30 +109,36 @@ class per_logger(gr.basic_block):
     def stop_per_meas(self):
         self.log = False
         self.per = self.num_packet_errors / float(self.num_rec_packets)
+        ber = self.num_bit_errors / (float(self.num_rec_packets) * 500 * 8)
         self.avg_snr = self.sum_snr / float(self.num_rec_packets)
-        print 'stopping. errors = ' + str(self.num_packet_errors) + ' PER = ' + str( float(self.per))
-        self.log_stats(self.avg_snr, self.per)
+        print 'stopping. errors = ' + str(self.num_packet_errors) + ' PER = ' + str( float(self.per)) + ' BER = ' + str(ber)
+        self.log_stats(self.avg_snr, self.per, ber)
   
     def start_per_meas(self):
         self.log = False
         self.sum_snr = 0
         self.num_rec_packets = 0
         self.num_packet_errors = 0
+        self.num_bit_errors = 0
         self.log = True
 
-    def log_packet(self, ok, snr):
+    def log_packet(self, ok, snr, byte_errors, bit_errors, packet_num):
         with open(self.log_file_name, 'a') as log_file:
             csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
             csv_writer.writerow({'Timestamp' : time.time(),
                     'OK' : ok,
-                    'SNR' : snr})
+                    'SNR' : snr,
+                    'Byte Errors' : byte_errors,
+                    'Bit Errors' : bit_errors,
+                    'Packet #' : packet_num})
 
-    def log_stats(self, snr, per):
+    def log_stats(self, snr, per, ber):
         with open(self.stats_log_file_name, 'a') as log_file:
             csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields_stats)
             csv_writer.writerow({'Timestamp' : time.time(),
                     'SNR' : snr,
-                    'PER' : per})
+                    'PER' : per,
+                    'BER' : ber})
 
     def handle_snr_message(self, msg):
         snr_pmt = pmt.to_python(msg)
@@ -137,10 +147,15 @@ class per_logger(gr.basic_block):
 
     def compare_lists(self, list1, list2):
         byte_errors = 0
+        bit_errors = 0
         for  x, y in zip(list1,list2):
             if x != y:
                 byte_errors += 1
+                for i in range(0, 8):
+                    if ((x >> i) & 0x01) != ((y >> i) & 0x01):
+                        self.num_bit_errors += 1
+                        bit_errors += 1
 
-        return byte_errors
+        return byte_errors, bit_errors
 
          
