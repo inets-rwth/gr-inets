@@ -112,7 +112,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, 251)</value>
+      <value>(88, 267)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -139,34 +139,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, 187)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>diff_preamble_256</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>[1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0,0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0,0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1,1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0]</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(8, 427)</value>
+      <value>(8, 267)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -220,34 +193,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(8, 267)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>preamble</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>[1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0,0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0,0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1,1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0]</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(176, 123)</value>
+      <value>(8, 331)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -712,7 +658,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1024, 107)</value>
+      <value>(1128, 107)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -755,7 +701,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(848, 616)</value>
+      <value>(904, 592)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -798,7 +744,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(848, 568)</value>
+      <value>(904, 544)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -841,7 +787,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(248, 744)</value>
+      <value>(304, 656)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -896,7 +842,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(448, 827)</value>
+      <value>(504, 755)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -951,7 +897,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(688, 272)</value>
+      <value>(856, 176)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -986,7 +932,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(256, 619)</value>
+      <value>(312, 595)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1037,7 +983,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(832, 840)</value>
+      <value>(912, 784)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1084,7 +1030,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(800, 888)</value>
+      <value>(856, 832)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1131,7 +1077,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(832, 792)</value>
+      <value>(952, 736)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1174,7 +1120,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(272, 323)</value>
+      <value>(296, 171)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1233,7 +1179,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(272, 419)</value>
+      <value>(304, 331)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1296,7 +1242,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(216, 867)</value>
+      <value>(280, 707)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1343,7 +1289,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1024, 59)</value>
+      <value>(1168, 59)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1374,7 +1320,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1024, 11)</value>
+      <value>(1176, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1409,7 +1355,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 512)</value>
+      <value>(784, 488)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1444,7 +1390,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(448, 480)</value>
+      <value>(504, 456)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1511,7 +1457,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(504, 352)</value>
+      <value>(560, 328)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1532,6 +1478,61 @@
     <param>
       <key>node_id</key>
       <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>inets_stop_and_wait_arq</key>
+    <param>
+      <key>ack_timeout</key>
+      <value>0.2</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(488, 200)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>inets_stop_and_wait_arq_0</value>
+    </param>
+    <param>
+      <key>max_mtu</key>
+      <value>500</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>stat_update_interval</key>
+      <value>100000</value>
+    </param>
+    <param>
+      <key>use_ack</key>
+      <value>False</value>
     </param>
   </block>
   <block>
@@ -1589,7 +1590,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1040, 707)</value>
+      <value>(1096, 683)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1940,7 +1941,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1048, 515)</value>
+      <value>(1104, 491)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -2299,7 +2300,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1048, 619)</value>
+      <value>(1104, 595)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -2642,7 +2643,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(8, 331)</value>
+      <value>(1024, 11)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -3413,7 +3414,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(848, 355)</value>
+      <value>(920, 347)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4228,7 +4229,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(24, 587)</value>
+      <value>(80, 563)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4407,9 +4408,9 @@
   </connection>
   <connection>
     <source_block_id>blocks_socket_pdu_0</source_block_id>
-    <sink_block_id>inets_rrrm_0</sink_block_id>
+    <sink_block_id>inets_stop_and_wait_arq_0</sink_block_id>
     <source_key>pdus</source_key>
-    <sink_key>payload_in</sink_key>
+    <sink_key>from_app</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_socket_pdu_1</source_block_id>
@@ -4484,16 +4485,34 @@
     <sink_key>snr_in</sink_key>
   </connection>
   <connection>
+    <source_block_id>inets_radio_0</source_block_id>
+    <sink_block_id>inets_stop_and_wait_arq_0</sink_block_id>
+    <source_key>snr</source_key>
+    <sink_key>snr</sink_key>
+  </connection>
+  <connection>
     <source_block_id>inets_rrrm_0</source_block_id>
-    <sink_block_id>blocks_message_debug_0</sink_block_id>
+    <sink_block_id>inets_stop_and_wait_arq_0</sink_block_id>
     <source_key>payload_out</source_key>
-    <sink_key>print</sink_key>
+    <sink_key>from_phy</sink_key>
   </connection>
   <connection>
     <source_block_id>inets_rrrm_0</source_block_id>
     <sink_block_id>inets_radio_0</sink_block_id>
     <source_key>rrrm_out</source_key>
     <sink_key>in</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_stop_and_wait_arq_0</source_block_id>
+    <sink_block_id>blocks_message_debug_0</sink_block_id>
+    <source_key>to_app</source_key>
+    <sink_key>print</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>inets_stop_and_wait_arq_0</source_block_id>
+    <sink_block_id>inets_rrrm_0</sink_block_id>
+    <source_key>to_phy</source_key>
+    <sink_key>payload_in</sink_key>
   </connection>
   <connection>
     <source_block_id>uhd_usrp_source_0</source_block_id>
