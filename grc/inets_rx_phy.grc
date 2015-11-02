@@ -245,7 +245,7 @@
     </param>
     <param>
       <key>decay_rate</key>
-      <value>0.1</value>
+      <value>10</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -269,7 +269,7 @@
     </param>
     <param>
       <key>max_gain</key>
-      <value>40</value>
+      <value>500</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1062,7 +1062,7 @@
     </param>
     <param>
       <key>max_dev</key>
-      <value>0.05</value>
+      <value>0.1</value>
     </param>
     <param>
       <key>minoutbuf</key>
@@ -1273,7 +1273,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(944, 235)</value>
+      <value>(952, 235)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1320,7 +1320,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(552, 280)</value>
+      <value>(544, 280)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1371,7 +1371,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(792, 243)</value>
+      <value>(784, 243)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1664,7 +1664,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(808, 467)</value>
+      <value>(816, 467)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1707,7 +1707,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(552, 227)</value>
+      <value>(544, 227)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2008,7 +2008,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1160, 243)</value>
+      <value>(1184, 243)</value>
     </param>
     <param>
       <key>_rotation</key>
