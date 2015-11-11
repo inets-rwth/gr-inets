@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<block>
+  <name>rssi</name>
+  <key>inets_rssi</key>
+  <category>inets</category>
+  <import>import inets</import>
+  <make>inets.rssi()</make>
+  <sink>
+    <name>in</name>
+    <type>float</type>
+  </sink>
+</block>
