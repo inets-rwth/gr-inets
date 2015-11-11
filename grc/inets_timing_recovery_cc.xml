@@ -1,0 +1,20 @@
+<block>
+  <name>Timing Recovery</name>
+  <key>inets_timing_recovery_cc</key>
+  <category>iNets</category>
+  <import>import inets</import>
+  <make>inets.timing_recovery_cc($sps)</make>
+  <param>
+    <name>Sps</name>
+    <key>sps</key>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>

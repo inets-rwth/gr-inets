@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<block>
+  <name>rrrm</name>
+  <key>inets_rrrm</key>
+  <category>iNets</category>
+  <import>import inets</import>
+  <make>inets.rrrm($node_id, $channel_map)</make>
+  <param>
+    <name>Channel Map</name>
+    <key>channel_map</key>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>Node ID</name>
+    <key>node_id</key>
+    <type>int</type>
+  </param>
+
+  <sink>
+    <name>payload_in</name>
+    <type>message</type>
+  </sink>
+  <sink>
+    <name>radar_in</name>
+    <type>message</type>
+  </sink>
+  <sink>
+    <name>rrrm_in</name>
+    <type>message</type>
+  </sink>
+
+  <source>
+    <name>payload_out</name>
+    <type>message</type>
+  </source>
+  <source>
+    <name>rrrm_out</name>
+    <type>message</type>
+  </source>
+</block>

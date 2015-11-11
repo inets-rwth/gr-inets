@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<block>
+  <name>Stop and Wait Arq</name>
+  <key>inets_stop_and_wait_arq</key>
+  <category>iNets</category>
+  <import>import inets</import>
+  <make>inets.stop_and_wait_arq($ack_timeout, $max_mtu, $use_ack, $stat_update_interval)</make>
+  <param>
+    <name>Use ACK</name>
+    <key>use_ack</key>
+    <type>bool</type>
+  </param>
+  <param>
+    <name>Statistics Update Interval (#Packets)</name>
+    <key>stat_update_interval</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>ACK Timeout</name>
+    <key>ack_timeout</key>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Max MTU Size</name>
+    <key>max_mtu</key>
+    <type>int</type>
+  </param>
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>from_app</name>
+    <type>message</type>
+  </sink>
+  <sink>
+    <name>from_phy</name>
+    <type>message</type>
+  </sink>
+  <sink>
+    <name>snr</name>
+    <type>message</type>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>to_app</name>
+    <type>message</type>
+  </source>
+  <source>
+    <name>to_phy</name>
+    <type>message</type>
+  </source>
+</block>

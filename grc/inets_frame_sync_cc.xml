@@ -1,0 +1,49 @@
+<block>
+  <name>Frame Sync</name>
+  <key>inets_frame_sync_cc</key>
+  <category>iNets</category>
+  <import>import inets</import>
+  <make>inets.frame_sync_cc($preamble, $constellation, $threshold, $len_tag_key)</make>
+  <callback>set_constellation($constellation)</callback>
+  <param>
+    <name>Preamble</name>
+    <key>preamble</key>
+    <type>int_vector</type>
+  </param>
+  <param>
+    <name>Constellation</name>
+    <key>constellation</key>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>Threshold</name>
+    <key>threshold</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Len_tag_key</name>
+    <key>len_tag_key</key>
+    <value>"packet_len"</value>
+    <type>string</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+  <source>
+    <name>out</name>
+    <type>float</type>
+  </source>
+</block>

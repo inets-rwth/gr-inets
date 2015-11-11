@@ -1,0 +1,26 @@
+<block>
+  <name>Baseband Derotation</name>
+  <key>inets_baseband_derotation</key>
+  <category>iNets</category>
+  <import>import inets</import>
+  <make>inets.baseband_derotation($mu, $con)</make>
+  <callback>set_mu($mu)</callback>
+  <param>
+    <name>Mu</name>
+    <key>mu</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Con</name>
+    <key>con</key>
+    <type>raw</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>

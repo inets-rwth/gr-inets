@@ -1,0 +1,32 @@
+<block>
+  <name>Packetizer</name>
+  <key>inets_packetizer</key>
+  <category>iNets</category>
+  <import>import inets</import>
+  <make>inets.packetizer($preamble, $padding, $bps)</make>
+  <param>
+    <name>Preamble</name>
+    <key>preamble</key>
+    <type>int_vector</type>
+  </param>
+  <param>
+    <name>Padding</name>
+    <key>padding</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Bitrate</name>
+    <key>bps</key>
+    <type>real</type>
+  </param>
+  <sink>
+    <name>payload_in</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+  <source>
+    <name>packet_out</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+</block>

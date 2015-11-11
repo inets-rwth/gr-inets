@@ -1,0 +1,20 @@
+<block>
+  <name>Variable Rotator</name>
+  <key>inets_variable_rotator</key>
+  <category>INETS</category>
+  <import>import inets</import>
+  <make>inets.variable_rotator($num_delay)</make>
+  <param>
+    <name>Num_delay</name>
+    <key>num_delay</key>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>
