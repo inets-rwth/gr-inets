@@ -1,3 +1,2 @@
-# gr-inets
-## Hold on tight! Content will be released soon.
-OOT GNU Radio module 'gr-inets' containing blocks and examples used for the work conducted for our demo presentation at SRIF'15
+# gr-inets OOT module for GNU Radio
+## Includes blocks to build a packetized transceiver system using USRPs
