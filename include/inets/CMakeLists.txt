@@ -26,5 +26,6 @@ install(FILES
     timing_recovery_cc.h
     packetizer.h
     variable_rotator.h
-    baseband_derotation.h DESTINATION include/inets
+    baseband_derotation.h
+    sink.h DESTINATION include/inets
 )
