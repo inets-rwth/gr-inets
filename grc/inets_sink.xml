@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<block>
+  <name>Sink</name>
+  <key>inets</key>
+  <category>iNets</category>
+  <import>import inets</import>
+  <make>inets.sink($filename)</make>
+  <param>
+    <name>filename</name>
+    <key>filename</key>
+    <type>file_save</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+</block>

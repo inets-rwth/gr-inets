@@ -13,6 +13,7 @@
 #include "inets/packetizer.h"
 #include "inets/variable_rotator.h"
 #include "inets/baseband_derotation.h"
+#include "inets/sink.h"
 %}
 %include "gnuradio/digital/constellation.h"
 
@@ -27,3 +28,5 @@ GR_SWIG_BLOCK_MAGIC2(inets, packetizer);
 GR_SWIG_BLOCK_MAGIC2(inets, variable_rotator);
 %include "inets/baseband_derotation.h"
 GR_SWIG_BLOCK_MAGIC2(inets, baseband_derotation);
+%include "inets/sink.h"
+GR_SWIG_BLOCK_MAGIC2(inets, sink);
