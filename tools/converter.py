@@ -16,7 +16,7 @@ class converter:
         self.ser.bytesize = serial.EIGHTBITS
         self.ser.parity = serial.PARITY_NONE
         self.ser.stopbits = serial.STOPBITS_ONE
-        #self.ser.timeout = 5
+        self.ser.timeout = 5
         self.operation_in_progress = False
         self.curr_ans = ''
 
@@ -27,7 +27,7 @@ class converter:
 
         self.run_input_thread = True
         self.input_thread = threading.Thread(target=self.monitor_input)
-        self.input_thread.daemon = True
+        self.input_thread.daemon = False
         self.input_thread.start()
 
     def close(self):
@@ -148,7 +148,7 @@ class converter:
         curr_line = ''
         while self.run_input_thread and self.ser.isOpen():
             try:
-                 curr_byte = self.ser.read()
+                 curr_byte = self.ser.read(1)
                  if curr_byte != '':
                      if curr_byte != '\n' and curr_byte != '\r':
                          curr_line += str(curr_byte)
@@ -157,8 +157,7 @@ class converter:
                          self.operation_in_progress = False
                          self.curr_ans = curr_line
                          curr_line = ""
-            except Exception as e:
-                print 'ALERT: could not read serial port',e
+            except:
                 break
 
 if __name__ == '__main__':
