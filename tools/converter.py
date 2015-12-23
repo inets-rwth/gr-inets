@@ -1,4 +1,5 @@
 import serial
+import argparse
 import sys
 import threading
 import time
@@ -46,20 +47,34 @@ class converter:
         self.send_command('CONV:VERS?')
         self.send_command('VERS?')
 
+        print 'TX ON?'
         print self.get_tx_on()
+        print 'RX ON?'
         print self.get_rx_on()
+        print 'TX FREQ?'
         print self.get_tx_freq()
+        print 'RX FREQ?'
         print self.get_rx_freq()
+        print 'TX GAIN?'
+        print self.get_tx_gain()
 
         print '#####################################\r\n'
 
+    def get_tx_gain(self):
+        self.send_command('CONV:TXPS?')
+        return self.curr_ans
+
+    def set_tx_gain(self, gain_str):
+        self.send_command('CONV:TXPS ' + gain_str)
 
     def set_tx_freq(self, freq):
         hex_str = self.get_freq_hex_string(freq)
+        print 'freq hex string = ' + hex_str
         self.send_command('SYNT:TXFR '+hex_str)
 
     def set_rx_freq(self, freq):
         hex_str = self.get_freq_hex_string(freq)
+        print 'freq hex string = ' + hex_str
         self.send_command('SYNT:RXFR '+hex_str)
 
     def get_tx_freq(self):
@@ -72,6 +87,13 @@ class converter:
 
     def get_tx_on(self):
         self.send_command('CONV:TXON?')
+        if self.curr_ans == 'ON':
+            return True
+        if self.curr_ans == 'OFF':
+            return False
+
+    def get_rx_on(self):
+        self.send_command('CONV:RXON?')
         if self.curr_ans == 'ON':
             return True
         if self.curr_ans == 'OFF':
@@ -93,19 +115,6 @@ class converter:
             self.send_command('CONV:TXON OFF')
             self.send_command('SYNT:TXON OFF')
 
-    def get_tx_on(self):
-        self.send_command('CONV:TXON?')
-        if self.curr_ans == 'ON':
-            return True
-        if self.curr_ans == 'OFF':
-            return False
-
-    def get_rx_on(self):
-        self.send_command('CONV:RXON?')
-        if self.curr_ans == 'ON':
-            return True
-        if self.curr_ans == 'OFF':
-            return False
 
     def store(self):
         self.send_command('CONV:STOR')
@@ -130,7 +139,6 @@ class converter:
         return int(num)
 
     def send_command(self, command):
-        print 'command: ' + command
         self.operation_in_progress = True
         self.ser.write(command+'\r\n')
         while self.operation_in_progress:
@@ -140,8 +148,7 @@ class converter:
         curr_line = ''
         while self.run_input_thread and self.ser.isOpen():
             try:
-                 curr_byte = self.ser.read(1)
-                 print curr_byte
+                 curr_byte = self.ser.read()
                  if curr_byte != '':
                      if curr_byte != '\n' and curr_byte != '\r':
                          curr_line += str(curr_byte)
@@ -154,20 +161,41 @@ class converter:
                 print 'ALERT: could not read serial port',e
                 break
 
-        print self.ser.isOpen()
-        print self.run_input_thread
-        print 'exiting input thread'
-
-
 if __name__ == '__main__':
-    cc = converter('/dev/ttyACM0')
-    cc.open()
+    pars = argparse.ArgumentParser()
+    pars.add_argument('mode', help='mode to use')
+    pars.add_argument('-com', help='com port')
+    pars.add_argument('-tx_lo', type=float)
+    pars.add_argument('-rx_lo', type=float)
+    pars.add_argument('-tx_gain')
 
-    cc.print_info()
-#   cc.set_tx_freq(77e9)
-#   cc.set_rx_freq(87e9)
-#   cc.set_tx_on(True)
-#   cc.set_rx_on(True)
-#   cc.store()
+    args = pars.parse_args()
 
-#    cc.close()
+    com_port = '/dev/ttyACM0'
+    if args.com != None:
+        com_port = args.com
+
+    if args.mode == 'show':
+        cc = converter(com_port)
+        cc.open()
+        cc.print_info()
+        cc.close()
+
+    if args.mode == 'set':
+        cc = converter(com_port)
+        cc.open()
+
+        cc.set_tx_on(False)
+        cc.set_rx_on(False)
+
+        if args.tx_lo != None:
+            cc.set_tx_freq(args.tx_lo)
+            cc.set_tx_on(True)
+        if args.rx_lo != None:
+            cc.set_rx_freq(args.rx_lo)
+            cc.set_rx_on(True)
+        if args.tx_gain != None:
+            cc.set_tx_gain(args.tx_gain)
+
+        cc.store()
+        cc.close()
