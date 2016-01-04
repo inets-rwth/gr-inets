@@ -12,10 +12,11 @@ namespace gr {
     {
      private:
       float d_rssi_avg;
-      float d_rssi_max;
       int d_num_of_samples;
-      float d_accumulated_powers;
       bool d_active;
+      double d_avg;
+      double d_beta;
+      double d_alpha;
 
      public:
       rssi_impl();
