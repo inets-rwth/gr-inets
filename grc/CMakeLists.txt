@@ -26,5 +26,6 @@ install(FILES
     inets_baseband_derotation.xml
     inets_stop_and_wait_arq.xml
     inets_rrrm.xml
-    inets_per_logger.xml DESTINATION share/gnuradio/grc/blocks
+    inets_per_logger.xml 
+    inets_rssi.xml DESTINATION share/gnuradio/grc/blocks
 )

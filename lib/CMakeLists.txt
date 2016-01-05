@@ -30,6 +30,7 @@ list(APPEND inets_sources
     packetizer_impl.cc
     variable_rotator_impl.cc
     baseband_derotation_impl.cc
+    rssi_impl.cc
 )
 
 set(inets_sources "${inets_sources}" PARENT_SCOPE)
