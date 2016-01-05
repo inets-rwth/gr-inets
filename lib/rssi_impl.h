@@ -19,7 +19,7 @@ namespace gr {
       double d_alpha;
 
      public:
-      rssi_impl();
+      rssi_impl(float alpha);
       ~rssi_impl();
       void start_rssi_meas();
       void stop_rssi_meas(int RXangle, int TXangle);

@@ -15,25 +15,24 @@
 namespace gr {
   namespace inets {
 
-    rssi::sptr
-      rssi::make()
-      {
-        return gnuradio::get_initial_sptr
-          (new rssi_impl());
-      }
+    rssi::sptr rssi::make(float alpha)
+    {
+      return gnuradio::get_initial_sptr
+        (new rssi_impl(alpha));
+    }
 
     /*
      * The private constructor
      */
-    rssi_impl::rssi_impl()
+    rssi_impl::rssi_impl(float alpha)
       : gr::sync_block("rssi",
           gr::io_signature::make(1, 1, sizeof(std::complex<float>)),
           gr::io_signature::make(0, 0, 0)),
       d_rssi_avg(0),
       d_num_of_samples(0),
       d_active(false),
-      d_alpha(0.001),
-      d_beta(1.0-0.001)
+      d_alpha(alpha),
+      d_beta(1.0 - alpha)
     {}
 
     /*

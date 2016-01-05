@@ -27,7 +27,7 @@ namespace gr {
        * class. inets::rssi::make is the public interface for
        * creating new instances.
        */
-      static sptr make();
+      static sptr make(float alpha);
 
       virtual void start_rssi_meas() = 0;
       virtual void stop_rssi_meas(int RXangle, int TXangle) = 0;
