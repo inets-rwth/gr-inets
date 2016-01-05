@@ -4,7 +4,12 @@
   <key>inets_rssi</key>
   <category>inets</category>
   <import>import inets</import>
-  <make>inets.rssi()</make>
+  <make>inets.rssi($alpha)</make>
+  <param>
+    <name>alpha</name>
+    <key>alpha</key>
+    <type>float</type>
+  </param>
   <sink>
     <name>in</name>
     <type>complex</type>
