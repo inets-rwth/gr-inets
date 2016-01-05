@@ -295,7 +295,7 @@ class top_block(gr.top_block, Qt.QWidget):
         
         self._qtgui_const_sink_x_0_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0_0.pyqwidget(), Qt.QWidget)
         self.tab_layout_2.addWidget(self._qtgui_const_sink_x_0_0_win)
-        self.inets_rssi_0 = inets.rssi()
+        self.inets_rssi_0 = inets.rssi(0.000001)
         self.inets_radio_0 = inets_radio(
             constellation=qpsk_mod,
             matched_filter_coeff=rrc,
@@ -310,7 +310,6 @@ class top_block(gr.top_block, Qt.QWidget):
         self.blocks_null_sink_0_0 = blocks.null_sink(gr.sizeof_gr_complex*1)
         self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_char*1)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((range_noise, ))
-        self.blocks_complex_to_mag_1 = blocks.complex_to_mag(1)
         self.blocks_complex_to_mag_0_0 = blocks.complex_to_mag(1)
         self.blocks_complex_to_mag_0 = blocks.complex_to_mag(1)
         self.blocks_add_xx_0 = blocks.add_vcc(1)
@@ -326,7 +325,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_add_xx_0, 0), (self.inets_radio_0, 0))    
         self.connect((self.blocks_complex_to_mag_0, 0), (self.qtgui_time_sink_x_0, 1))    
         self.connect((self.blocks_complex_to_mag_0_0, 0), (self.qtgui_time_sink_x_0, 0))    
-        self.connect((self.blocks_complex_to_mag_1, 0), (self.inets_rssi_0, 0))    
+        self.connect((self.uhd_usrp_source_0, 0), (self.inets_rssi_0, 0))    
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_add_xx_0, 1))    
         self.connect((self.inets_radio_0, 2), (self.blocks_complex_to_mag_0, 0))    
         self.connect((self.inets_radio_0, 1), (self.blocks_complex_to_mag_0_0, 0))    
@@ -336,7 +335,6 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.inets_radio_0, 4), (self.qtgui_time_sink_x_0_0, 0))    
         self.connect((self.inets_radio_0, 0), (self.uhd_usrp_sink_0, 0))    
         self.connect((self.uhd_usrp_source_0, 0), (self.blocks_add_xx_0, 0))    
-        self.connect((self.uhd_usrp_source_0, 0), (self.blocks_complex_to_mag_1, 0))    
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "top_block")
@@ -549,6 +547,8 @@ if __name__ == '__main__':
     per_thread.start()
     tb.show()
     def quitting():
+        my_per_test.doWork = False
+        per_thread.join()
         tb.stop()
         tb.wait()
     qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
