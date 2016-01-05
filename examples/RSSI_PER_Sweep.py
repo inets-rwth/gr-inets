@@ -72,11 +72,11 @@ class top_block(gr.top_block, Qt.QWidget):
         self.RXangle = RXangle = 0
         self.TXangle = TXangle = 0
         self.sps = sps = 4
-        self.range_tx_gain = range_tx_gain = 15
-        self.range_rx_gain = range_rx_gain = 18
+        self.range_tx_gain = range_tx_gain = 0
+        self.range_rx_gain = range_rx_gain = 10
         self.range_mu = range_mu = 0.4
-        self.range_freq = range_freq = 3.5e9
-        self.variable_qtgui_label_0 = variable_qtgui_label_0 = "{:2.1f} GHz".format(float((77e9-range_freq))/1e9)
+        self.range_freq = range_freq = 3.0e9
+        self.variable_qtgui_label_0 = variable_qtgui_label_0 = "{:2.1f} GHz".format(float((59e9+range_freq))/1e9)
         self.tx_gain = tx_gain = range_tx_gain
         self.threshold = threshold = 40
         self.samp_rate = samp_rate = 4e6
@@ -151,16 +151,16 @@ class top_block(gr.top_block, Qt.QWidget):
         self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
         self.uhd_usrp_sink_0.set_center_freq(freq, 0)
         self.uhd_usrp_sink_0.set_gain(tx_gain, 0)
-        self._range_tx_gain_range = Range(0, 15, 1, 15, 200)
+        self._range_tx_gain_range = Range(0, 15, 1, 0, 200)
         self._range_tx_gain_win = RangeWidget(self._range_tx_gain_range, self.set_range_tx_gain, "Tx Gain", "counter_slider", float)
         self.top_grid_layout.addWidget(self._range_tx_gain_win, 1,1,1,1)
-        self._range_rx_gain_range = Range(0, 60, 1, 18, 200)
+        self._range_rx_gain_range = Range(0, 60, 1, 10, 200)
         self._range_rx_gain_win = RangeWidget(self._range_rx_gain_range, self.set_range_rx_gain, "Rx Gain", "counter_slider", float)
         self.top_grid_layout.addWidget(self._range_rx_gain_win, 1,0,1,1)
         self._range_mu_range = Range(0, 1, 0.01, 0.4, 200)
         self._range_mu_win = RangeWidget(self._range_mu_range, self.set_range_mu, "BB Derotation Gain", "counter_slider", float)
         self.top_grid_layout.addWidget(self._range_mu_win, 2,0,1,1)
-        self._range_freq_range = Range(2.5e9, 4e9, 100e6, 3.5e9, 200)
+        self._range_freq_range = Range(2.4e9, 4e9, 100e6, 3.0e9, 200)
         self._range_freq_win = RangeWidget(self._range_freq_range, self.set_range_freq, "IF Frequency", "counter_slider", float)
         self.top_grid_layout.addWidget(self._range_freq_win, 0,0,1,1)
         self.qtgui_time_sink_x_0_0 = qtgui.time_sink_f(
@@ -377,7 +377,7 @@ class top_block(gr.top_block, Qt.QWidget):
     def set_range_freq(self, range_freq):
         self.range_freq = range_freq
         self.set_freq(self.range_freq)
-        self.set_variable_qtgui_label_0(self._variable_qtgui_label_0_formatter("{:2.1f} GHz".format(float((77e9-self.range_freq))/1e9)))
+        self.set_variable_qtgui_label_0(self._variable_qtgui_label_0_formatter("{:2.1f} GHz".format(float((59e9+self.range_freq))/1e9)))
 
     def get_variable_qtgui_label_0(self):
         return self.variable_qtgui_label_0
@@ -511,18 +511,18 @@ class per_test:
 
         while self.doWork:
 
-            time.sleep(2)
+            time.sleep(1)
             num = tb.get_num_rec_packets()
 
             tb.stop_per_meas(self.RXangle, self.TXangle)
             tb.stop_rssi_meas(self.RXangle, self.TXangle)
             print 'Iteration done. RXangle = ' + str(self.RXangle) + ', TXangle = ' + str(self.TXangle)
 
-            if self.RXangle >= 50:
+            if self.RXangle >= 80: # 1 step = 2.25 deg
                 self.TXangle += 1
                 self.RXangle = -1
                 self.TTController.move_to(0)
-                if self.TXangle > 50:
+                if self.TXangle > 40:
                     self.TTController.close()
                     return
                 else:
@@ -530,9 +530,9 @@ class per_test:
 
             self.RXangle += 1
             if self.RXangle > 0:
-                self.TTController.move_to(self.RXangle*400)
+                self.TTController.move_to(self.RXangle*200)
 
-            time.sleep(2)
+            time.sleep(0.2)
             tb.start_per_meas()
             tb.start_rssi_meas()
 
