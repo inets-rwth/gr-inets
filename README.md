@@ -14,3 +14,8 @@ make && make install
 For an example which uses most of the parts of this project see the `transceiver.grc` in the `examples` folder.
 
 This flowgraph sets up a transceiver that accepts UDP input and forwards output also via UDP. It is intended for use with a USRP x3x0 SDR device.
+
+In oder to use this example you have to compile the following hierarchical blocks using GRC:
+* `grc/inets_tx_phy.grc`
+* `grc/inets_rx_phy.grc`
+* `grc/inets_radio.grc`
