@@ -16,7 +16,7 @@ class converter:
         self.ser.bytesize = serial.EIGHTBITS
         self.ser.parity = serial.PARITY_NONE
         self.ser.stopbits = serial.STOPBITS_ONE
-        self.ser.timeout = 5
+        self.ser.timeout = 10
         self.operation_in_progress = False
         self.curr_ans = ''
 
@@ -33,14 +33,13 @@ class converter:
     def close(self):
         while self.operation_in_progress:
             time.sleep(1)
-        print 'closing connection'
+            print 'closing connection'
         self.ser.close()
         self.run_input_thread = False
         if self.input_thread.isAlive():
             print 'joining thread'
             self.input_thread.join()
             print 'thread exited'
-
 
     def print_info(self):
         print '############### Info ################'
@@ -58,7 +57,7 @@ class converter:
         print 'TX GAIN?'
         print self.get_tx_gain()
 
-        print '#####################################\r\n'
+        print '#####################################'
 
     def get_tx_gain(self):
         self.send_command('CONV:TXPS?')
@@ -115,7 +114,6 @@ class converter:
             self.send_command('CONV:TXON OFF')
             self.send_command('SYNT:TXON OFF')
 
-
     def store(self):
         self.send_command('CONV:STOR')
         self.send_command('SYNT:STOR')
@@ -129,8 +127,7 @@ class converter:
 
         if len(hex_string) == 5:
             hex_string = '0' + hex_string
-
-        return hex_string
+            return hex_string
 
     def get_freq_from_hex(self, hex_str):
         hex_str = hex_str.replace(" ","")
@@ -148,21 +145,22 @@ class converter:
         curr_line = ''
         while self.run_input_thread and self.ser.isOpen():
             try:
-                 curr_byte = self.ser.read(1)
-                 if curr_byte != '':
-                     if curr_byte != '\n' and curr_byte != '\r':
-                         curr_line += str(curr_byte)
-                     if curr_byte == '\r':
-                         print curr_line
-                         self.operation_in_progress = False
-                         self.curr_ans = curr_line
-                         curr_line = ""
+                curr_byte = self.ser.read(1)
+                if curr_byte != '':
+                    if curr_byte != '\n' and curr_byte != '\r':
+                        curr_line += str(curr_byte)
+                    else:
+                        #print 'got eol'
+                        if self.operation_in_progress:
+                            self.operation_in_progress = False
+                            self.curr_ans = curr_line
+                            curr_line = ""
             except:
                 break
 
 if __name__ == '__main__':
     pars = argparse.ArgumentParser()
-    pars.add_argument('mode', help='mode to use')
+    pars.add_argument('mode', help='set, list')
     pars.add_argument('-com', help='com port')
     pars.add_argument('-tx_lo', type=float)
     pars.add_argument('-rx_lo', type=float)
@@ -183,7 +181,6 @@ if __name__ == '__main__':
     if args.mode == 'set':
         cc = converter(com_port)
         cc.open()
-
         cc.set_tx_on(False)
         cc.set_rx_on(False)
 
@@ -194,7 +191,9 @@ if __name__ == '__main__':
             cc.set_rx_freq(args.rx_lo)
             cc.set_rx_on(True)
         if args.tx_gain != None:
+            print 'Setting Tx Gain = ' + str(args.tx_gain)
             cc.set_tx_gain(args.tx_gain)
 
         cc.store()
         cc.close()
+
