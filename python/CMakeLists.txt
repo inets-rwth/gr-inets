@@ -36,7 +36,9 @@ GR_PYTHON_INSTALL(
     stop_and_wait_arq.py
     rrrm.py
     per_logger.py
-    source.py DESTINATION ${GR_PYTHON_DIR}/inets
+    source.py
+    turntable.py
+    control.py DESTINATION ${GR_PYTHON_DIR}/inets
 )
 
 ########################################################################
@@ -56,3 +58,4 @@ GR_ADD_TEST(qa_stop_and_wait_arq ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR
 GR_ADD_TEST(qa_rrrm ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_rrrm.py)
 GR_ADD_TEST(qa_psource ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_psource.py)
 GR_ADD_TEST(qa_sink ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_sink.py)
+GR_ADD_TEST(qa_turntable ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_turntable.py)

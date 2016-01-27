@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<block>
+  <name>turntable</name>
+  <key>inets_turntable</key>
+  <category>iNets</category>
+  <import>import inets</import>
+  <make>inets.turntable($period, $serial_port, $degrees_per_trigger, $stop)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <param>
+    <name>Period</name>
+    <key>period</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Serial Port</name>
+    <key>serial_port</key>
+    <type>string</type>
+  </param>
+
+  <param>
+    <name>Degrees per trigger</name>
+    <key>degrees_per_trigger</key>
+    <type>float</type>
+  </param>
+
+  <param>
+    <name>Stop angle</name>
+    <key>stop</key>
+    <type>float</type>
+  </param>
+
+  <sink>
+      <name>in</name>
+      <type>message</type>
+      <optional>0</optional>
+  </sink>
+
+  <source>
+      <name>out</name>
+      <type>message</type>
+      <optional>0</optional>
+  </source>
+
+</block>
