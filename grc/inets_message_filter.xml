@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<block>
+  <name>message_filter</name>
+  <key>inets_message_filter</key>
+  <category>iNets</category>
+  <import>import inets</import>
+  <make>inets.message_filter($n, $k, $init)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <!--<param>
+    <name>...</name>
+    <key>...</key>
+    <type>...</type>
+  </param>-->
+
+  <param>
+    <name>N</name>
+    <key>n</key>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Keys</name>
+    <key>k</key>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Init</name>
+    <key>init</key>
+    <type>raw</type>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in</name>
+    <type>message</type>
+    <optional>0</optional>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>message</type>
+    <optional>0</optional>
+  </source>
+
+</block>

@@ -56,11 +56,12 @@ class turntable(gr.basic_block):
         self.counter=0
 
         print "Opening serial port: " + self.d_serial_port
-        self.ttctrl = control.control(self.d_serial_port)
-        self.ttctrl.open()
+        #self.ttctrl = control.control(self.d_serial_port)
+        #self.ttctrl.open()
 
     def __del__(self):
-        self.ttctrl.close()
+        pass
+        #self.ttctrl.close()
 
     def msg_handler(self, p):
         self.counter = self.counter + 1
@@ -68,22 +69,20 @@ class turntable(gr.basic_block):
             self.counter = 0
             #print "turning ", self.d_degrees_per_trigger, " degrees"
             self.angle += self.d_degrees_per_trigger
-            self.ttctrl.move_to(self.angle)
+            #self.ttctrl.move_to(self.angle)
             if self.angle > self.d_stop:
                 print "Stopping execution now"
                 #sys.exit(0)
-            #print "Turned ", self.angle, " degrees in total"
-            #print "Got a new message: ", p
-
-            #p = pmt.list2(pmt.list2(pmt.string_to_symbol("angle"), pmt.init_f32vector(1, [20.0])), pmt.list2(pmt.from_float(20.0)))
 
             ang_key = pmt.string_to_symbol("angle")
             ang_value = pmt.init_f32vector(1, [self.angle])
             ang_pack = pmt.list2(ang_key, ang_value)
 
-            p = pmt.list1(ang_pack)
+            #m = pmt.list1(ang_pack)
+            m = pmt.list4(pmt.nth(0, p), pmt.nth(1, p), pmt.nth(2, p), ang_pack)
 
-            self.message_port_pub(pmt.string_to_symbol("out"), p)
+            #pmt.list_add(m, p)
+            self.message_port_pub(pmt.string_to_symbol("out"), m)
 
 
 
