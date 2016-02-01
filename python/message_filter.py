@@ -102,8 +102,14 @@ class message_filter(gr.basic_block):
                    output = sum(self.prev_values[j])/len(self.prev_values[j])
                    output = pmt.make_f32vector(1, output)
 
-           if found==False:
-               output = pmt.nth(1, element)
+                   if i==0:
+                       outpmt = pmt.list1(pmt.list2(pmt.string_to_symbol(str(key) + "_filtered"), output))
+                   else:
+                       outpmt = pmt.list_add(outpmt, pmt.list2(pmt.string_to_symbol(str(key) + "_filtered"), output))
+
+
+
+           output = pmt.nth(1, element)
 
            if i==0:
                outpmt = pmt.list1(pmt.list2(key, output))
