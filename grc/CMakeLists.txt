@@ -30,5 +30,6 @@ install(FILES
     inets_source.xml
     inets_sink.xml
     inets_turntable.xml
-    inets_message_filter.xml DESTINATION share/gnuradio/grc/blocks
+    inets_message_filter.xml
+    inets_power_to_db.xml DESTINATION share/gnuradio/grc/blocks
 )
