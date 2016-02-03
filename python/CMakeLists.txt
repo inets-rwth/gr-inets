@@ -39,7 +39,8 @@ GR_PYTHON_INSTALL(
     source.py
     turntable.py
     control.py
-    message_filter.py DESTINATION ${GR_PYTHON_DIR}/inets
+    message_filter.py
+    power_to_db.py DESTINATION ${GR_PYTHON_DIR}/inets
 )
 
 ########################################################################
@@ -61,3 +62,4 @@ GR_ADD_TEST(qa_psource ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_psour
 GR_ADD_TEST(qa_sink ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_sink.py)
 GR_ADD_TEST(qa_turntable ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_turntable.py)
 GR_ADD_TEST(qa_message_filter ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_message_filter.py)
+GR_ADD_TEST(qa_power_to_db ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_power_to_db.py)

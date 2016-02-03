@@ -116,9 +116,26 @@ class message_filter(gr.basic_block):
            else:
                outpmt = pmt.list_add(outpmt, pmt.list2(key, output))
 
-       
         if verbose:
             print
+
+
+        #iterate over all keys
+        for i in range(0, len(self.kk)):
+            minimum = self.prev_values[i][0]
+            maximum = self.prev_values[i][0]
+            #iterate over all saved values
+            for j in range(0, self.n[i]):
+                if self.prev_values[i][j] < minimum:
+                    minimum = self.prev_values[i][j]
+                if self.prev_values[i][j] > maximum:
+                    maximum = self.prev_values[i][j]
+        
+        difference = maximum-minimum
+        outpmt = pmt.list_add(outpmt, pmt.list2(pmt.string_to_symbol("min"), pmt.make_f32vector(1, minimum)))
+        outpmt = pmt.list_add(outpmt, pmt.list2(pmt.string_to_symbol("max"), pmt.make_f32vector(1, maximum)))
+        outpmt = pmt.list_add(outpmt, pmt.list2(pmt.string_to_symbol("diff"), pmt.make_f32vector(1, difference)))
+
 
         self.message_port_pub(pmt.string_to_symbol("out"), outpmt)
     

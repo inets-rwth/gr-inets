@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<block>
+  <name>power_to_db</name>
+  <key>inets_power_to_db</key>
+  <category>Inets</category>
+  <import>import inets</import>
+  <make>inets.power_to_db()</make>
+
+  <sink>
+    <name>in</name>
+    <type>message</type>
+    <optional>0</optional>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>message</type>
+    <optional>0</optional>
+  </source>
+</block>
