@@ -16,7 +16,7 @@ class converter:
         self.ser.bytesize = serial.EIGHTBITS
         self.ser.parity = serial.PARITY_NONE
         self.ser.stopbits = serial.STOPBITS_ONE
-        self.ser.timeout = 10
+        self.ser.timeout = 0
         self.operation_in_progress = False
         self.curr_ans = ''
 
@@ -155,6 +155,8 @@ class converter:
                             self.operation_in_progress = False
                             self.curr_ans = curr_line
                             curr_line = ""
+                else:
+                    time.sleep(0.1)
             except:
                 break
 
