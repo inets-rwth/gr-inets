@@ -27,7 +27,7 @@ class converter:
 
         self.run_input_thread = True
         self.input_thread = threading.Thread(target=self.monitor_input)
-        self.input_thread.daemon = False
+        self.input_thread.daemon = True
         self.input_thread.start()
 
     def close(self):
