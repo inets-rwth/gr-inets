@@ -4,7 +4,7 @@
   <key>inets_message_filter</key>
   <category>iNets</category>
   <import>import inets</import>
-  <make>inets.message_filter($n, $k, $init)</make>
+  <make>inets.message_filter($n, $k, $init, $filter_suffix, $min_suffix, $max_suffix, $diff_suffix)</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name
@@ -32,6 +32,30 @@
     <name>Init</name>
     <key>init</key>
     <type>raw</type>
+  </param>
+
+  <param>
+      <name>Filter Suffix</name>
+      <key>filter_suffix</key>
+      <type>string</type>
+  </param>
+
+  <param>
+      <name>Min Suffix</name>
+      <key>min_suffix</key>
+      <type>string</type>
+  </param>
+
+  <param>
+      <name>Max Suffix</name>
+      <key>max_suffix</key>
+      <type>string</type>
+  </param>
+
+  <param>
+      <name>Diff Suffix</name>
+      <key>diff_suffix</key>
+      <type>string</type>
   </param>
 
   <!-- Make one 'sink' node per input. Sub-nodes:

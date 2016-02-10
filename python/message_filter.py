@@ -27,7 +27,8 @@ class message_filter(gr.basic_block):
     """
     docstring for block message_filter
     """
-    def __init__(self, n, k, init):
+    #$n, $k, $init, $filter_suffix, $min_suffix, $max_suffix, diff_suffix
+    def __init__(self, n, k, init, filter_suffix, min_suffix, max_suffix, diff_suffix):
         gr.basic_block.__init__(self,
             name="message_filter",
             in_sig=[],
@@ -37,6 +38,10 @@ class message_filter(gr.basic_block):
         self.kk = k
         self.init = init
         self.prev_values = []
+        self.filter_suffix = filter_suffix
+        self.min_suffix = min_suffix
+        self.max_suffix = max_suffix
+        self.diff_suffix
 
         if len(self.n) != len(self.kk) or len(self.n) != len(self.init):
             print "Error with parameters"
@@ -131,6 +136,7 @@ class message_filter(gr.basic_block):
                 if self.prev_values[i][j] > maximum:
                     maximum = self.prev_values[i][j]
         
+        #print out a min, diff, max for every key
         difference = maximum-minimum
         outpmt = pmt.list_add(outpmt, pmt.list2(pmt.string_to_symbol("min"), pmt.make_f32vector(1, minimum)))
         outpmt = pmt.list_add(outpmt, pmt.list2(pmt.string_to_symbol("max"), pmt.make_f32vector(1, maximum)))

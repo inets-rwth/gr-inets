@@ -33,7 +33,6 @@ class turntable(gr.basic_block):
     #i declare the class' variables here
     #angle
     
-
     def __init__(self, period, serial_port, degrees_per_trigger, stop):
         gr.basic_block.__init__(self,
             name="turntable",
@@ -56,12 +55,13 @@ class turntable(gr.basic_block):
         self.counter=0
 
         print "Opening serial port: " + self.d_serial_port
-        #self.ttctrl = control.control(self.d_serial_port)
-        #self.ttctrl.open()
+        if self.d_serial_port != "":
+            self.ttctrl = control.control(self.d_serial_port)
+            self.ttctrl.open()
 
     def __del__(self):
-        pass
-        #self.ttctrl.close()
+        if self.d_serial_port != "":
+            self.ttctrl.close()
 
     def msg_handler(self, p):
         self.counter = self.counter + 1
@@ -69,20 +69,24 @@ class turntable(gr.basic_block):
             self.counter = 0
             #print "turning ", self.d_degrees_per_trigger, " degrees"
             self.angle += self.d_degrees_per_trigger
-            #self.ttctrl.move_to(self.angle)
+
+            if self.d_serial_port != "":
+                self.ttctrl.move_to(self.angle)
+
             if self.angle > self.d_stop:
                 print "Stopping execution now"
                 #sys.exit(0)
 
-            ang_key = pmt.string_to_symbol("angle")
-            ang_value = pmt.init_f32vector(1, [self.angle])
-            ang_pack = pmt.list2(ang_key, ang_value)
+        ang_key = pmt.string_to_symbol("angle")
+        ang_value = pmt.init_f32vector(1, [self.angle])
+        ang_pack = pmt.list2(ang_key, ang_value)
 
-            #m = pmt.list1(ang_pack)
-            m = pmt.list4(pmt.nth(0, p), pmt.nth(1, p), pmt.nth(2, p), ang_pack)
+        #m = pmt.list1(ang_pack)
+        m = pmt.list4(pmt.nth(0, p), pmt.nth(1, p), pmt.nth(2, p), ang_pack)
 
-            #pmt.list_add(m, p)
-            self.message_port_pub(pmt.string_to_symbol("out"), m)
+        #pmt.list_add(m, p)
+        self.message_port_pub(pmt.string_to_symbol("out"), m)
+
 
 
 
