@@ -152,6 +152,10 @@ class converter:
                     else:
                         #print 'got eol'
                         if self.operation_in_progress:
+                            if curr_line == 'NACK':
+                                print 'ERROR: NACK'
+                                self.ser.close()
+                                break
                             self.operation_in_progress = False
                             self.curr_ans = curr_line
                             curr_line = ""
