@@ -25,7 +25,7 @@ class control:
     def close(self):
         while self.operation_in_progress:
             time.sleep(1)
-        print 'closing connection'
+        #print 'closing connection'
         self.serial_port.close()
         self.run_input_thread = False
         if self.input_thread.isAlive():
@@ -41,11 +41,14 @@ class control:
             return
         print "moving: " + str(int(diff))
         self.serial_port.write(str(int(diff))+"\r\n")
-        #while self.operation_in_progress:
-            #time.sleep(0.1)
+        while self.operation_in_progress:
+            time.sleep(0.1)
 
     def monitor_input(self):
         curr_line = ''
+        #print "self.run_input_thread: ", self.run_input_thread
+        #print "self.serial_port.isOpen(): ", self.serial_port.isOpen()
+
         while self.run_input_thread and self.serial_port.isOpen():
             try:
                  curr_byte = self.serial_port.read()
@@ -54,20 +57,30 @@ class control:
                          curr_line += str(curr_byte)
                      if curr_byte == '\r':
                          print curr_line
-                         if curr_line == 'done':
+                         if curr_line == 'Rotation done':
                              self.operation_in_progress = False
                          curr_line = ""
             except:
                 self.operation_in_progress = False
                 break
 
-        print 'exiting input thread'
+        #print 'exiting input thread'
 
 if __name__ == "__main__":
     pos = sys.argv[1]
+    #for my turntable, 16000 is 2pi
 
     con = control("/dev/ttyACM0")
     con.open()
+
+    #for i in range(0, 20):
+        #print "Moving the next round: ", i
+        #con.move_to(int(16000*i))
+        #time.sleep(1)
+
+
     con.move_to(int(pos))
+
     con.close()
+
 

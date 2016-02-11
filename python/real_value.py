@@ -29,12 +29,14 @@ class real_value(gr.basic_block):
     """
     docstring for block real_value
     """
-    def __init__(self):
+    def __init__(self, filename, key):
         gr.basic_block.__init__(self,
             name="real_value",
             in_sig=[],
             out_sig=[])
 
+        self.filename = filename
+        self.key = key
 
         #register message ports
         self.message_port_register_in(pmt.string_to_symbol("in"))
@@ -44,15 +46,22 @@ class real_value(gr.basic_block):
     def msg_handler(self, p):
         #os.system("pwd")
         #time.sleep(1)
-        fd = open("real_range", "r")
+        fd = open(self.filename, "r")
 
         s = fd.readline()
         fd.close()
 
-        s = float(s)
+        #print "Got string ", s
+        try:
+            s = float(s)
+        except ValueError:
+            s = -200000.0
 
-        p = pmt.list_add(p, pmt.list2(pmt.string_to_symbol("real_range"), pmt.make_f32vector(1, s)))
+        p = pmt.list_add(p, pmt.list2(pmt.string_to_symbol(self.key), pmt.make_f32vector(1, s)))
 
-        if(s>-500.0):
+        if(s>-100000.0):
             self.message_port_pub(pmt.string_to_symbol("out"), p)
+        else:
+            #print "s=", s
+            pass
     

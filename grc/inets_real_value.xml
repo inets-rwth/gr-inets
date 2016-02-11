@@ -4,7 +4,19 @@
   <key>inets_real_value</key>
   <category>iNets</category>
   <import>import inets</import>
-  <make>inets.real_value()</make>
+  <make>inets.real_value($filename, $key)</make>
+
+  <param>
+    <name>Filename</name>
+    <key>filename</key>
+    <type>string</type>
+  </param>
+
+  <param>
+    <name>Key</name>
+    <key>key</key>
+    <type>string</type>
+  </param>
 
   <!-- Make one 'sink' node per input. Sub-nodes:
        * name (an identifier for the GUI)
