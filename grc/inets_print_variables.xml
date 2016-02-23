@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<block>
+  <name>print_variables</name>
+  <key>inets_print_variables</key>
+  <category>iNets</category>
+  <import>import inets</import>
+  <make>inets.print_variables($n, $v)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <param>
+    <name>names</name>
+    <key>n</key>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>values</name>
+    <key>v</key>
+    <type>raw</type>
+  </param>
+</block>
