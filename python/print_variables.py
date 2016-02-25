@@ -41,4 +41,3 @@ class print_variables(gr.basic_block):
                 print "variable ", names[i], ": ", values[i]
             print "#################################"
 
-[samp_rate, delta_freq, center_freq, min_output_buffer, samp_per_freq, samp_discard, blocks_per_tag, v_res, decimator_fac, R_max]

@@ -41,7 +41,7 @@ class message_filter(gr.basic_block):
         self.filter_suffix = filter_suffix
         self.min_suffix = min_suffix
         self.max_suffix = max_suffix
-        self.diff_suffix
+        self.diff_suffix = diff_suffix
 
         if len(self.n) != len(self.kk) or len(self.n) != len(self.init):
             print "Error with parameters"
