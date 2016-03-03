@@ -19,26 +19,23 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-import numpy
-from gnuradio import gr
+from gnuradio import gr, gr_unittest
+from gnuradio import blocks
+from message_print import message_print
 
-class print_variables(gr.basic_block):
-    """
-    docstring for block print_variables
-    """
-    def __init__(self, names, values):
-        gr.basic_block.__init__(self,
-            name="print_variables",
-            in_sig=[],
-            out_sig=[])
+class qa_message_print (gr_unittest.TestCase):
 
-        if len(names) != len(values):
-            print "Error: lengths do not match"
-        else:
-            print "#################################"
-            print "Summary of variables:"
-            for i in range(0, len(names)):
-                print "variable ", names[i], ": ", values[i]
-            print "#################################"
+    def setUp (self):
+        self.tb = gr.top_block ()
 
-#[samp_rate, delta_freq, center_freq, min_output_buffer, samp_per_freq, samp_discard, blocks_per_tag, v_res, decimator_fac, R_max]
+    def tearDown (self):
+        self.tb = None
+
+    def test_001_t (self):
+        # set up fg
+        self.tb.run ()
+        # check data
+
+
+if __name__ == '__main__':
+    gr_unittest.run(qa_message_print, "qa_message_print.xml")

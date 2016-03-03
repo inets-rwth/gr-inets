@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<block>
+  <name>message_print</name>
+  <key>inets_message_print</key>
+  <category>iNets</category>
+  <import>import inets</import>
+  <make>inets.message_print($k, $filename)</make>
+
+  <param>
+    <name>Keys</name>
+    <key>k</key>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Filename</name>
+    <key>filename</key>
+    <type>string</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>message</type>
+    <optional>0</optional>
+  </sink>
+
+
+</block>
