@@ -55,7 +55,7 @@ namespace gr {
       d_active = false;
       d_rssi_avg = d_avg;
       //convert to dB and add correction term to convert to dBm
-      //correction term was generated using a tone at 3.0001 GHz 
+      //correction term was generated using a tone at 3.0001 GHz
       //with a power of -20.9 dBm. The USRP was set to 3 GHz and 0dB gain.
       //The measured RMS power was -22.25 dB -> 1.35 dB difference
       double input_power_db = 10.0 * std::log10(d_rssi_avg) + 1.35;
@@ -63,9 +63,9 @@ namespace gr {
       std::ofstream myfile;
       myfile.open("/home/inets/Documents/Log/RSSI.csv", std::ios::app);
 
-      myfile.seekp(0, std::ios::end);  
+      myfile.seekp(0, std::ios::end);
       if(myfile.tellp() == 0)
-      {    
+      {
         myfile << "RXangle,TXangle,RSSI_avg,RSSI_max,Num_of_Samples\n";
       }
 
