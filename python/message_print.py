@@ -80,7 +80,10 @@ class message_print(gr.basic_block):
                 current_value = pmt.nth(1, element)
 
                 if current_key=="rx_time":
-                    self.fdout.write("[" + str(pmt.tuple_ref(current_value, 0)) + "|" + str(pmt.tuple_ref(current_value, 1)) + "],")
+                    number = pmt.to_uint64(pmt.tuple_ref(current_value,0)) + \
+                             pmt.to_double(pmt.tuple_ref(current_value,1))
+                    
+                    self.fdout.write(str(number) + ",")
                 else:
                     self.fdout.write(str(pmt.f32vector_elements(current_value)[0]) + ",")
 
@@ -94,7 +97,10 @@ class message_print(gr.basic_block):
 
                     if current_key == key:
                         if key=="rx_time":
-                            self.fdout.write("[" + str(pmt.tuple_ref(current_value, 0)) + "|" + str(pmt.tuple_ref(current_value, 1)) + "],")
+                            number = pmt.to_uint64(pmt.tuple_ref(current_value,0)) + \
+                                     pmt.to_double(pmt.tuple_ref(current_value,1))
+                            
+                            self.fdout.write(str(number) + ",")
                         else:
                             self.fdout.write(str(pmt.f32vector_elements(current_value)[0]) + ",")
 

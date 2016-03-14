@@ -160,7 +160,7 @@ class converter:
 
 
 if __name__ == '__main__':
-    cc = converter('/dev/ttyACM0')
+    cc = converter('/dev/ttyACM1')
     cc.open()
 
     cc.print_info()
