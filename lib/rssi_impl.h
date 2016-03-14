@@ -3,6 +3,8 @@
 #ifndef INCLUDED_INETS_RSSI_IMPL_H
 #define INCLUDED_INETS_RSSI_IMPL_H
 
+#include <boost/thread.hpp>
+
 #include <inets/rssi.h>
 
 namespace gr {
@@ -17,6 +19,7 @@ namespace gr {
       double d_avg;
       double d_beta;
       double d_alpha;
+      boost::mutex mtx;
 
      public:
       rssi_impl(float alpha);
