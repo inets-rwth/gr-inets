@@ -54,7 +54,7 @@ class power_to_db(gr.basic_block):
                output = pmt.f32vector_elements(value)[0]
 
 
-               output = -10 * math.log(output, 10)           
+               output = 10 * math.log(output, 10)           
                output = pmt.make_f32vector(1, output)
 
                if i==0:
