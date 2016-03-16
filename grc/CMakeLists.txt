@@ -34,5 +34,6 @@ install(FILES
     inets_power_to_db.xml
     inets_real_value.xml
     inets_print_variables.xml
-    inets_message_print.xml DESTINATION share/gnuradio/grc/blocks
+    inets_message_print.xml
+    inets_calibrate.xml DESTINATION share/gnuradio/grc/blocks
 )

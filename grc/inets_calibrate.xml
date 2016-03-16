@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<block>
+  <name>calibrate</name>
+  <key>inets_calibrate</key>
+  <category>iNets</category>
+  <import>import inets</import>
+  <make>inets.calibrate($val)</make>
+  <callback>set_val($val)</callback>
+  <callback>cal($calcommand)</callback>
+
+  <param>
+    <name>Calibrate</name>
+    <key>calcommand</key>
+    <type>float</type>
+  </param>
+
+  <param>
+    <name>Value</name>
+    <key>val</key>
+    <type>float</type>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in</name>
+    <type>message</type>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out</name>
+    <type>message</type>
+  </source>
+</block>

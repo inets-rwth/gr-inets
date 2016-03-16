@@ -43,7 +43,8 @@ GR_PYTHON_INSTALL(
     power_to_db.py
     real_value.py
     print_variables.py
-    message_print.py DESTINATION ${GR_PYTHON_DIR}/inets
+    message_print.py
+    calibrate.py DESTINATION ${GR_PYTHON_DIR}/inets
 )
 
 ########################################################################
@@ -69,3 +70,4 @@ GR_ADD_TEST(qa_power_to_db ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_p
 GR_ADD_TEST(qa_real_value ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_real_value.py)
 GR_ADD_TEST(qa_print_variables ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_print_variables.py)
 GR_ADD_TEST(qa_message_print ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_message_print.py)
+GR_ADD_TEST(qa_calibrate ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_calibrate.py)
