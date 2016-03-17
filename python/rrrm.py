@@ -87,6 +87,7 @@ class rrrm(gr.basic_block):
             try:
                 self.antenna_control = control.control("/dev/ttyACM0")
                 self.antenna_control.open()
+                self.antenna_control.move_to(self.channel_map[0])
             except:
                 self.antenna_control = None
                 print 'could not open serial port'
