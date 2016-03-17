@@ -54,6 +54,9 @@ namespace gr {
         float wrap_phase(float phi);
         void modulate_preamble(); 
 
+        uint64_t rx_time_full_sec;
+        double rx_time_frac_sec;
+
       public:
         frame_sync_cc_impl(const std::vector<int> &preamble, gr::digital::constellation_sptr constellation, float threshold, const std::string &len_tag_key);
         ~frame_sync_cc_impl();

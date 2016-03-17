@@ -26,6 +26,8 @@
 #include <boost/assert.hpp>
 #include <boost/assign/list_of.hpp>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/tags.h>
+#include <pmt/pmt.h>
 #include "frame_sync_cc_impl.h"
 #include <volk/volk.h>
 using namespace std;
@@ -102,6 +104,7 @@ namespace gr {
     std::complex<float>* ab =  (gr_complex*)volk_malloc(sizeof(gr_complex)*256, volk_get_alignment());
     std::complex<float>* ab_conj =(gr_complex*)volk_malloc(sizeof(gr_complex)*256, volk_get_alignment());
     std::complex<float>* cd = (gr_complex*)volk_malloc(sizeof(gr_complex)*256, volk_get_alignment());
+    long rx_time = 0;
     
     int
     frame_sync_cc_impl::general_work(int noutput_items,
@@ -127,6 +130,15 @@ namespace gr {
         int preamble_items_left = 0;
         gr_complex sum = 0;
 
+        //look for tx_time tag
+        std::vector<tag_t> tags;
+        get_tags_in_window(tags, 0, 0, noutput_items, pmt::intern("rx_time")); 
+        if(tags.size() > 0) {
+            rx_time_full_sec = pmt::to_uint64(pmt::tuple_ref(tags[0].value, 0));
+            rx_time_frac_sec = pmt::to_double(pmt::tuple_ref(tags[0].value, 1));
+            std::cout << "received rx_time. Full Sec = " << rx_time_full_sec << " Frac Sec = " << rx_time_frac_sec << std::endl;
+            add_item_tag(0, nitems_written(0), pmt::intern("rx_time"), pmt::make_tuple(pmt::from_uint64(rx_time_full_sec), pmt::from_double(rx_time_frac_sec)));          
+        }
         
         for(i = 0; i < noutput_items - _len_preamble; i++) {
 
