@@ -78,7 +78,7 @@ class rrrm(gr.basic_block):
         self.last_ping_time = 0
         self.last_message_tx_time = 0
 
-        self.log_file = open('rrrm_log.txt','w')
+        self.log_file = open('/home/inets/Documents/Log/rrrm_log.txt','w+')
 
         self.ping_frequency = 100
         self.max_message_timeout = 0.05
@@ -91,12 +91,14 @@ class rrrm(gr.basic_block):
                 self.antenna_control = None
                 print 'could not open serial port'
 
+        self.run_threads = True
+
         self.ping_thread = threading.Thread(target=self.do_send_ping)
-        #self.ping_thread.daemon = True
+        self.ping_thread.daemon = True
         self.ping_thread.start()
 
         self.ping_monitor_thread = threading.Thread(target=self.do_check_ping)
-        #self.ping_monitor_thread.daemon = True
+        self.ping_monitor_thread.daemon = True
         self.ping_monitor_thread.start()
 
 
@@ -140,7 +142,7 @@ class rrrm(gr.basic_block):
             self.switch_ack_thread.start()
 
     def do_send_ping(self):
-        while True:
+        while self.run_threads:
             if self.state == self.STATE_FORWARD_PAYLOAD:
                 if(time.time() - self.last_message_tx_time > (1.0 / self.ping_frequency)):
                         self.send_ping_message()
@@ -148,7 +150,7 @@ class rrrm(gr.basic_block):
                 time.sleep(0.5*(1.0 / self.ping_frequency))
 
     def do_check_ping(self):
-        while True:
+        while self.run_threads:
             if self.last_ping_time != 0 and self.state == self.STATE_FORWARD_PAYLOAD:
                 if (time.time() - self.last_ping_time) > self.max_message_timeout:
                     #link broken. change path
