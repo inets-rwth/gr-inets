@@ -65,51 +65,36 @@ class per_logger(gr.basic_block):
         self.per = 0
         self.num_packet_errors = 0
         self.num_bit_errors = 0
-        self.skip_header_bytes = 6 #1 byte type, 1 byte node_id, 4 byte crc
+        self.skip_header_bytes_start = 5 #1 byte type, 1 byte node_id, 4 byte crc
+        self.skip_header_bytes_end = 4 #1 byte type, 1 byte node_id, 4 byte crc
 
         numpy.random.seed(0)
         self.payload = numpy.random.randint(0, 256, 500) #500 byte payload
-        #print '[per_logger] using payload:'
-        #print self.payload
 
     def handle_payload_message(self, msg_pmt):
-        #if not self.log:
-        #    return
-
         meta = pmt.to_python(pmt.car(msg_pmt))
         packet_num = meta["packet_num"]
         packet_rx_time = meta["rx_time"]
         packet_rx_time_full_sec = packet_rx_time[0]
         packet_rx_time_frac_sec = packet_rx_time[1]
-        #packet_num = pmt.to_double(pmt.dict_values(meta)[0])
-        #print 'num = '+str(packet_num)
         msg = pmt.cdr(msg_pmt)
         msg_data = pmt.u8vector_elements(msg)
 
-        self.num_rec_packets += 1
-        self.sum_snr += self.curr_snr
-        ok = True
-        timestamp = packet_rx_time_full_sec + packet_rx_time_frac_sec
-        print '[per_logger] got message. ' + str(timestamp) + ' Total = ' + str(self.num_rec_packets)
-        #print list(msg_data)
+        if len(list(msg_data)) > 100: #only data packets
+            self.num_rec_packets += 1
+            self.sum_snr += self.curr_snr
+            ok = True
+            timestamp = packet_rx_time_full_sec + packet_rx_time_frac_sec
+            print '[per_logger] Packet: rx_time = ' + str(timestamp) + ' Total = ' + str(self.num_rec_packets)
+            user_data = list(msg_data)[self.skip_header_bytes_start:-self.skip_header_bytes_end]
+            print(len(user_data))
+            byte_errors, bit_errors = self.compare_lists(user_data, self.payload)
+            if bit_errors > 0:
+                self.num_packet_errors += 1
+                print '[per_logger] Packet error. Total Errors = ' + str(self.num_packet_errors)
+                ok = False
 
-        byte_errors, bit_errors = self.compare_lists(list(msg_data)[self.skip_header_bytes:], self.payload)
-
-        if bit_errors > 0:
-            self.num_packet_errors += 1
-            print '[per_logger] Packet error. Byte errors = ' + str(bit_errors) + " Bit errors = " + str(bit_errors) + " Total = " + str(self.num_packet_errors)
-            ok = False
-
-        self.log_packet(packet_rx_time_full_sec + packet_rx_time_frac_sec, self.curr_snr, byte_errors, bit_errors, packet_num)
-
-#        if self.num_rec_packets == 10000:
-#            snr = sefl.avg_snr / self.num_rec_packets
-#            per = self.num_packet_errors / self.num_rec_packets
-#            self.num_rec_packets = 0
-#            self.avg_snr = 0
-#            self.log = False
-#            self.log_stats(snr, per)
-
+            self.log_packet(timestamp, self.curr_snr, byte_errors, bit_errors, packet_num)
 
     def stop_per_meas(self, RXangle, TXangle):
         self.log = False
