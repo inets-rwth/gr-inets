@@ -591,7 +591,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(104, 571)</value>
+      <value>(104, 555)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -615,7 +615,7 @@
     </param>
     <param>
       <key>propagate_tags</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>vlen</key>
@@ -642,7 +642,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(960, 843)</value>
+      <value>(968, 859)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -913,7 +913,7 @@
     </param>
     <param>
       <key>samp_rate</key>
-      <value>int(samp_rate)</value>
+      <value>int(samp_rate / sps)</value>
     </param>
     <param>
       <key>special_tags</key>
@@ -921,7 +921,7 @@
     </param>
     <param>
       <key>timing_tag_key</key>
-      <value>""</value>
+      <value>rx_time</value>
     </param>
     <param>
       <key>trigger_tag_key</key>
@@ -1109,7 +1109,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(480, 648)</value>
+      <value>(496, 648)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1273,7 +1273,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(952, 235)</value>
+      <value>(960, 235)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1371,7 +1371,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(784, 243)</value>
+      <value>(800, 243)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1602,7 +1602,7 @@
     </param>
     <param>
       <key>optional</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>vlen</key>
@@ -2062,7 +2062,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(24, 659)</value>
+      <value>(64, 475)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2089,7 +2089,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(24, 707)</value>
+      <value>(8, 699)</value>
     </param>
     <param>
       <key>_rotation</key>
