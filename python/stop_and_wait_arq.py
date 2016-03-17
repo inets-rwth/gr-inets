@@ -89,7 +89,7 @@ class stop_and_wait_arq(gr.basic_block):
         self.csv_fields = ['Timestamp', 'TX/RX' , 'Packet Type', 'Packet Length', 'Packet Seq #', 'SNR']
         curr_time = time.strftime("%d.%m.%Y-%H-%M-%S")
 
-        self.log_file_name = '/home/inets/stop_and_wait_arq_log.csv'
+        self.log_file_name = '/home/inets/Documents/Log/stop_and_wait_arq_log.csv'
 
         with open(self.log_file_name,'w') as log_file:
             csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)

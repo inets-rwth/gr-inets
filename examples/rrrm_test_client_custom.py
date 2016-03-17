@@ -1,5 +1,5 @@
 #!/usr/bin/env python2
-##################################################
+
 # GNU Radio Python Flow Graph
 # Title: RRRM Test Client
 # Author: Julian Arnold
@@ -39,6 +39,8 @@ import numpy
 import sip
 import time
 
+import threading
+
 from distutils.version import StrictVersion
 class rrrm_test_client(gr.top_block, Qt.QWidget):
 
@@ -75,9 +77,9 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
         self.threshold = threshold = 40
         self.samp_rate = samp_rate = 4e6
         self.rx_gain = rx_gain = range_rx_gain
-        
+
         self.rrc = rrc = firdes.root_raised_cosine(1.0, sps, 1, 0.5, 11*sps)
-          
+
         self.qpsk_mod = qpsk_mod = gnuradio.digital.constellation_qpsk().base()
         self.mu = mu = range_mu
         self.diff_preamble_128 = diff_preamble_128 = [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0,0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0,0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1,1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0][0:128]
@@ -140,18 +142,18 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
         )
         self.qtgui_time_sink_x_0.set_update_time(0.10)
         self.qtgui_time_sink_x_0.set_y_axis(0, 80)
-        
+
         self.qtgui_time_sink_x_0.set_y_label("Magnitude", "")
-        
+
         self.qtgui_time_sink_x_0.enable_tags(-1, True)
         self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_NORM, qtgui.TRIG_SLOPE_POS, 20, 0, 1, "")
         self.qtgui_time_sink_x_0.enable_autoscale(True)
         self.qtgui_time_sink_x_0.enable_grid(True)
         self.qtgui_time_sink_x_0.enable_control_panel(False)
-        
+
         if not False:
           self.qtgui_time_sink_x_0.disable_legend()
-        
+
         labels = ["RX Signal", "Correlation", "", "", "",
                   "", "", "", "", ""]
         widths = [1, 1, 1, 1, 1,
@@ -164,7 +166,7 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
                    -1, -1, -1, -1, -1]
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
                   1.0, 1.0, 1.0, 1.0, 1.0]
-        
+
         for i in xrange(2):
             if len(labels[i]) == 0:
                 self.qtgui_time_sink_x_0.set_line_label(i, "Data {0}".format(i))
@@ -175,7 +177,7 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
             self.qtgui_time_sink_x_0.set_line_style(i, styles[i])
             self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
             self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
-        
+
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
         self.tab_layout_1.addWidget(self._qtgui_time_sink_x_0_win)
         self.qtgui_const_sink_x_0_0 = qtgui.const_sink_c(
@@ -189,10 +191,10 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
         self.qtgui_const_sink_x_0_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, "")
         self.qtgui_const_sink_x_0_0.enable_autoscale(False)
         self.qtgui_const_sink_x_0_0.enable_grid(True)
-        
+
         if not True:
           self.qtgui_const_sink_x_0_0.disable_legend()
-        
+
         labels = ["", "", "", "", "",
                   "", "", "", "", ""]
         widths = [1, 1, 1, 1, 1,
@@ -215,11 +217,11 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
             self.qtgui_const_sink_x_0_0.set_line_style(i, styles[i])
             self.qtgui_const_sink_x_0_0.set_line_marker(i, markers[i])
             self.qtgui_const_sink_x_0_0.set_line_alpha(i, alphas[i])
-        
+
         self._qtgui_const_sink_x_0_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0_0.pyqwidget(), Qt.QWidget)
         self.tab_layout_2.addWidget(self._qtgui_const_sink_x_0_0_win)
         self.inets_stop_and_wait_arq_0 = inets.stop_and_wait_arq(0.2, 500, False, 100000)
-        self.inets_rrrm_0 = inets.rrrm(1, [0,65])
+        self.inets_rrrm_0 = inets.rrrm(1, [-166,-229,-63])
         self.inets_radio_0 = inets_radio(
             constellation=qpsk_mod,
             matched_filter_coeff=rrc,
@@ -238,7 +240,7 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
         self.blocks_null_sink_0_0 = blocks.null_sink(gr.sizeof_gr_complex*1)
         self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_char*1)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((1, ))
-        self.blocks_message_debug_0 = blocks.message_debug()
+        #self.blocks_message_debug_0 = blocks.message_debug()
         self.blocks_file_meta_sink_0 = blocks.file_meta_sink(gr.sizeof_float*1, "rrrm_test_client_rx_data.dat", samp_rate, 1.0/64.0, blocks.GR_FILE_FLOAT, False, 1000000, "", True)
         self.blocks_file_meta_sink_0.set_unbuffered(False)
         self.blocks_complex_to_mag_0_0_0 = blocks.complex_to_mag(1)
@@ -248,30 +250,30 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.inets_stop_and_wait_arq_0, 'from_app'))    
-        self.msg_connect((self.blocks_socket_pdu_1, 'pdus'), (self.inets_rrrm_0, 'radar_in'))    
-        self.msg_connect((self.inets_radio_0, 'out'), (self.inets_per_logger_0, 'payload_in'))    
-        self.msg_connect((self.inets_radio_0, 'snr'), (self.inets_per_logger_0, 'snr_in'))    
-        self.msg_connect((self.inets_radio_0, 'out'), (self.inets_rrrm_0, 'rrrm_in'))    
-        self.msg_connect((self.inets_radio_0, 'snr'), (self.inets_stop_and_wait_arq_0, 'snr'))    
-        self.msg_connect((self.inets_rrrm_0, 'rrrm_out'), (self.inets_radio_0, 'in'))    
-        self.msg_connect((self.inets_rrrm_0, 'payload_out'), (self.inets_stop_and_wait_arq_0, 'from_phy'))    
-        self.msg_connect((self.inets_stop_and_wait_arq_0, 'to_app'), (self.blocks_message_debug_0, 'print'))    
-        self.msg_connect((self.inets_stop_and_wait_arq_0, 'to_phy'), (self.inets_rrrm_0, 'payload_in'))    
-        self.connect((self.blocks_complex_to_mag_0, 0), (self.qtgui_time_sink_x_0, 1))    
-        self.connect((self.blocks_complex_to_mag_0_0, 0), (self.qtgui_time_sink_x_0, 0))    
-        self.connect((self.blocks_complex_to_mag_0_0_0, 0), (self.fir_filter_xxx_0, 0))    
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_complex_to_mag_0_0_0, 0))    
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.inets_radio_0, 0))    
-        self.connect((self.fir_filter_xxx_0, 0), (self.blocks_file_meta_sink_0, 0))    
-        self.connect((self.inets_radio_0, 2), (self.blocks_complex_to_mag_0, 0))    
-        self.connect((self.inets_radio_0, 1), (self.blocks_complex_to_mag_0_0, 0))    
-        self.connect((self.inets_radio_0, 5), (self.blocks_null_sink_0, 0))    
-        self.connect((self.inets_radio_0, 6), (self.blocks_null_sink_0_0, 0))    
-        self.connect((self.inets_radio_0, 4), (self.blocks_null_sink_0_1, 0))    
-        self.connect((self.inets_radio_0, 3), (self.qtgui_const_sink_x_0_0, 0))    
-        self.connect((self.inets_radio_0, 0), (self.uhd_usrp_sink_0, 0))    
-        self.connect((self.uhd_usrp_source_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
+        self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.inets_stop_and_wait_arq_0, 'from_app'))
+        self.msg_connect((self.blocks_socket_pdu_1, 'pdus'), (self.inets_rrrm_0, 'radar_in'))
+        self.msg_connect((self.inets_radio_0, 'out'), (self.inets_per_logger_0, 'payload_in'))
+        self.msg_connect((self.inets_radio_0, 'snr'), (self.inets_per_logger_0, 'snr_in'))
+        self.msg_connect((self.inets_radio_0, 'out'), (self.inets_rrrm_0, 'rrrm_in'))
+        self.msg_connect((self.inets_radio_0, 'snr'), (self.inets_stop_and_wait_arq_0, 'snr'))
+        self.msg_connect((self.inets_rrrm_0, 'rrrm_out'), (self.inets_radio_0, 'in'))
+        self.msg_connect((self.inets_rrrm_0, 'payload_out'), (self.inets_stop_and_wait_arq_0, 'from_phy'))
+        #self.msg_connect((self.inets_stop_and_wait_arq_0, 'to_app'), (self.blocks_message_debug_0, 'print'))
+        self.msg_connect((self.inets_stop_and_wait_arq_0, 'to_phy'), (self.inets_rrrm_0, 'payload_in'))
+        self.connect((self.blocks_complex_to_mag_0, 0), (self.qtgui_time_sink_x_0, 1))
+        self.connect((self.blocks_complex_to_mag_0_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.blocks_complex_to_mag_0_0_0, 0), (self.fir_filter_xxx_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_complex_to_mag_0_0_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.inets_radio_0, 0))
+        self.connect((self.fir_filter_xxx_0, 0), (self.blocks_file_meta_sink_0, 0))
+        self.connect((self.inets_radio_0, 2), (self.blocks_complex_to_mag_0, 0))
+        self.connect((self.inets_radio_0, 1), (self.blocks_complex_to_mag_0_0, 0))
+        self.connect((self.inets_radio_0, 5), (self.blocks_null_sink_0, 0))
+        self.connect((self.inets_radio_0, 6), (self.blocks_null_sink_0_0, 0))
+        self.connect((self.inets_radio_0, 4), (self.blocks_null_sink_0_1, 0))
+        self.connect((self.inets_radio_0, 3), (self.qtgui_const_sink_x_0_0, 0))
+        self.connect((self.inets_radio_0, 0), (self.uhd_usrp_sink_0, 0))
+        self.connect((self.uhd_usrp_source_0, 0), (self.blocks_multiply_const_vxx_0, 0))
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "rrrm_test_client")
@@ -358,9 +360,10 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
         self.bpsk_mod = bpsk_mod
 
 class rrrm_test:
-    def __init__(self, top_block):
+    def __init__(self, top_block, qapp):
         self.tb = top_block
-        self.log = open('/home/inets/rrrm_test_client_log.txt','w')
+        self.log = open('/home/inets/Documents/Log/rrrm_test_client_log.txt','w+')
+        self.qapp = qapp
 
     def block(self):
         self.tb.blocks_multiply_const_vxx_0.set_k((0,))
@@ -373,10 +376,14 @@ class rrrm_test:
         self.log.flush()
 
     def run_test(self):
-        time.sleep(10)
+        time.sleep(2)
         self.block()
-        time.sleep(1)
+        time.sleep(2)
         self.unblock()
+        time.sleep(2)
+        tb.stop()
+        tb.wait()
+        qapp.quit()
 
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
@@ -386,7 +393,7 @@ if __name__ == '__main__':
     qapp = Qt.QApplication(sys.argv)
     tb = rrrm_test_client()
     tb.start()
-    my_test = rrrm_test(tb)
+    my_test = rrrm_test(tb, qapp)
     per_thread = threading.Thread(target=my_test.run_test)
     per_thread.start()
     tb.show()

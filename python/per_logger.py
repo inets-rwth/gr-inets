@@ -45,14 +45,14 @@ class per_logger(gr.basic_block):
         self.csv_fields = ['Timestamp', 'SNR', 'Byte Errors', 'Bit Errors', 'Packet #']
         self.log_file_name = '/home/inets/Documents/Log/Packets.csv'
 
-        with open(self.log_file_name,'w') as log_file:
+        with open(self.log_file_name,'w+') as log_file:
             csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
             csv_writer.writeheader()
-        
+
         self.csv_fields_stats = ['Timestamp', 'SNR', 'PER', 'BER', 'Valid', 'RXangle', 'TXangle']
         self.stats_log_file_name = '/home/inets/Documents/Log/PER.csv'
 
-        with open(self.stats_log_file_name,'w') as log_file:
+        with open(self.stats_log_file_name,'w+') as log_file:
             csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields_stats)
             csv_writer.writeheader()
 
@@ -65,6 +65,7 @@ class per_logger(gr.basic_block):
         self.per = 0
         self.num_packet_errors = 0
         self.num_bit_errors = 0
+        self.skip_header_bytes = 6 #1 byte type, 1 byte node_id, 4 byte crc
 
         numpy.random.seed(0)
         self.payload = numpy.random.randint(0, 256, 500) #500 byte payload
@@ -88,11 +89,11 @@ class per_logger(gr.basic_block):
         self.num_rec_packets += 1
         self.sum_snr += self.curr_snr
         ok = True
-        timestamp = packet_rx_time_full_sec + packet_rx_time_frac_sec 
+        timestamp = packet_rx_time_full_sec + packet_rx_time_frac_sec
         print '[per_logger] got message. ' + str(timestamp) + ' Total = ' + str(self.num_rec_packets)
         #print list(msg_data)
-        
-        byte_errors, bit_errors = self.compare_lists(list(msg_data), self.payload)
+
+        byte_errors, bit_errors = self.compare_lists(list(msg_data)[self.skip_header_bytes:], self.payload)
 
         if bit_errors > 0:
             self.num_packet_errors += 1
@@ -122,7 +123,7 @@ class per_logger(gr.basic_block):
         self.avg_snr = self.sum_snr / float(self.num_rec_packets)
         print 'Packet Errors = ' + str(self.num_packet_errors) + ', PER = ' + str( float(self.per)) + ', BER = ' + str(ber) + ', Valid = ' + str(self.valid)
         self.log_stats(self.avg_snr, self.per, ber, self.valid, RXangle, TXangle)
-  
+
     def start_per_meas(self):
         self.log = False
         self.sum_snr = 0
@@ -169,4 +170,4 @@ class per_logger(gr.basic_block):
 
         return byte_errors, bit_errors
 
-         
+
