@@ -17,7 +17,7 @@
 # along with this software; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-#
+
 
 import numpy
 from gnuradio import gr
@@ -42,7 +42,7 @@ class per_logger(gr.basic_block):
         self.message_port_register_in(pmt.intern('snr_in'))
         self.set_msg_handler(pmt.intern('snr_in'), self.handle_snr_message)
 
-        self.csv_fields = ['Timestamp', 'OK', 'SNR', 'Byte Errors', 'Bit Errors', 'Packet #']
+        self.csv_fields = ['Timestamp', 'SNR', 'Byte Errors', 'Bit Errors', 'Packet #']
         self.log_file_name = '/home/inets/Documents/Log/Packets.csv'
 
         with open(self.log_file_name,'w') as log_file:
@@ -77,6 +77,9 @@ class per_logger(gr.basic_block):
 
         meta = pmt.to_python(pmt.car(msg_pmt))
         packet_num = meta["packet_num"]
+        packet_rx_time = meta["rx_time"]
+        packet_rx_time_full_sec = packet_rx_time[0]
+        packet_rx_time_frac_sec = packet_rx_time[1]
         #packet_num = pmt.to_double(pmt.dict_values(meta)[0])
         #print 'num = '+str(packet_num)
         msg = pmt.cdr(msg_pmt)
@@ -85,8 +88,8 @@ class per_logger(gr.basic_block):
         self.num_rec_packets += 1
         self.sum_snr += self.curr_snr
         ok = True
-        
-        print '[per_logger] got message. Total = ' + str(self.num_rec_packets)
+        timestamp = packet_rx_time_full_sec + packet_rx_time_frac_sec 
+        print '[per_logger] got message. ' + str(timestamp) + ' Total = ' + str(self.num_rec_packets)
         #print list(msg_data)
         
         byte_errors, bit_errors = self.compare_lists(list(msg_data), self.payload)
@@ -96,7 +99,7 @@ class per_logger(gr.basic_block):
             print '[per_logger] Packet error. Byte errors = ' + str(bit_errors) + " Bit errors = " + str(bit_errors) + " Total = " + str(self.num_packet_errors)
             ok = False
 
-#        self.log_packet(ok, self.curr_snr, byte_errors, bit_errors, packet_num)
+        self.log_packet(packet_rx_time_full_sec + packet_rx_time_frac_sec, self.curr_snr, byte_errors, bit_errors, packet_num)
 
 #        if self.num_rec_packets == 10000:
 #            snr = sefl.avg_snr / self.num_rec_packets
@@ -128,11 +131,10 @@ class per_logger(gr.basic_block):
         self.num_bit_errors = 0
         self.log = True
 
-    def log_packet(self, ok, snr, byte_errors, bit_errors, packet_num):
+    def log_packet(self, timestamp, snr, byte_errors, bit_errors, packet_num):
         with open(self.log_file_name, 'a') as log_file:
             csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
-            csv_writer.writerow({'Timestamp' : time.time(),
-                    'OK' : ok,
+            csv_writer.writerow({'Timestamp' : timestamp,
                     'SNR' : snr,
                     'Byte Errors' : byte_errors,
                     'Bit Errors' : bit_errors,

@@ -108,7 +108,7 @@ class rrrm(gr.basic_block):
 
             if self.state == self.STATE_SWITCH:
                 print 'RRRM: payload_in. Switch state. Discarding message'
-                self.log_file.write("{:.5f}".format(time.time()) + ";Discarding;\r\n")
+                self.log_file.write("{:.8f}".format(time.time()) + ";Discarding;\r\n")
                 self.log_file.flush()
 
     def handle_radar_message(self, msg_pmt):
@@ -130,7 +130,7 @@ class rrrm(gr.basic_block):
             print ('RRRM: Curr chan = '+
                 str(self.curr_channel_id)+" next chan = "+str(self.next_channel_id))
 
-            self.log_file.write("{:.5f}".format(time.time()) + ";Radar;"+str(self.next_channel_id)+"\r\n")
+            self.log_file.write("{:.8f}".format(time.time()) + ";Radar;"+str(self.next_channel_id)+"\r\n")
             self.log_file.flush()
 
             self.next_channel_pos = self.channel_map[self.next_channel_id]
@@ -161,15 +161,15 @@ class rrrm(gr.basic_block):
                     print str(time.time()) + ' :: Link broken. Last ping = ' + str(self.last_ping_time)
 
                     self.next_channel_pos = self.channel_map[self.next_channel_id]
-                    self.log_file.write("{:.5f}".format(time.time()) + ";Link Blocked;" + str(self.next_channel_id) + "\r\n")
+                    self.log_file.write("{:.8f}".format(time.time()) + ";Link Blocked;" + str(self.next_channel_id) + "\r\n")
                     self.log_file.flush()
                     if self.antenna_control != None:
                         try:
                             print 'Moving to ' + str(self.next_channel_pos)
-                            self.log_file.write("{:.5f}".format(time.time()) + ";Steer Start;\r\n")
+                            self.log_file.write("{:.8f}".format(time.time()) + ";Steer Start;\r\n")
                             self.log_file.flush()
                             self.antenna_control.move_to(self.next_channel_pos)
-                            self.log_file.write("{:.5f}".format(time.time()) + ";Steer End;\r\n")
+                            self.log_file.write("{:.8f}".format(time.time()) + ";Steer End;\r\n")
                             self.log_file.flush()
                             print(str(time.time()) + " :: antenna in pos")
                         except:
@@ -185,7 +185,7 @@ class rrrm(gr.basic_block):
         count = 0
         while (self.switch_ack_received == False and count < 3):
             self.send_switch_command(self.next_channel_id)
-            self.log_file.write("{:.5f}".format(time.time()) + ";Send Switch;"+str(self.next_channel_id)+";\r\n")
+            self.log_file.write("{:.8f}".format(time.time()) + ";Send Switch;"+str(self.next_channel_id)+";\r\n")
             self.log_file.flush()
             self.last_ping_time = time.time() + 200*self.max_message_timeout
             self.state = self.STATE_FORWARD_PAYLOAD
@@ -252,6 +252,12 @@ class rrrm(gr.basic_block):
 
             msg_str = self.get_data_str_from_pmt(msg_pmt)
             meta = self.get_meta_dict_from_pmt(msg_pmt)
+
+            packet_rx_time = meta["rx_time"]
+            packet_rx_time_full_sec = packet_rx_time[0]
+            packet_rx_time_frac_sec = packet_rx_time[1]
+            timestamp = packet_rx_time_full_sec + packet_rx_time_frac_sec
+
             ok, node_id, msg_type, msg_data = self.parse_rrrm_message(msg_str)
 
             if not ok:
@@ -266,13 +272,13 @@ class rrrm(gr.basic_block):
                 self.last_ping_time = time.time()
 
             if msg_type == self.PACKET_TYPE_DATA:
-                self.log_file.write("{:.5f}".format(time.time()) + ";Got Data;"+str(meta["packet_num"])+";\r\n")
+                self.log_file.write("{:.8f}".format(timestamp) + ";Got Data;"+str(meta["packet_num"])+";\r\n")
                 self.log_file.flush()
                 send_pmt = self.get_pmt_from_data_str(msg_data)
                 self.message_port_pub(pmt.intern('payload_out'), send_pmt)
 
             if msg_type == self.PACKET_TYPE_PING:
-                self.log_file.write("{:.5f}".format(time.time()) + ";Got Ping;"+str(meta["packet_num"])+";\r\n")
+                self.log_file.write("{:.8f}".format(timestamp) + ";Got Ping;"+str(meta["packet_num"])+";\r\n")
                 self.log_file.flush()
 
             if msg_type == self.PACKET_TYPE_SWITCH:
@@ -284,19 +290,19 @@ class rrrm(gr.basic_block):
                 self.state = self.STATE_SWITCH
 
                 print 'RRRM: SWITCH REQ: ' + str(channel_id)
-                self.log_file.write("{:.5f}".format(time.time()) + ";Got Switch;" + str(channel_id) + ";" + str(meta["packet_num"]) +";\r\n")
+                self.log_file.write("{:.8f}".format(timestamp) + ";Got Switch;" + str(channel_id) + ";" + str(meta["packet_num"]) +";\r\n")
                 self.log_file.flush()
 
                 self.next_channel_pos = self.channel_map[channel_id]
                 #make sure switch ack reaches other side before turning antenna
                 self.send_switch_accept()
-                self.log_file.write("{:.5f}".format(time.time()) + ";Send Accept;;;\r\n")
+                self.log_file.write("{:.8f}".format(time.time()) + ";Send Accept;;;\r\n")
                 time.sleep(1.0/self.ping_frequency)
                 self.send_switch_accept()
-                self.log_file.write("{:.5f}".format(time.time()) + ";Send Accept;;;\r\n")
+                self.log_file.write("{:.8f}".format(time.time()) + ";Send Accept;;;\r\n")
                 time.sleep(1.0/self.ping_frequency)
                 self.send_switch_accept()
-                self.log_file.write("{:.5f}".format(time.time()) + ";Send Accept;;;\r\n")
+                self.log_file.write("{:.8f}".format(time.time()) + ";Send Accept;;;\r\n")
                 self.log_file.flush()
 
                 self.curr_channel_id = channel_id
@@ -305,15 +311,15 @@ class rrrm(gr.basic_block):
 
                 try:
                     if self.antenna_control != None:
-                        self.log_file.write("{:.5f}".format(time.time()) + ";Steer Start;\r\n")
+                        self.log_file.write("{:.8f}".format(time.time()) + ";Steer Start;\r\n")
                         self.antenna_control.move_to(self.next_channel_pos)
-                        self.log_file.write("{:.5f}".format(time.time()) + ";Steer End;\r\n")
+                        self.log_file.write("{:.8f}".format(time.time()) + ";Steer End;\r\n")
                 except:
                     pass
 
             if msg_type == self.PACKET_TYPE_SWITCH_ACCEPT:
 
-                self.log_file.write("{:.5f}".format(time.time()) + ";Got Accept;" + str(meta["packet_num"]) +";\r\n")
+                self.log_file.write("{:.8f}".format(timestamp) + ";Got Accept;" + str(meta["packet_num"]) +";\r\n")
                 self.log_file.flush()
 
                 if self.switch_ack_received == True: #Duplicate ACK, we'll receive 3 ACKs
@@ -334,9 +340,9 @@ class rrrm(gr.basic_block):
     def steer_antenna(self):
         if self.antenna_control != None:
             try:
-                self.log_file.write("{:.5f}".format(time.time()) + ";Steer Start;\r\n")
+                self.log_file.write("{:.8f}".format(time.time()) + ";Steer Start;\r\n")
                 self.antenna_control.move_to(self.next_channel_pos)
-                self.log_file.write("{:.5f}".format(time.time()) + ";Steer Stop;\r\n")
+                self.log_file.write("{:.8f}".format(time.time()) + ";Steer Stop;\r\n")
             except:
                 pass
 
