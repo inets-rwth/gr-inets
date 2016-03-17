@@ -1,9 +1,9 @@
 #!/usr/bin/env python2
-
+##################################################
 # GNU Radio Python Flow Graph
 # Title: RRRM Test Client
 # Author: Julian Arnold
-# Generated: Thu Mar 17 11:26:52 2016
+# Generated: Thu Mar 17 15:56:55 2016
 ##################################################
 
 if __name__ == '__main__':
@@ -126,7 +126,7 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
         )
         self.uhd_usrp_sink_0.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
         self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
-        self.uhd_usrp_sink_0.set_center_freq(1.5e9, 0)
+        self.uhd_usrp_sink_0.set_center_freq(1.6e9, 0)
         self.uhd_usrp_sink_0.set_gain(0, 0)
         self._range_rx_gain_range = Range(0, 60, 1, 10, 200)
         self._range_rx_gain_win = RangeWidget(self._range_rx_gain_range, self.set_range_rx_gain, "Rx Gain", "counter_slider", float)
@@ -240,7 +240,6 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
         self.blocks_null_sink_0_0 = blocks.null_sink(gr.sizeof_gr_complex*1)
         self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_char*1)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((1, ))
-        #self.blocks_message_debug_0 = blocks.message_debug()
         self.blocks_file_meta_sink_0 = blocks.file_meta_sink(gr.sizeof_float*1, "rrrm_test_client_rx_data.dat", samp_rate, 1.0/64.0, blocks.GR_FILE_FLOAT, False, 1000000, "", True)
         self.blocks_file_meta_sink_0.set_unbuffered(False)
         self.blocks_complex_to_mag_0_0_0 = blocks.complex_to_mag(1)
@@ -258,7 +257,7 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
         self.msg_connect((self.inets_radio_0, 'snr'), (self.inets_stop_and_wait_arq_0, 'snr'))
         self.msg_connect((self.inets_rrrm_0, 'rrrm_out'), (self.inets_radio_0, 'in'))
         self.msg_connect((self.inets_rrrm_0, 'payload_out'), (self.inets_stop_and_wait_arq_0, 'from_phy'))
-        #self.msg_connect((self.inets_stop_and_wait_arq_0, 'to_app'), (self.blocks_message_debug_0, 'print'))
+        self.msg_connect((self.inets_stop_and_wait_arq_0, 'to_app'), (self.blocks_socket_pdu_0, 'pdus'))
         self.msg_connect((self.inets_stop_and_wait_arq_0, 'to_phy'), (self.inets_rrrm_0, 'payload_in'))
         self.connect((self.blocks_complex_to_mag_0, 0), (self.qtgui_time_sink_x_0, 1))
         self.connect((self.blocks_complex_to_mag_0_0, 0), (self.qtgui_time_sink_x_0, 0))
@@ -359,6 +358,7 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
     def set_bpsk_mod(self, bpsk_mod):
         self.bpsk_mod = bpsk_mod
 
+
 class rrrm_test:
     def __init__(self, top_block, qapp):
         self.tb = top_block
@@ -381,9 +381,7 @@ class rrrm_test:
         time.sleep(2)
         self.unblock()
         time.sleep(2)
-        tb.stop()
-        tb.wait()
-        qapp.quit()
+        print('########### TEST DONE ############')
 
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
