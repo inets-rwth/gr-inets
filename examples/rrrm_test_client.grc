@@ -615,7 +615,7 @@
     </param>
     <param>
       <key>file</key>
-      <value>rrrm_test_client_rx_data.dat</value>
+      <value>/home/inets/Documents/Log/rrrm_test_client_rx_data.dat</value>
     </param>
     <param>
       <key>_coordinate</key>
