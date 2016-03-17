@@ -6,7 +6,7 @@
     <key>options</key>
     <param>
       <key>author</key>
-      <value></value>
+      <value>Julian Arnold</value>
     </param>
     <param>
       <key>alias</key>
@@ -42,7 +42,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>top_block</value>
+      <value>radio_test_client</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -66,7 +66,7 @@
     </param>
     <param>
       <key>title</key>
-      <value></value>
+      <value>Radio Test Client</value>
     </param>
     <param>
       <key>window_size</key>
