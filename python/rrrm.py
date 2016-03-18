@@ -261,9 +261,6 @@ class rrrm(gr.basic_block):
             if node_id == self.node_id:
                 return
 
-            if self.state == STATE_SWITCH:
-                self.last_ping_time = time.time() + 200*self.max_message_timeout
-
             if self.last_ping_time < time.time():
                 self.last_ping_time = time.time()
 
@@ -349,7 +346,7 @@ class rrrm(gr.basic_block):
                 self.log_file.write("{:.8f}".format(time.time()) + ";Steer Start;\r\n")
                 self.antenna_control.move_to(self.next_channel_pos)
                 self.log_file.write("{:.8f}".format(time.time()) + ";Steer Stop;\r\n")
-                if self.state == STATE_SWITCH:
+                if self.state == self.STATE_SWITCH:
                     self.last_ping_time = time.time() + 200*self.max_message_timeout
                     self.state = self.STATE_FORWARD_PAYLOAD
             except:
