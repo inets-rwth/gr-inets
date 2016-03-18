@@ -240,7 +240,7 @@ class rrrm_test_client(gr.top_block, Qt.QWidget):
         self.blocks_null_sink_0_0 = blocks.null_sink(gr.sizeof_gr_complex*1)
         self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_char*1)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((1, ))
-        self.blocks_file_meta_sink_0 = blocks.file_meta_sink(gr.sizeof_float*1, "rrrm_test_client_rx_data.dat", samp_rate, 1.0/64.0, blocks.GR_FILE_FLOAT, False, 1000000, "", True)
+        self.blocks_file_meta_sink_0 = blocks.file_meta_sink(gr.sizeof_float*1, "/home/inets/Documents/Log/rrrm_test_client_rx_data.dat", samp_rate, 1.0/64.0, blocks.GR_FILE_FLOAT, False, 1000000, "", True)
         self.blocks_file_meta_sink_0.set_unbuffered(False)
         self.blocks_complex_to_mag_0_0_0 = blocks.complex_to_mag(1)
         self.blocks_complex_to_mag_0_0 = blocks.complex_to_mag(1)
@@ -378,7 +378,7 @@ class rrrm_test:
     def run_test(self):
         time.sleep(2)
         self.block()
-        time.sleep(2)
+        time.sleep(0.5)
         self.unblock()
         time.sleep(2)
         print('########### TEST DONE ############')
