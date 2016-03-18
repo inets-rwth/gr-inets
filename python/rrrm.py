@@ -281,7 +281,7 @@ class rrrm(gr.basic_block):
 
                 self.state = self.STATE_SWITCH
 
-                print 'RRRM: SWITCH REQ: ' + str(channel_id)
+                print('RRRM: SWITCH REQ: ' + str(channel_id))
                 self.log_file.write("{:.8f}".format(timestamp) + ";Switch Req;" + str(channel_id) + ";" + str(meta["packet_num"]) +";\r\n")
                 self.log_file.flush()
 
@@ -304,6 +304,8 @@ class rrrm(gr.basic_block):
                         self.log_file.write("{:.8f}".format(time.time()) + ";Steer Start;\r\n")
                         self.antenna_control.move_to(self.next_channel_pos)
                         self.log_file.write("{:.8f}".format(time.time()) + ";Steer End;\r\n")
+                        self.last_ping_time = time.time() + 200*self.max_message_timeout
+                        self.state = self.STATE_FORWARD_PAYLOAD
                     else:
                         self.last_ping_time = time.time() + 200*self.max_message_timeout
                         self.state = self.STATE_FORWARD_PAYLOAD
@@ -319,6 +321,8 @@ class rrrm(gr.basic_block):
                 if self.switch_ack_received == True: #Duplicate ACK, we'll receive 3 ACKs
                     return
 
+                print('RRRM: SWITCH ACK')
+
                 self.switch_ack_received = True
                 if (self.switch_ack_thread != None and self.switch_ack_thread.isAlive()):
                     self.switch_ack_thread.join()
@@ -332,6 +336,8 @@ class rrrm(gr.basic_block):
                         self.log_file.write("{:.8f}".format(time.time()) + ";Steer Start;\r\n")
                         self.antenna_control.move_to(self.next_channel_pos)
                         self.log_file.write("{:.8f}".format(time.time()) + ";Steer End;\r\n")
+                        self.last_ping_time = time.time() + 200*self.max_message_timeout
+                        self.state = self.STATE_FORWARD_PAYLOAD
                     else:
                         self.last_ping_time = time.time() + 200*self.max_message_timeout
                         self.state = self.STATE_FORWARD_PAYLOAD
@@ -347,6 +353,7 @@ class rrrm(gr.basic_block):
                 self.log_file.write("{:.8f}".format(time.time()) + ";Steer Stop;\r\n")
                 if self.state == self.STATE_SWITCH:
                     self.last_ping_time = time.time() + 200*self.max_message_timeout
+                    print("Steering complete. Setting default state")
                     self.state = self.STATE_FORWARD_PAYLOAD
             except:
                 self.last_ping_time = time.time() + 200*self.max_message_timeout
