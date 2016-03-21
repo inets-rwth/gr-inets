@@ -65,8 +65,8 @@ class per_logger(gr.basic_block):
         self.per = 0
         self.num_packet_errors = 0
         self.num_bit_errors = 0
-        self.skip_header_bytes_start = 5 #1 byte type, 1 byte node_id, 4 byte crc
-        self.skip_header_bytes_end = 4 #1 byte type, 1 byte node_id, 4 byte crc
+        self.skip_header_bytes_start = 0 #5 #1 byte type, 1 byte node_id, 4 byte crc
+        self.skip_header_bytes_end = 0 #4 #1 byte type, 1 byte node_id, 4 byte crc
 
         numpy.random.seed(0)
         self.payload = numpy.random.randint(0, 256, 500) #500 byte payload
@@ -85,13 +85,12 @@ class per_logger(gr.basic_block):
             self.sum_snr += self.curr_snr
             ok = True
             timestamp = packet_rx_time_full_sec + packet_rx_time_frac_sec
-            print '[per_logger] Packet: rx_time = ' + str(timestamp) + ' Total = ' + str(self.num_rec_packets)
+            #print '[per_logger] Packet: rx_time = ' + str(timestamp) + ' Total = ' + str(self.num_rec_packets)
             user_data = list(msg_data)[self.skip_header_bytes_start:-self.skip_header_bytes_end]
-            print(len(user_data))
             byte_errors, bit_errors = self.compare_lists(user_data, self.payload)
             if bit_errors > 0:
                 self.num_packet_errors += 1
-                print '[per_logger] Packet error. Total Errors = ' + str(self.num_packet_errors)
+                #print '[per_logger] Packet error. Total Errors = ' + str(self.num_packet_errors)
                 ok = False
 
             self.log_packet(timestamp, self.curr_snr, byte_errors, bit_errors, packet_num)
@@ -106,7 +105,7 @@ class per_logger(gr.basic_block):
         self.per = self.num_packet_errors / float(self.num_rec_packets)
         ber = self.num_bit_errors / (float(self.num_rec_packets) * 500 * 8)
         self.avg_snr = self.sum_snr / float(self.num_rec_packets)
-        print 'Packet Errors = ' + str(self.num_packet_errors) + ', PER = ' + str( float(self.per)) + ', BER = ' + str(ber) + ', Valid = ' + str(self.valid)
+        #print 'Packet Errors = ' + str(self.num_packet_errors) + ', PER = ' + str( float(self.per)) + ', BER = ' + str(ber) + ', Valid = ' + str(self.valid)
         self.log_stats(self.avg_snr, self.per, ber, self.valid, RXangle, TXangle)
 
     def start_per_meas(self):
