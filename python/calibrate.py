@@ -70,15 +70,16 @@ class calibrate(gr.basic_block):
            key = pmt.nth(0, element)
            value = pmt.nth(1, element)
 
-
+           initial_phase = None
+            
             #when we found the phase key
-           if str(key) == 'phase':
-                #extract value from pmt
-                #print "-------------------------------"
-                #print "value = ", value
-                #print "self.subtract = ", self.subtract
+           if str(key) == 'phase' and pmt.length(value)>=1:
+                #print "length of vector: ", pmt.length(value)
                 value = pmt.f32vector_elements(value)[0]
                 self.last_val = value
+
+                #save that value
+                initial_phase = value
 
                 value = value - self.subtract
                 while value < -numpy.pi:
@@ -87,31 +88,22 @@ class calibrate(gr.basic_block):
                     value = value - numpy.pi
 
 
-                #put it in the right interval
-                #while value < self.minimum:
-                    #value = value + 2*numpy.pi
-                #while value > self.maximum:
-                    #value = value - 2*numpy.pi
-
-                #print "resulting phase = ", value
+                initial_phase = pmt.make_f32vector(1, initial_phase)
+                initial_phase = pmt.list2(pmt.string_to_symbol("phase_initial"), initial_phase)
 
                 outvalue = pmt.make_f32vector(1, value)
                 output = pmt.list2(pmt.string_to_symbol(str(key)), outvalue)
-                #output = pmt.list_add(outpmt, pmt.list2(pmt.string_to_symbol(str(key)), output))
-                #print "-------------------------------"
-                #print "if path, output = ", output
 
            else:
                 output = element
-                #print "else path, output = ", output
-
-
-           #output = pmt.nth(1, element)
 
            if i==0:
                outpmt = pmt.list1(output)
            else:
                outpmt = pmt.list_add(outpmt, output)
+
+           if initial_phase != None:
+               outpmt = pmt.list_add(outpmt, initial_phase)
 
 
         self.message_port_pub(pmt.string_to_symbol("out"), outpmt)
