@@ -75,15 +75,15 @@ class top_block(gr.top_block, Qt.QWidget):
         self.range_tx_gain = range_tx_gain = 0
         self.range_rx_gain = range_rx_gain = 10
         self.range_mu = range_mu = 0.4
-        self.range_freq = range_freq = 3.0e9
+        self.range_freq = range_freq = 2.0e9
         self.variable_qtgui_label_0 = variable_qtgui_label_0 = "{:2.1f} GHz".format(float((59e9+range_freq))/1e9)
         self.tx_gain = tx_gain = range_tx_gain
         self.threshold = threshold = 40
         self.samp_rate = samp_rate = 4e6
         self.rx_gain = rx_gain = range_rx_gain
-        
+
         self.rrc = rrc = firdes.root_raised_cosine(1.0, sps, 1, 0.5, 11*sps)
-          
+
         self.range_noise = range_noise = 0
         self.qpsk_mod = qpsk_mod = gnuradio.digital.constellation_qpsk().base()
         self.preamble = preamble = [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0,0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0,0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1,1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0]
@@ -117,17 +117,17 @@ class top_block(gr.top_block, Qt.QWidget):
         self._range_noise_win = RangeWidget(self._range_noise_range, self.set_range_noise, "noise", "counter_slider", float)
         self.top_layout.addWidget(self._range_noise_win)
         self._variable_qtgui_label_0_tool_bar = Qt.QToolBar(self)
-        
+
         if None:
           self._variable_qtgui_label_0_formatter = None
         else:
           self._variable_qtgui_label_0_formatter = lambda x: x
-        
+
         self._variable_qtgui_label_0_tool_bar.addWidget(Qt.QLabel("RF Frequency"+": "))
         self._variable_qtgui_label_0_label = Qt.QLabel(str(self._variable_qtgui_label_0_formatter(self.variable_qtgui_label_0)))
         self._variable_qtgui_label_0_tool_bar.addWidget(self._variable_qtgui_label_0_label)
         self.top_grid_layout.addWidget(self._variable_qtgui_label_0_tool_bar, 0,1,1,1)
-          
+
         self.uhd_usrp_source_0 = uhd.usrp_source(
         	",".join(("addr=192.168.10.2", "")),
         	uhd.stream_args(
@@ -171,18 +171,18 @@ class top_block(gr.top_block, Qt.QWidget):
         )
         self.qtgui_time_sink_x_0_0.set_update_time(0.10)
         self.qtgui_time_sink_x_0_0.set_y_axis(-1, 1)
-        
+
         self.qtgui_time_sink_x_0_0.set_y_label("Amplitude", "")
-        
+
         self.qtgui_time_sink_x_0_0.enable_tags(-1, True)
         self.qtgui_time_sink_x_0_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 1, 0, 0, "")
         self.qtgui_time_sink_x_0_0.enable_autoscale(True)
         self.qtgui_time_sink_x_0_0.enable_grid(True)
         self.qtgui_time_sink_x_0_0.enable_control_panel(False)
-        
+
         if not True:
           self.qtgui_time_sink_x_0_0.disable_legend()
-        
+
         labels = ["", "", "", "", "",
                   "", "", "", "", ""]
         widths = [1, 1, 1, 1, 1,
@@ -195,7 +195,7 @@ class top_block(gr.top_block, Qt.QWidget):
                    -1, -1, -1, -1, -1]
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
                   1.0, 1.0, 1.0, 1.0, 1.0]
-        
+
         for i in xrange(1):
             if len(labels[i]) == 0:
                 self.qtgui_time_sink_x_0_0.set_line_label(i, "Data {0}".format(i))
@@ -206,7 +206,7 @@ class top_block(gr.top_block, Qt.QWidget):
             self.qtgui_time_sink_x_0_0.set_line_style(i, styles[i])
             self.qtgui_time_sink_x_0_0.set_line_marker(i, markers[i])
             self.qtgui_time_sink_x_0_0.set_line_alpha(i, alphas[i])
-        
+
         self._qtgui_time_sink_x_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0.pyqwidget(), Qt.QWidget)
         self.tab_layout_1.addWidget(self._qtgui_time_sink_x_0_0_win)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
@@ -217,18 +217,18 @@ class top_block(gr.top_block, Qt.QWidget):
         )
         self.qtgui_time_sink_x_0.set_update_time(0.10)
         self.qtgui_time_sink_x_0.set_y_axis(-1, 200)
-        
+
         self.qtgui_time_sink_x_0.set_y_label("Amplitude", "")
-        
+
         self.qtgui_time_sink_x_0.enable_tags(-1, True)
         self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_NORM, qtgui.TRIG_SLOPE_POS, 20, 0, 1, "")
         self.qtgui_time_sink_x_0.enable_autoscale(False)
         self.qtgui_time_sink_x_0.enable_grid(True)
         self.qtgui_time_sink_x_0.enable_control_panel(False)
-        
+
         if not True:
           self.qtgui_time_sink_x_0.disable_legend()
-        
+
         labels = ["", "", "", "", "",
                   "", "", "", "", ""]
         widths = [1, 1, 1, 1, 1,
@@ -241,7 +241,7 @@ class top_block(gr.top_block, Qt.QWidget):
                    -1, -1, -1, -1, -1]
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
                   1.0, 1.0, 1.0, 1.0, 1.0]
-        
+
         for i in xrange(2):
             if len(labels[i]) == 0:
                 self.qtgui_time_sink_x_0.set_line_label(i, "Data {0}".format(i))
@@ -252,7 +252,7 @@ class top_block(gr.top_block, Qt.QWidget):
             self.qtgui_time_sink_x_0.set_line_style(i, styles[i])
             self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
             self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
-        
+
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
         self.tab_layout_1.addWidget(self._qtgui_time_sink_x_0_win)
         self.qtgui_const_sink_x_0_0 = qtgui.const_sink_c(
@@ -266,10 +266,10 @@ class top_block(gr.top_block, Qt.QWidget):
         self.qtgui_const_sink_x_0_0.set_trigger_mode(qtgui.TRIG_MODE_TAG, qtgui.TRIG_SLOPE_POS, 0.0, 0, "fd")
         self.qtgui_const_sink_x_0_0.enable_autoscale(False)
         self.qtgui_const_sink_x_0_0.enable_grid(True)
-        
+
         if not True:
           self.qtgui_const_sink_x_0_0.disable_legend()
-        
+
         labels = ["", "", "", "", "",
                   "", "", "", "", ""]
         widths = [1, 1, 1, 1, 1,
@@ -292,7 +292,7 @@ class top_block(gr.top_block, Qt.QWidget):
             self.qtgui_const_sink_x_0_0.set_line_style(i, styles[i])
             self.qtgui_const_sink_x_0_0.set_line_marker(i, markers[i])
             self.qtgui_const_sink_x_0_0.set_line_alpha(i, alphas[i])
-        
+
         self._qtgui_const_sink_x_0_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0_0.pyqwidget(), Qt.QWidget)
         self.tab_layout_2.addWidget(self._qtgui_const_sink_x_0_0_win)
         self.inets_rssi_0 = inets.rssi(0.000001)
@@ -318,23 +318,23 @@ class top_block(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.inets_radio_0, 'in'))    
-        self.msg_connect((self.inets_radio_0, 'out'), (self.inets_per_logger_0, 'payload_in'))    
-        self.msg_connect((self.inets_radio_0, 'snr'), (self.inets_per_logger_0, 'snr_in'))    
-        self.connect((self.analog_fastnoise_source_x_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
-        self.connect((self.blocks_add_xx_0, 0), (self.inets_radio_0, 0))    
-        self.connect((self.blocks_complex_to_mag_0, 0), (self.qtgui_time_sink_x_0, 1))    
-        self.connect((self.blocks_complex_to_mag_0_0, 0), (self.qtgui_time_sink_x_0, 0))    
-        self.connect((self.uhd_usrp_source_0, 0), (self.inets_rssi_0, 0))    
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_add_xx_0, 1))    
-        self.connect((self.inets_radio_0, 2), (self.blocks_complex_to_mag_0, 0))    
-        self.connect((self.inets_radio_0, 1), (self.blocks_complex_to_mag_0_0, 0))    
-        self.connect((self.inets_radio_0, 5), (self.blocks_null_sink_0, 0))    
-        self.connect((self.inets_radio_0, 6), (self.blocks_null_sink_0_0, 0))    
-        self.connect((self.inets_radio_0, 3), (self.qtgui_const_sink_x_0_0, 0))    
-        self.connect((self.inets_radio_0, 4), (self.qtgui_time_sink_x_0_0, 0))    
-        self.connect((self.inets_radio_0, 0), (self.uhd_usrp_sink_0, 0))    
-        self.connect((self.uhd_usrp_source_0, 0), (self.blocks_add_xx_0, 0))    
+        self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.inets_radio_0, 'in'))
+        self.msg_connect((self.inets_radio_0, 'out'), (self.inets_per_logger_0, 'payload_in'))
+        self.msg_connect((self.inets_radio_0, 'snr'), (self.inets_per_logger_0, 'snr_in'))
+        self.connect((self.analog_fastnoise_source_x_0, 0), (self.blocks_multiply_const_vxx_0, 0))
+        self.connect((self.blocks_add_xx_0, 0), (self.inets_radio_0, 0))
+        self.connect((self.blocks_complex_to_mag_0, 0), (self.qtgui_time_sink_x_0, 1))
+        self.connect((self.blocks_complex_to_mag_0_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.uhd_usrp_source_0, 0), (self.inets_rssi_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_add_xx_0, 1))
+        self.connect((self.inets_radio_0, 2), (self.blocks_complex_to_mag_0, 0))
+        self.connect((self.inets_radio_0, 1), (self.blocks_complex_to_mag_0_0, 0))
+        self.connect((self.inets_radio_0, 5), (self.blocks_null_sink_0, 0))
+        self.connect((self.inets_radio_0, 6), (self.blocks_null_sink_0_0, 0))
+        self.connect((self.inets_radio_0, 3), (self.qtgui_const_sink_x_0_0, 0))
+        self.connect((self.inets_radio_0, 4), (self.qtgui_time_sink_x_0_0, 0))
+        self.connect((self.inets_radio_0, 0), (self.uhd_usrp_sink_0, 0))
+        self.connect((self.uhd_usrp_source_0, 0), (self.blocks_add_xx_0, 0))
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "top_block")
@@ -497,20 +497,22 @@ class rssi_test:
         self.tb = block
 
     def run_test(self):
-        print("Get ready! First measurement in 20s")
-        num_points = 24
-        for i in range(0,num_points)
-            time.sleep(20)
+        num_points = 25
+        for i in range(0,num_points):
+            print("Get ready! Next measurement (#" + str(i) + ") in 10s")
+            time.sleep(10)
 
             tb.start_per_meas()
             tb.start_rssi_meas()
 
-            time.sleep(20)
+            time.sleep(10)
 
             tb.stop_per_meas(0,0)
             tb.stop_rssi_meas(0,0)
 
-            print("Get ready! Next measurement in 20s")
+            print("Measurement " + str(i) + " done")
+            if not self.doWork:
+                break
 
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
@@ -521,12 +523,13 @@ if __name__ == '__main__':
     tb = top_block()
     tb.start()
     rssi_probe = rssi_test(tb)
-    per_thread = threading.Thread(target=rssi_probe.run_test)
-    per_thread.start()
+    rssi_thread = threading.Thread(target=rssi_probe.run_test)
+    rssi_thread.start()
     tb.show()
     def quitting():
-        my_per_test.doWork = False
-        per_thread.join()
+        rssi_probe.doWork = False
+        rssi_thread.join()
+        rssi_thread = None
         tb.stop()
         tb.wait()
     qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
