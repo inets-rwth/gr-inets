@@ -534,5 +534,9 @@ if __name__ == '__main__':
         tb.wait()
     qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
     qapp.exec_()
+    rssi_probe.doWork = False
+    if rssi_thread not None:
+        rssi_thread.join()
+    rssi_thread = None
     rssi_probe = None
     tb = None #to clean up Qt widgets
