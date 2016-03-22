@@ -528,15 +528,16 @@ if __name__ == '__main__':
     tb.show()
     def quitting():
         rssi_probe.doWork = False
-        rssi_thread.join()
-        rssi_thread = None
+        if rssi_thread != None:
+            rssi_thread.join()
+            rssi_thread = None
         tb.stop()
         tb.wait()
     qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
     qapp.exec_()
     rssi_probe.doWork = False
-    if rssi_thread not None:
+    if rssi_thread != None:
         rssi_thread.join()
-    rssi_thread = None
+        rssi_thread = None
     rssi_probe = None
     tb = None #to clean up Qt widgets
