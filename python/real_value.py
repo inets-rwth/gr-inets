@@ -59,9 +59,9 @@ class real_value(gr.basic_block):
 
         p = pmt.list_add(p, pmt.list2(pmt.string_to_symbol(self.key), pmt.make_f32vector(1, s)))
 
-        if(s>-100000.0):
-            self.message_port_pub(pmt.string_to_symbol("out"), p)
-        else:
+        #if(s>-100000.0):
+        self.message_port_pub(pmt.string_to_symbol("out"), p)
+        #else:
             #print "s=", s
-            pass
+            #pass
     
