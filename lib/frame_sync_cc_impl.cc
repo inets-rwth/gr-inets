@@ -120,6 +120,7 @@ namespace gr {
         gr_complex *corr_out = (gr_complex *) output_items[1];
         unsigned char *trig_out = (unsigned char *) output_items[2];
         float *f_offset_out = (float*) output_items[3];
+        float preamble_p_sum = 0.0;
 
         // Do <+signal processing+>
         int num_f_offset_prod = 0;
@@ -187,6 +188,7 @@ namespace gr {
 
             if(_state == STATE_PROCESS_PREAMBLE) {
                 if(preamble_items_left == _len_preamble) {
+                    preamble_p_sum = 0.0;
                     _d_f = calculate_fd(curr_correlation_buffer, &in[i], &_mod_preamble[0], _len_preamble / 2, _len_preamble);
                     //_d_phi = _mod_preamble[_len_preamble - 1] / in[i + (_len_preamble - 1)];
                     f_offset_out[num_f_offset_prod] = _d_f;
@@ -201,12 +203,17 @@ namespace gr {
                     //_d_phi = std::complex<float>(0,0);
                 }
 
+                preamble_p_sum += in[i] * std::conj(in[i]);
                 consumed_items++;
                 produced_items++;
+
                 preamble_items_left--;
 
                 if(preamble_items_left == 0) {
                     _state = STATE_SET_TRIGGER;
+                    float p_rms = std::sqrt( preamble_p_sum / _len_preamble);
+                    add_item_tag(0, nitems_written(0) + i + 1, pmt::intern("p_preamble_rms"), pmt::from_float(p_rms));
+                    add_item_tag(0, nitems_written(0) + i + 1, pmt::intern("sample_offset"), pmt::from_uint64(nitems_written(0) + i + 1));
                     continue;
                 }
             }
