@@ -67,6 +67,7 @@ class per_logger(gr.basic_block):
         self.num_bit_errors = 0
         self.skip_header_bytes_start = 0 #5 #1 byte type, 1 byte node_id, 4 byte crc
         self.skip_header_bytes_end = 0 #4 #1 byte type, 1 byte node_id, 4 byte crc
+        self.check_payload = False
 
         numpy.random.seed(0)
         self.payload = numpy.random.randint(0, 256, 500) #500 byte payload
@@ -85,13 +86,15 @@ class per_logger(gr.basic_block):
             self.sum_snr += self.curr_snr
             ok = True
             timestamp = packet_rx_time_full_sec + packet_rx_time_frac_sec
-            #print '[per_logger] Packet: rx_time = ' + str(timestamp) + ' Total = ' + str(self.num_rec_packets)
+            print '[per_logger] Packet: rx_time = ' + str(timestamp) + ' Total #Packets = ' + str(self.num_rec_packets)
             user_data = list(msg_data)[self.skip_header_bytes_start:-self.skip_header_bytes_end]
-            byte_errors, bit_errors = self.compare_lists(user_data, self.payload)
-            if bit_errors > 0:
-                self.num_packet_errors += 1
-                #print '[per_logger] Packet error. Total Errors = ' + str(self.num_packet_errors)
-                ok = False
+
+            if self.check_payload:
+                byte_errors, bit_errors = self.compare_lists(user_data, self.payload)
+                if bit_errors > 0:
+                    self.num_packet_errors += 1
+                    print '[per_logger] Packet error. Total Errors = ' + str(self.num_packet_errors)
+                    ok = False
 
             self.log_packet(timestamp, self.curr_snr, byte_errors, bit_errors, packet_num)
 
