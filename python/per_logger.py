@@ -95,8 +95,10 @@ class per_logger(gr.basic_block):
                     self.num_packet_errors += 1
                     print '[per_logger] Packet error. Total Errors = ' + str(self.num_packet_errors)
                     ok = False
+                self.log_packet(timestamp, self.curr_snr, byte_errors, bit_errors, packet_num)
+            else:
+                self.log_packet(timestamp, self.curr_snr, 0, 0, packet_num)
 
-            self.log_packet(timestamp, self.curr_snr, byte_errors, bit_errors, packet_num)
 
     def stop_per_meas(self, RXangle, TXangle):
         self.log = False
