@@ -203,7 +203,7 @@ namespace gr {
                     //_d_phi = std::complex<float>(0,0);
                 }
 
-                preamble_p_sum += in[i] * std::conj(in[i]);
+                preamble_p_sum += (in[i] * std::conj(in[i])).real();
                 consumed_items++;
                 produced_items++;
 
@@ -220,7 +220,7 @@ namespace gr {
 
             if(_state == STATE_SET_TRIGGER) {
                 trig_out[i] = 1;
-                add_item_tag(0, nitems_written(0) + i, pmt::intern("fd"), pmt::from_float(_d_f))
+                add_item_tag(0, nitems_written(0) + i, pmt::intern("fd"), pmt::from_float(_d_f));
                 add_item_tag(0, nitems_written(0) + i, pmt::intern("phi"), pmt::from_float(std::arg(_d_phi)));
                  _state = STATE_DETECT;
                 consumed_items++;
