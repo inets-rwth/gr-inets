@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
@@ -75,8 +75,8 @@ class top_block(gr.top_block, Qt.QWidget):
         self.range_tx_gain = range_tx_gain = 0
         self.range_rx_gain = range_rx_gain = 10
         self.range_mu = range_mu = 0.4
-        self.range_freq = range_freq = 3.0e9
-        self.variable_qtgui_label_0 = variable_qtgui_label_0 = "{:2.1f} GHz".format(float((59e9+range_freq))/1e9)
+        self.range_freq = range_freq = 1.5e9
+        self.variable_qtgui_label_0 = variable_qtgui_label_0 = "{:2.1f} GHz".format(float((60e9+range_freq))/1e9)
         self.tx_gain = tx_gain = range_tx_gain
         self.threshold = threshold = 40
         self.samp_rate = samp_rate = 4e6
@@ -137,8 +137,8 @@ class top_block(gr.top_block, Qt.QWidget):
         )
         self.uhd_usrp_source_0.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
         self.uhd_usrp_source_0.set_samp_rate(samp_rate)
-        self.uhd_usrp_source_0.set_center_freq(freq, 0)
-        self.uhd_usrp_source_0.set_gain(rx_gain, 0)
+        self.uhd_usrp_source_0.set_center_freq(1.5e9, 0)
+        self.uhd_usrp_source_0.set_gain(15, 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
         	",".join(("addr=192.168.10.2", "")),
         	uhd.stream_args(
@@ -149,8 +149,8 @@ class top_block(gr.top_block, Qt.QWidget):
         )
         self.uhd_usrp_sink_0.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
         self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
-        self.uhd_usrp_sink_0.set_center_freq(freq, 0)
-        self.uhd_usrp_sink_0.set_gain(tx_gain, 0)
+        self.uhd_usrp_sink_0.set_center_freq(2e9, 0)
+        self.uhd_usrp_sink_0.set_gain(0, 0)
         self._range_tx_gain_range = Range(0, 15, 1, 0, 200)
         self._range_tx_gain_win = RangeWidget(self._range_tx_gain_range, self.set_range_tx_gain, "Tx Gain", "counter_slider", float)
         self.top_grid_layout.addWidget(self._range_tx_gain_win, 1,1,1,1)
@@ -160,7 +160,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self._range_mu_range = Range(0, 1, 0.01, 0.4, 200)
         self._range_mu_win = RangeWidget(self._range_mu_range, self.set_range_mu, "BB Derotation Gain", "counter_slider", float)
         self.top_grid_layout.addWidget(self._range_mu_win, 2,0,1,1)
-        self._range_freq_range = Range(2.4e9, 4e9, 100e6, 3.0e9, 200)
+        self._range_freq_range = Range(1.0e9, 4e9, 100e6, 1.5e9, 200)
         self._range_freq_win = RangeWidget(self._range_freq_range, self.set_range_freq, "IF Frequency", "counter_slider", float)
         self.top_grid_layout.addWidget(self._range_freq_win, 0,0,1,1)
         self.qtgui_time_sink_x_0_0 = qtgui.time_sink_f(
@@ -508,29 +508,27 @@ class per_test:
         tb.start_rssi_meas()
 
         while self.doWork:
-
-            time.sleep(1)
-            num = tb.get_num_rec_packets()
-
-            tb.stop_per_meas(self.RXangle, self.TXangle)
-            tb.stop_rssi_meas(self.RXangle, self.TXangle)
+            time.sleep(5)
+            tb.stop_per_meas(int(self.RXangle*100), int(self.TXangle*100))
+            tb.stop_rssi_meas(int(self.RXangle*100), int(self.TXangle*100))
             print 'Iteration done. RXangle = ' + str(self.RXangle) + ', TXangle = ' + str(self.TXangle)
 
-            if self.RXangle >= 80: # 1 step = 2.25 deg
-                self.TXangle += 1
-                self.RXangle = -1
+            if abs(self.RXangle) >= 270: # 1 step = 4.5 deg
+                self.RXangle = 0
                 self.TTController.move_to(0)
-                if self.TXangle > 40:
+                if abs(self.TXangle) >= 270:
                     self.TTController.close()
                     return
                 else:
-                    self.TTController.move_to(32767)
+                    self.TXangle += -4.5
+                    for i in range(0,4): #4.5 deg
+                        self.TTController.trigger_remote_table() #1.125 deg per trigger
+                        time.sleep(0.3)
 
-            self.RXangle += 1
-            if self.RXangle > 0:
-                self.TTController.move_to(self.RXangle*200)
+            self.RXangle += -4.5
+            self.TTController.move_to(self.RXangle)
 
-            time.sleep(0.2)
+            time.sleep(1)
             tb.start_per_meas()
             tb.start_rssi_meas()
 
@@ -553,4 +551,6 @@ if __name__ == '__main__':
         tb.wait()
     qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
     qapp.exec_()
+    my_per_test.doWork = False
+    per_thread.join()
     tb = None #to clean up Qt widgets
