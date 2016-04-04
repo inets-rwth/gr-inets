@@ -101,7 +101,6 @@ class stop_and_wait_arq(gr.basic_block):
         self.last_snr = float(snr_pmt)
 
     def handle_app_message(self, msg_pmt):
-        #print 'app interrupt'
         with self.thread_lock:
           packets_str = self.fragment_packet(msg_pmt)
           for packet_str in packets_str:
@@ -127,7 +126,6 @@ class stop_and_wait_arq(gr.basic_block):
     def handle_queue(self):
         if self.state == self.STATE_IDLE:
           if self.app_queue.empty() == False:
-            print 'SAW: Sending packet. Queue fill level = ', self.app_queue.qsize()
             self.last_tx_packet = self.app_queue.get()
 
             msg_str = "".join([chr(x) for x in pmt.u8vector_elements(pmt.cdr(self.last_tx_packet))])
@@ -135,6 +133,7 @@ class stop_and_wait_arq(gr.basic_block):
             self.curr_packet_seq = ord(msg_str[0])
 
             self.last_tx_time = time.time()
+            print '[stop_and_wait] :: Sending packet. Payload len: '+ str(self.curr_packet_len) +' Queue fill level = ', self.app_queue.qsize()
 
             if self.use_ack:
                 self.state = self.STATE_WAIT_FOR_ACK
@@ -144,10 +143,9 @@ class stop_and_wait_arq(gr.basic_block):
             self.message_port_pub(pmt.intern('to_phy'), self.last_tx_packet)
 
         elif self.state == self.STATE_WAIT_FOR_ACK:
-          #print 'Not sending packet yet. ACK pending'
           if (time.time() - self.last_tx_time) > self.ack_timeout:
             #retransmit
-            print 'SAW: ACK timeout. Retransmitting'
+            print '[stop_and_wait] :: ACK timeout. Retransmitting'
             self.last_tx_time = time.time()
             self.num_ack_timeouts += 1
             self.num_data_packets_send += 1
@@ -170,13 +168,13 @@ class stop_and_wait_arq(gr.basic_block):
 
             drop = False
             if(self.last_seq_num == packet_rx_seq_byte):
-                print 'SAW: WARN: duplicate packet. dropping...'
+                print '[stop_and_wait] :: WARN: duplicate packet. dropping...'
                 drop = True
 
             if((self.last_seq_num + 1) != packet_rx_seq_byte):
-                print 'SAW: WARN: out of seq packet'
+                print '[stop_and_wait] :: WARN: out of seq packet'
 
-            print 'SAW: Packet received. seq = ', packet_rx_seq_byte, ' type = ', packet_type_byte
+            print '[stop_and_wait] :: Packet received. seq = ', packet_rx_seq_byte, ' type = ', packet_type_byte
 
             self.log_packet("RX", packet_type_byte, len(packet_str) - 1, packet_rx_seq_byte, self.last_snr) #remove frag hdr
 
@@ -185,7 +183,7 @@ class stop_and_wait_arq(gr.basic_block):
             if packet_type_byte == self.PACKET_TYPE_DATA:
                 if self.use_ack:
                     #send ACK packet
-                    print 'SAW: Sending ACK'
+                    print '[stop_and_wait] :: Sending ACK'
                     ack_pdu = self.generate_ack_packet_pdu(packet_rx_seq_byte)
                     self.message_port_pub(pmt.intern('to_phy'), ack_pdu)
 
@@ -323,6 +321,7 @@ class stop_and_wait_arq(gr.basic_block):
             return
 
         msg_str = "".join([chr(x) for x in pmt.u8vector_elements(msg)])
+        print '[stop_and_wait] :: App message: Len: '+ str(len(msg_str))
 
         num_mtus = (len(msg_str) // self.max_mtu_size)
         if len(msg_str) % self.max_mtu_size != 0:
@@ -355,6 +354,8 @@ class stop_and_wait_arq(gr.basic_block):
 
           # Send the message:
           packet_list.append(packet)
+
+        print '[stop_and_wait] :: #Fragments: '+ str(len(packet_list))
 
         return packet_list
 
