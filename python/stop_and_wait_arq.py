@@ -165,7 +165,8 @@ class stop_and_wait_arq(gr.basic_block):
 
             packet_rx_seq_byte = ord(packet_str[0])
             packet_type_byte = ord(packet_str[1])
-            packet_str = packet_str[1:]
+            packet_frag_byte = ord(packet_str[2])
+            packet_str = packet_str[2:]
 
             drop = False
             if(self.last_seq_num == packet_rx_seq_byte):
