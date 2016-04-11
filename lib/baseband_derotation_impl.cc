@@ -106,7 +106,7 @@ namespace gr {
           }
 
           if(_constellation->points().size() == 16) {
-            _constellation->decision_maker_pe(out[i], &error);
+            _constellation->decision_maker_pe(&out[i], &error);
           }
 
 
