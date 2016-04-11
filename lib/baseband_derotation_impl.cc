@@ -1,17 +1,17 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015 <+YOU OR YOUR COMPANY+>.
- * 
+ *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -77,7 +77,7 @@ namespace gr {
 
           float arg = std::arg(out[i]);
           float error = 0.0f;
-           
+
           if(_constellation->points().size() == 2) {
             if(arg > M_PI / 2.0f || arg < -M_PI / 2.0f) {
                 if(arg < 0) {
@@ -87,12 +87,12 @@ namespace gr {
                 }
             } else {
               error = arg;
-            } 
+            }
           }
 
           if(_constellation->points().size() == 4) {
             if(arg >= 0 && arg < (M_PI / 2.0f)) {
-              error = arg - (M_PI / 4.0f); 
+              error = arg - (M_PI / 4.0f);
             }
             if(arg >= (M_PI / 2.0f)) {
               error = arg - ((3.0f * M_PI) / 4.0f);
@@ -105,9 +105,13 @@ namespace gr {
             }
           }
 
+          if(_constellation->points().size() == 16) {
+            _constellation->decision_maker_pe(out[i], &error);
+          }
+
+
           _error = _error + _mu * error;
           //TODO wrap _error
-        
         }
         // Tell runtime system how many output items we produced.
         return noutput_items;
