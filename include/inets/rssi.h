@@ -6,6 +6,7 @@
 
 #include <inets/api.h>
 #include <gnuradio/sync_block.h>
+#include <string>
 
 namespace gr {
     namespace inets {
@@ -30,7 +31,8 @@ namespace gr {
             static sptr make(float alpha);
 
             virtual void start_rssi_meas() = 0;
-            virtual void stop_rssi_meas(int RXangle, int TXangle) = 0;
+            virtual void set_alpha(float a) = 0;
+            virtual void store(std::string time, int RXangle = 0, int TXangle = 0) = 0;
 
         };
     } // namespace inets

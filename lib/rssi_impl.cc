@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <fstream>
 
 namespace gr {
   namespace inets {
@@ -27,21 +26,23 @@ namespace gr {
     rssi_impl::rssi_impl(float alpha)
         : gr::sync_block("rssi",
             gr::io_signature::make(1, 1, sizeof(std::complex<float>)),
-            gr::io_signature::make(0, 0, 0)),
+            gr::io_signature::make(1, 1, sizeof(float))),
         d_rssi_avg(0),
         d_num_of_samples(0),
         d_active(false),
         d_alpha(alpha),
-        d_beta(1.0 - alpha)
+        d_beta(1.0 - alpha),
+        log_file("/home/inets/Documents/Log/RSSI.csv")
     {
+        log_file << "Time,RXangle,TXangle,RSSI,Num_of_Samples" << std::endl;
     }
-
 
     /*
      * Our virtual destructor.
      */
     rssi_impl::~rssi_impl()
     {
+        log_file.close();
     }
 
     void rssi_impl::start_rssi_meas()
@@ -50,19 +51,10 @@ namespace gr {
         d_active = true;
         d_avg = 0;
         d_num_of_samples = 0;
-        std::cout << "RSSI measurement started\n";
     }
 
-    void rssi_impl::stop_rssi_meas(int RXangle, int TXangle)
+    void rssi_impl::store(std::string time, int RXangle, int TXangle)
     {
-        std::ofstream myfile;
-        myfile.open("/home/inets/Documents/Log/RSSI.csv", std::ios::app);
-
-        myfile.seekp(0, std::ios::end);
-        if(myfile.tellp() == 0)
-        {
-            myfile << "RXangle,TXangle,RSSI_avg,RSSI_max,Num_of_Samples\n";
-        }
 
         boost::lock_guard<boost::mutex> guard(mtx);
 
@@ -74,12 +66,15 @@ namespace gr {
         //The measured RMS power was -22.25 dB -> 1.35 dB difference
         double input_power_db = 10.0 * std::log10(d_rssi_avg) + 1.35;
 
-        myfile << RXangle << "," << TXangle << ","
-            << input_power_db << ","
-            << "0.0" << "," << d_num_of_samples << "\n";
+        log_file << time << RXangle << "," << TXangle << ","
+            << input_power_db << "," << d_num_of_samples << std::endl;
 
-        myfile.close();
-        std::cout << "RSSI measurement done\n";
+    }
+
+    void rssi_impl::set_alpha(float a)
+    {
+        boost::lock_guard<boost::mutex> guard(mtx);
+        d_alpha = a;
     }
 
     int rssi_impl::work(int noutput_items,
@@ -88,11 +83,14 @@ namespace gr {
     {
         boost::lock_guard<boost::mutex> guard(mtx);
         const std::complex<float> *in = (const std::complex<float> *) input_items[0];
+        const float *out = (const float *) output_items[0];
 
         for(int i = 0; i < noutput_items; i++) {
             double mag_sqrd = std::abs(in[i]) * std::abs(in[i]);
             d_avg = d_beta*d_avg + d_alpha*mag_sqrd; //Single pole IIR LP
+            out[i] = d_avg;
         }
+
         d_num_of_samples += noutput_items;
         return noutput_items;
     }

@@ -14,4 +14,8 @@
     <name>in</name>
     <type>complex</type>
   </sink>
+  <source>
+    <name>rssi</name>
+    <type>real</type>
+  </source>
 </block>
