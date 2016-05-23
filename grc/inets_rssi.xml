@@ -5,6 +5,7 @@
   <category>inets</category>
   <import>import inets</import>
   <make>inets.rssi($alpha)</make>
+  <callback>set_alpha($alpha)</callback>
   <param>
     <name>alpha</name>
     <key>alpha</key>
@@ -15,7 +16,11 @@
     <type>complex</type>
   </sink>
   <source>
+    <name>rssi_avg</name>
+    <type>float</type>
+  </source>
+  <source>
     <name>rssi</name>
-    <type>real</type>
+    <type>float</type>
   </source>
 </block>
