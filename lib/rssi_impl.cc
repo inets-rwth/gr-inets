@@ -14,16 +14,16 @@
 namespace gr {
   namespace inets {
 
-    rssi::sptr rssi::make(float alpha)
+    rssi::sptr rssi::make(float alpha, float th_low)
     {
       return gnuradio::get_initial_sptr
-        (new rssi_impl(alpha));
+        (new rssi_impl(alpha, th_low));
     }
 
     /*
      * The private constructor
      */
-    rssi_impl::rssi_impl(float alpha)
+    rssi_impl::rssi_impl(float alpha, float th_low_db)
         : gr::sync_block("rssi",
             gr::io_signature::make(1, 1, sizeof(std::complex<float>)),
             gr::io_signature::make(2, 2, sizeof(float))),
@@ -32,9 +32,14 @@ namespace gr {
         d_active(false),
         d_alpha(alpha),
         d_beta(1.0 - alpha),
-        log_file("/home/inets/Documents/Log/RSSI.csv")
+        log_file("/home/inets/Documents/Log/RSSI.csv"),
+        pow_win_len(POW_WIN_LEN),
+        th_low_counter(POW_WIN_LEN),
+        th_low(0)
     {
         log_file << "Time;RXangle;TXangle;RSSI;Num_of_Samples;" << std::endl;
+        th_low = std::pow(10, th_low_db / 10.0);
+        std::cout << "th_low = " << th_low << std::endl;
     }
 
     /*
@@ -90,7 +95,29 @@ namespace gr {
 
         for(int i = 0; i < noutput_items; i++) {
             double mag_sqrd = std::abs(in[i]) * std::abs(in[i]);
-            d_avg = d_beta*d_avg + d_alpha*mag_sqrd; //Single pole IIR LP
+            pow_win[pow_win_wp] = mag_sqrd;
+            pow_win_wp++;
+            pow_win_wp %= pow_win_len;
+
+            if(mag_sqrd < th_low) {
+              th_low_counter++;
+              if(th_low_counter >= pow_win_len) {
+                in_pkt = false;
+                th_high_counter = 0;
+              }
+            } else {
+              in_pkt = true;
+              th_low_counter = 0;
+            }
+
+            if(in_pkt) {
+              th_high_counter++;
+              if(th_high_counter >= pow_win_len) {
+                int rp = pow_win_wp;
+                d_avg = d_beta*d_avg + d_alpha*pow_win[rp]; //Single pole IIR LP
+              }
+            }
+
             out_avg[i] = d_avg;
             out[i] = mag_sqrd;
         }

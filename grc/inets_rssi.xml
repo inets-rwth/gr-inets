@@ -4,11 +4,16 @@
   <key>inets_rssi</key>
   <category>inets</category>
   <import>import inets</import>
-  <make>inets.rssi($alpha)</make>
+  <make>inets.rssi($alpha, $th_low_db)</make>
   <callback>set_alpha($alpha)</callback>
   <param>
     <name>alpha</name>
     <key>alpha</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Detect Threshold [dBm]</name>
+    <key>th_low_db</key>
     <type>float</type>
   </param>
   <sink>

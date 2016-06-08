@@ -6,9 +6,11 @@
 #include <boost/thread.hpp>
 #include <inets/rssi.h>
 #include <fstream>
-
 namespace gr {
   namespace inets {
+
+    #define POW_WIN_LEN 128
+
 
     class rssi_impl : public rssi
     {
@@ -19,11 +21,18 @@ namespace gr {
       double d_avg;
       double d_beta;
       double d_alpha;
+      bool in_pkt;
+      int th_low_counter;
+      int th_high_counter;
+      double pow_win[POW_WIN_LEN];
+      const int pow_win_len;
+      int pow_win_wp;
+      double th_low;
       boost::mutex mtx;
       std::ofstream log_file;
 
      public:
-      rssi_impl(float alpha);
+      rssi_impl(float alpha, float th_low_db);
       ~rssi_impl();
       void start_rssi_meas();
       void store(std::string time, int RXangle = 0, int TXangle = 0);
