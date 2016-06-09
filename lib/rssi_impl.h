@@ -25,6 +25,7 @@ namespace gr {
       int th_low_counter;
       int th_high_counter;
       double pow_win[POW_WIN_LEN];
+      int store_counter;
       const int pow_win_len;
       int pow_win_wp;
       double th_low;

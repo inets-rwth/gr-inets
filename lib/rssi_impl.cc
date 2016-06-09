@@ -61,7 +61,7 @@ namespace gr {
     void rssi_impl::store(std::string app_time, int RXangle, int TXangle)
     {
 
-        boost::lock_guard<boost::mutex> guard(mtx);
+        //boost::lock_guard<boost::mutex> guard(mtx);
 
         d_rssi_avg = d_avg;
         //d_num_of_samples = 0;
@@ -70,7 +70,7 @@ namespace gr {
         //with a power of -20.9 dBm. The USRP was set to 3 GHz and 0dB gain.
         //The measured RMS power was -22.25 dB -> 1.35 dB difference
         double input_power_db = 10.0 * std::log10(d_rssi_avg) + 1.35;
-
+        std::cout<< "Storing" << std::endl;
         log_file << app_time << ";" << RXangle << ";" << TXangle << ";"
             << input_power_db << ";" << d_num_of_samples << ";" << std::endl;
 
@@ -120,6 +120,13 @@ namespace gr {
 
             out_avg[i] = d_avg;
             out[i] = mag_sqrd;
+        }
+
+        store_counter++;
+
+        if(store_counter == 1024) {
+            store("",0, 0);
+            store_counter = 0;
         }
 
         d_num_of_samples += noutput_items;
