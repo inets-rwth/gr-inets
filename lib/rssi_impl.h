@@ -22,17 +22,20 @@ namespace gr {
       double d_beta;
       double d_alpha;
       bool in_pkt;
+      bool in_noise;
       int th_low_counter;
       int th_high_counter;
       double pow_win[POW_WIN_LEN];
+      int noise_counter;
       const int pow_win_len;
       int pow_win_wp;
       double th_low;
+      int num_idle;
       boost::mutex mtx;
       std::ofstream log_file;
 
      public:
-      rssi_impl(float alpha, float th_low_db);
+      rssi_impl(float alpha, float th_low_db, int num_samp_idle_det);
       ~rssi_impl();
       void start_rssi_meas();
       void store(std::string time, int RXangle = 0, int TXangle = 0);
