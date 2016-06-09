@@ -62,9 +62,7 @@ namespace gr {
 
     void rssi_impl::store(std::string app_time, int RXangle, int TXangle)
     {
-
         //boost::lock_guard<boost::mutex> guard(mtx);
-
         d_rssi_avg = d_avg;
         //d_num_of_samples = 0;
         //convert to dB and add correction term to convert to dBm
@@ -72,10 +70,7 @@ namespace gr {
         //with a power of -20.9 dBm. The USRP was set to 3 GHz and 0dB gain.
         //The measured RMS power was -22.25 dB -> 1.35 dB difference
         double input_power_db = 10.0 * std::log10(d_rssi_avg) + 1.35;
-        std::cout<< "Storing" << std::endl;
-        log_file << app_time << ";" << RXangle << ";" << TXangle << ";"
-            << input_power_db << ";" << d_num_of_samples << ";" << std::endl;
-
+        log_file << input_power_db << ";" << d_num_of_samples << ";" << std::endl;
     }
 
     void rssi_impl::set_alpha(float a)
@@ -103,7 +98,7 @@ namespace gr {
 
             if(mag_sqrd < th_low) {
               th_low_counter++;
-              if(th_low_counter >= pow_win_len) {
+              if(th_low_counter >= (pow_win_len - 512)) {
                 in_pkt = false;
                 th_high_counter = 0;
               }
@@ -114,7 +109,7 @@ namespace gr {
 
             if(th_low_counter < pow_win_len) {
               th_high_counter++;
-              if(th_high_counter >= pow_win_len) {
+              if(th_high_counter >= (pow_win_len + 512)) {
                 in_pkt = true;
               }
             }
@@ -138,13 +133,13 @@ namespace gr {
         }
 
         store_counter++;
+        d_num_of_samples += noutput_items;
 
-        if(store_counter == 1024) {
+        if(store_counter == 5) {
             store("",0, 0);
             store_counter = 0;
         }
 
-        d_num_of_samples += noutput_items;
         return noutput_items;
     }
 

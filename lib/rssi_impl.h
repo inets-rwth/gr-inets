@@ -9,7 +9,7 @@
 namespace gr {
   namespace inets {
 
-    #define POW_WIN_LEN 128
+    #define POW_WIN_LEN 640
 
 
     class rssi_impl : public rssi
