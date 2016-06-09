@@ -69,8 +69,9 @@ namespace gr {
         //correction term was generated using a tone at 3.0001 GHz
         //with a power of -20.9 dBm. The USRP was set to 3 GHz and 0dB gain.
         //The measured RMS power was -22.25 dB -> 1.35 dB difference
-        double input_power_db = 10.0 * std::log10(d_rssi_avg) + 1.35;
-        log_file << input_power_db << ";" << d_num_of_samples << ";" << std::endl;
+        double input_power_db_avg = 10.0 * std::log10(d_rssi_avg) + 1.35;
+        double input_power_db = 10.0 * std::log10(pow_win[pow_win_wp]) + 1.35;
+        log_file << input_power_db << input_power_db_avg << ";" << d_num_of_samples << ";" << std::endl;
     }
 
     void rssi_impl::set_alpha(float a)
@@ -107,7 +108,7 @@ namespace gr {
               in_noise = false;
             }
 
-            if(th_low_counter < pow_win_len) {
+            if(th_low_counter < (pow_win_len - 512)) {
               th_high_counter++;
               if(th_high_counter >= (pow_win_len + 512)) {
                 in_pkt = true;
@@ -129,7 +130,7 @@ namespace gr {
             }
 
             out_avg[i] = d_avg;
-            out[i] = mag_sqrd;
+            out[i] = pow_win[pow_win_wp];
         }
 
         store_counter++;
