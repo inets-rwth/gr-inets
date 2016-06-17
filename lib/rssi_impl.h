@@ -17,6 +17,7 @@ namespace gr {
      private:
       float d_rssi_avg;
       int d_num_of_samples;
+      int last_num_samples;
       bool d_active;
       double d_avg;
       double d_beta;
@@ -38,9 +39,13 @@ namespace gr {
      public:
       rssi_impl(float alpha, float th_low_db, int num_samp_idle_det);
       ~rssi_impl();
-      void start_rssi_meas();
-      void store(std::string time, int RXangle = 0, int TXangle = 0);
+      void reset();
+      void store();
       void set_alpha(float a);
+
+      double get_pow_data();
+      double get_pow();
+      int get_last_sample_count();
 
       // Where all the action really happens
       int work(int noutput_items,

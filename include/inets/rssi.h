@@ -30,9 +30,11 @@ namespace gr {
              */
             static sptr make(float alpha, float th_low_db, int num_samp_idle_det);
 
-            virtual void start_rssi_meas() = 0;
+            virtual void reset() = 0;
             virtual void set_alpha(float a) = 0;
-            virtual void store(std::string time, int RXangle = 0, int TXangle = 0) = 0;
+            virtual double get_pow_data() = 0;
+            virtual double get_pow() = 0;
+            virtual int get_last_sample_count() = 0;
 
         };
     } // namespace inets

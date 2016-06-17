@@ -40,8 +40,11 @@ namespace gr {
         in_noise(false),
         num_idle(num_samp_idle_det)
     {
-        log_file << "Time;RXangle;TXangle;RSSI;Num_of_Samples;" << std::endl;
+        log_file << "Power[dBm];Avg Power[dBm](Packets only);Num Samps;" << std::endl;
         th_low = std::pow(10, th_low_db / 10.0);
+        for(int i = 0;i < POW_WIN_LEN; i++) {
+            pow_win[i] = 0;
+        }
     }
 
     /*
@@ -52,15 +55,14 @@ namespace gr {
         log_file.close();
     }
 
-    void rssi_impl::start_rssi_meas()
+    void rssi_impl::reset()
     {
         boost::lock_guard<boost::mutex> guard(mtx);
-        d_active = true;
         d_avg = 0;
         d_num_of_samples = 0;
     }
 
-    void rssi_impl::store(std::string app_time, int RXangle, int TXangle)
+    void rssi_impl::store()
     {
         //boost::lock_guard<boost::mutex> guard(mtx);
         d_rssi_avg = d_avg;
@@ -69,9 +71,14 @@ namespace gr {
         //correction term was generated using a tone at 3.0001 GHz
         //with a power of -20.9 dBm. The USRP was set to 3 GHz and 0dB gain.
         //The measured RMS power was -22.25 dB -> 1.35 dB difference
+
         double input_power_db_avg = 10.0 * std::log10(d_rssi_avg) + 1.35;
-        double input_power_db = 10.0 * std::log10(pow_win[pow_win_wp]) + 1.35;
-        log_file << input_power_db << input_power_db_avg << ";" << d_num_of_samples << ";" << std::endl;
+        double inst_pow = 0.000000001;
+        if(pow_win[pow_win_wp] > inst_pow) {
+            inst_pow = pow_win[pow_win_wp];
+        }
+        double inst_pow_db = 10.0 * std::log10(inst_pow) + 1.35;
+        log_file << inst_pow_db << ";" << input_power_db_avg << ";" << d_num_of_samples << ";" << std::endl;
     }
 
     void rssi_impl::set_alpha(float a)
@@ -80,6 +87,28 @@ namespace gr {
         d_alpha = a;
         d_beta = 1.0f - a;
         std::cout << "Alpha = " << d_alpha << "Beta = " << d_beta << std::endl;
+    }
+
+    double rssi_impl::get_pow_data()
+    {
+        boost::lock_guard<boost::mutex> guard(mtx);
+        last_num_samples = d_num_of_samples;
+        return 10.0 * std::log10(d_rssi_avg) + 1.35;
+    }
+
+    int rssi_impl::get_last_sample_count()
+    {
+        return last_num_samples;
+    }
+
+    double rssi_impl::get_pow()
+    {
+        double inst_pow = 0.000000001;
+        if(pow_win[pow_win_wp] > inst_pow) {
+            inst_pow = pow_win[pow_win_wp];
+        }
+        double inst_pow_db = 10.0 * std::log10(inst_pow) + 1.35;
+        return inst_pow_db;
     }
 
     int rssi_impl::work(int noutput_items,
@@ -137,7 +166,7 @@ namespace gr {
         d_num_of_samples += noutput_items;
 
         if(store_counter == 5) {
-            store("",0, 0);
+            store();
             store_counter = 0;
         }
 
