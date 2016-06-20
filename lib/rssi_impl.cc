@@ -32,7 +32,6 @@ namespace gr {
         d_active(false),
         d_alpha(alpha),
         d_beta(1.0 - alpha),
-        log_file("/home/inets/Documents/Log/RSSI.csv"),
         pow_win_len(POW_WIN_LEN),
         th_low_counter(POW_WIN_LEN),
         th_low(0),
@@ -40,7 +39,6 @@ namespace gr {
         in_noise(false),
         num_idle(num_samp_idle_det)
     {
-        log_file << "Power[dBm];Avg Power[dBm](Packets only);Num Samps;" << std::endl;
         th_low = std::pow(10, th_low_db / 10.0);
         for(int i = 0;i < POW_WIN_LEN; i++) {
             pow_win[i] = 0;
@@ -72,6 +70,7 @@ namespace gr {
         //with a power of -20.9 dBm. The USRP was set to 3 GHz and 0dB gain.
         //The measured RMS power was -22.25 dB -> 1.35 dB difference
 
+        log_file.open("/home/inets/Documents/Log/RSSI.csv", std::ofstream::out | std::ofstream::app);
         double input_power_db_avg = 10.0 * std::log10(d_rssi_avg) + 1.35;
         double inst_pow = 0.000000001;
         if(pow_win[pow_win_wp] > inst_pow) {
@@ -79,6 +78,7 @@ namespace gr {
         }
         double inst_pow_db = 10.0 * std::log10(inst_pow) + 1.35;
         log_file << inst_pow_db << ";" << input_power_db_avg << ";" << d_num_of_samples << ";" << std::endl;
+        log_file.close();
     }
 
     void rssi_impl::set_alpha(float a)
