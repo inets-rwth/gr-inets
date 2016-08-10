@@ -44,6 +44,8 @@ class per_logger(gr.basic_block):
 
         self.csv_fields = ['Timestamp', 'SNR', 'Byte Errors', 'Bit Errors', 'Packet #']
         self.log_file_name = '/home/inets/Documents/Log/Packets.csv'
+        self.csv_fields = ['Timestamp', 'Packet ID']
+        self.log_file_name = '/home/inets/Documents/Log/per_logger_packets_log.csv'
 
         with open(self.log_file_name,'w+') as log_file:
             csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
@@ -81,23 +83,23 @@ class per_logger(gr.basic_block):
         msg = pmt.cdr(msg_pmt)
         msg_data = pmt.u8vector_elements(msg)
 
-        if len(list(msg_data)) > 100: #only data packets
-            self.num_rec_packets += 1
-            self.sum_snr += self.curr_snr
-            ok = True
-            timestamp = packet_rx_time_full_sec + packet_rx_time_frac_sec
-            print '[per_logger] Packet: rx_time = ' + str(timestamp) + ' Total #Packets = ' + str(self.num_rec_packets)
-            user_data = list(msg_data)[self.skip_header_bytes_start:-self.skip_header_bytes_end]
+        self.num_rec_packets += 1
+        self.sum_snr += self.curr_snr
+        ok = True
+        timestamp = packet_rx_time_full_sec + packet_rx_time_frac_sec
 
-            if self.check_payload:
-                byte_errors, bit_errors = self.compare_lists(user_data, self.payload)
-                if bit_errors > 0:
-                    self.num_packet_errors += 1
-                    print '[per_logger] Packet error. Total Errors = ' + str(self.num_packet_errors)
-                    ok = False
-                self.log_packet(timestamp, self.curr_snr, byte_errors, bit_errors, packet_num)
-            else:
-                self.log_packet(timestamp, self.curr_snr, 0, 0, packet_num)
+        print '[per_logger] Packet: rx_time = ' + str(timestamp) + ' id = ' + str(packet_num)
+        log_packet_simple(timestamp, packet_num)
+
+        if self.check_payload:
+            user_data = list(msg_data)[self.skip_header_bytes_start:-self.skip_header_bytes_end]
+            byte_errors, bit_errors = self.compare_lists(user_data, self.payload)
+            if bit_errors > 0:
+                self.num_packet_errors += 1
+                ok = False
+            self.log_packet(timestamp, self.curr_snr, byte_errors, bit_errors, packet_num)
+        else:
+            self.log_packet(timestamp, self.curr_snr, 0, 0, packet_num)
 
 
     def stop_per_meas(self, RXangle, TXangle):
@@ -110,7 +112,6 @@ class per_logger(gr.basic_block):
         self.per = self.num_packet_errors / float(self.num_rec_packets)
         ber = self.num_bit_errors / (float(self.num_rec_packets) * 500 * 8)
         self.avg_snr = self.sum_snr / float(self.num_rec_packets)
-        #print 'Packet Errors = ' + str(self.num_packet_errors) + ', PER = ' + str( float(self.per)) + ', BER = ' + str(ber) + ', Valid = ' + str(self.valid)
         self.log_stats(self.avg_snr, self.per, ber, self.valid, RXangle, TXangle)
 
     def start_per_meas(self):
@@ -120,6 +121,12 @@ class per_logger(gr.basic_block):
         self.num_packet_errors = 0
         self.num_bit_errors = 0
         self.log = True
+
+    def log_packet_simple(self, timestamp, packet_id):
+        with open(self.log_file_name, 'a') as log_file:
+            csv_writer = csv.DictWriter(log_file, fieldnames=self.csv_fields)
+            csv_writer.writerow({'Timestamp' : timestamp,
+                    'Packet ID' : packet_num})
 
     def log_packet(self, timestamp, snr, byte_errors, bit_errors, packet_num):
         with open(self.log_file_name, 'a') as log_file:
@@ -158,5 +165,3 @@ class per_logger(gr.basic_block):
                         bit_errors += 1
 
         return byte_errors, bit_errors
-
-
