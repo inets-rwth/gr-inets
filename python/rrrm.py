@@ -94,13 +94,13 @@ class rrrm(gr.basic_block):
 
         self.run_threads = True
 
-        self.ping_thread = threading.Thread(target=self.do_send_ping)
-        self.ping_thread.daemon = True
-        self.ping_thread.start()
+        #self.ping_thread = threading.Thread(target=self.do_send_ping)
+        #self.ping_thread.daemon = True
+        #self.ping_thread.start()
 
-        self.ping_monitor_thread = threading.Thread(target=self.do_check_ping)
-        self.ping_monitor_thread.daemon = True
-        self.ping_monitor_thread.start()
+        #self.ping_monitor_thread = threading.Thread(target=self.do_check_ping)
+        #self.ping_monitor_thread.daemon = True
+        #self.ping_monitor_thread.start()
 
     def handle_payload_message(self, msg_pmt):
         with self.thread_lock:
