@@ -116,6 +116,8 @@ class rrrm(gr.basic_block):
                             print("RRRM: ERROR: Antenna Control exception")
                             pass
                 self.state = self.STATE_FORWARD_PAYLOAD
+            else:
+                time.sleep(0.01)
 
 
     def handle_radar_message(self, msg_pmt):
@@ -199,8 +201,7 @@ class rrrm(gr.basic_block):
             self.send_switch_accept()
             self.send_switch_accept()
 
-            self.next_channel_id = channel_id
-
+            self.move_to_id = channel_id
             self.switch_thread = threading.Thread(target=self.move_antenna)
             self.switch_thread.start()
 
@@ -213,11 +214,12 @@ class rrrm(gr.basic_block):
     def move_antenna(self):
         try:
             if self.antenna_control != None:
-                self.antenna_control.move_to(self.channel_map[self.next_channel_id])
+                self.antenna_control.move_to(self.channel_map[self.move_to_id])
         except:
             pass
-        self.curr_channel_id = self.next_channel_id
         self.state = self.STATE_FORWARD_PAYLOAD
+        self.current_channel_id = move_to_id
+        self.next_channel_id = move_to_id
 
     def parse_link_layer_packet(self, msg_str):
         (ok, msg_str) = digital.crc.check_crc32(msg_str)
