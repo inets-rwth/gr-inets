@@ -113,6 +113,7 @@ class rrrm(gr.basic_block):
                             self.antenna_control.move_to(self.channel_map[self.next_channel_id])
                             self.curr_channel_id = self.next_channel_id
                         except:
+                            print("RRRM: ERROR: Antenna Control exception")
                             pass
                 self.state = self.STATE_FORWARD_PAYLOAD
 
