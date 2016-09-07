@@ -99,14 +99,13 @@ class rrrm(gr.basic_block):
             if(self.curr_channel_id != self.next_channel_id):
                 self.state = self.STATE_SWITCH
                 count = 0
-                while (self.switch_ack_received == False and count < 3):
+                while(self.switch_ack_received == False and count < 3):
                     self.send_switch_command(self.next_channel_id)
                     time.sleep(0.35)
                     count += 1
 
                 if count >= 3:
                     print("RRRM: FATAL: No ACK")
-                    print(count)
                 else:
                     if self.antenna_control != None:
                         try:
@@ -117,7 +116,8 @@ class rrrm(gr.basic_block):
                             pass
                 self.state = self.STATE_FORWARD_PAYLOAD
             else:
-                time.sleep(0.01)
+                pass
+            time.sleep(0.01)
 
 
     def handle_radar_message(self, msg_pmt):
@@ -212,10 +212,13 @@ class rrrm(gr.basic_block):
             self.switch_ack_thread = None
 
     def move_antenna(self):
+        print('RRRM: Moving Antenna')
         try:
             if self.antenna_control != None:
                 self.antenna_control.move_to(self.channel_map[self.move_to_id])
+                print('RRRM: Moved Antenna')
         except:
+            print('RRRM: ERROR: Antenna control exception')
             pass
         self.state = self.STATE_FORWARD_PAYLOAD
 
@@ -236,7 +239,6 @@ class rrrm(gr.basic_block):
     def get_meta_dict_from_pmt(self, msg_pmt):
         meta = pmt.to_python(pmt.car(msg_pmt))
         return meta
-
 
     def get_data_str_from_pmt(self, msg_pmt):
         meta = pmt.to_python(pmt.car(msg_pmt))
