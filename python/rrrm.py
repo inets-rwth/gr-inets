@@ -71,17 +71,10 @@ class rrrm(gr.basic_block):
         self.state = self.STATE_FORWARD_PAYLOAD
         self.curr_channel_id = 0
         self.next_channel_id = 0
-        self.next_channel_pos = 0
         self.thread_lock = threading.Lock()
         self.switch_ack_thread = None
         self.switch_ack_received = False
-        self.last_ping_time = 0
         self.last_message_tx_time = 0
-
-        self.log_file = open('/home/inets/Documents/Log/rrrm_log.txt','w+')
-
-        self.ping_frequency = 100 #10ms between PINGs
-        self.max_message_timeout = 0.05
 
         if HAS_TURNTABLE:
             try:
@@ -93,113 +86,44 @@ class rrrm(gr.basic_block):
                 print 'could not open serial port'
 
         self.run_threads = True
-
-        #self.ping_thread = threading.Thread(target=self.do_send_ping)
-        #self.ping_thread.daemon = True
-        #self.ping_thread.start()
-
-        #self.ping_monitor_thread = threading.Thread(target=self.do_check_ping)
-        #self.ping_monitor_thread.daemon = True
-        #self.ping_monitor_thread.start()
+        self.steering_thread = threading.Thread(target=self.handle_steering)
+        self.steering_thread .start()
 
     def handle_payload_message(self, msg_pmt):
         with self.thread_lock:
             if self.state == self.STATE_FORWARD_PAYLOAD:
-                #print 'RRRM: payload_in. Run state. Forwarding message'
                 self.send_data_message(msg_pmt)
 
-            if self.state == self.STATE_SWITCH:
-                print 'RRRM: payload_in. Switch state. Discarding message'
-                self.log_file.write("{:.8f}".format(time.time()) + ";Discarding;\r\n")
-                self.log_file.flush()
+    def handle_steering(self):
+        while(self.run_threads):
+            if(self.curr_channel_id != self.next_channel_id):
+                self.state = self.STATE_SWITCH
+                count = 0
+                while (self.switch_ack_received == False and count < 3):
+                    self.send_switch_command(self.next_channel_id)
+                    time.sleep(0.35)
+                    count += 1
+
+                if count >= 3:
+                    print("RRRM: FATAL: No ACK")
+                else:
+                    print("RRRM: ACK received")
+                    if self.antenna_control != None:
+                        try:
+                            self.antenna_control.move_to(self.channel_map[self.next_channel_id])
+                            self.curr_channel_id = self.next_channel_id
+                        except:
+                            pass
+                self.state = self.STATE_FORWARD_PAYLOAD
+
 
     def handle_radar_message(self, msg_pmt):
         with self.thread_lock:
-            print 'RRRM: radar_in'
-
-            if self.state == self.STATE_SWITCH:
-                print 'RRRM: WARN: Already in SWITCH state.'
-                return
-
-            self.state = self.STATE_SWITCH
-
-            #calculate new path
-            self.next_channel_id = (self.curr_channel_id + 1) % len(self.channel_map)
-
-            print ('RRRM: Curr chan = '+
-                str(self.curr_channel_id)+" next chan = "+str(self.next_channel_id))
-
-            self.log_file.write("{:.8f}".format(time.time()) + ";Radar;"+str(self.next_channel_id)+";\r\n")
-            self.log_file.flush()
-
-            self.next_channel_pos = self.channel_map[self.next_channel_id]
-            self.switch_ack_received = False
-            self.switch_ack_thread = threading.Thread(target=self.do_wait_for_switch_ack)
-            self.switch_ack_thread.daemon = True
-            self.switch_ack_thread.start()
-
-    def do_send_ping(self):
-        while self.run_threads:
-            if(time.time() - self.last_message_tx_time > (1.0 / self.ping_frequency)):
-                    self.send_ping_message()
-            time.sleep(0.5*(1.0 / self.ping_frequency))
-
-    def do_check_ping(self):
-        while self.run_threads:
-            if self.last_ping_time != 0 and self.state == self.STATE_FORWARD_PAYLOAD:
-                if (time.time() - self.last_ping_time) > self.max_message_timeout:
-                    #link broken. change path
-                    #calculate new path
-                    self.next_channel_id = (self.curr_channel_id + 1) % len(self.channel_map)
-
-                    print str(time.time()) + ' :: Link broken. Last ping = ' + str(self.last_ping_time)
-
-                    self.next_channel_pos = self.channel_map[self.next_channel_id]
-                    self.log_file.write("{:.8f}".format(time.time()) + ";Link Blocked;" + str(self.next_channel_id) + "\r\n")
-                    self.log_file.flush()
-                    if self.antenna_control != None:
-                        try:
-                            print(str(time.time()) + " :: Moving to " + str(self.next_channel_pos))
-                            self.log_file.write("{:.8f}".format(time.time()) + ";Steer Start;\r\n")
-                            self.log_file.flush()
-                            self.antenna_control.move_to(self.next_channel_pos)
-                            self.log_file.write("{:.8f}".format(time.time()) + ";Steer End;\r\n")
-                            self.log_file.flush()
-                            print(str(time.time()) + " :: antenna in pos")
-                        except:
-                            time.sleep(5)
-                    else:
-                        time.sleep(5)
-
-                    self.curr_channel_id = self.next_channel_id
-                    self.last_ping_time = time.time() + 200*self.max_message_timeout
-
-            time.sleep(0.2 * self.max_message_timeout)
-
-    def do_wait_for_switch_ack(self):
-        count = 0
-        while (self.switch_ack_received == False and count < 3):
-            self.send_switch_command(self.next_channel_id)
-            self.log_file.write("{:.8f}".format(time.time()) + ";Send Switch;"+str(self.next_channel_id)+";\r\n")
-            self.log_file.flush()
-            time.sleep(0.2)
-            count += 1
-
-        if count >= 3:
-            print(str(time.time()) + " :: RRRM: FATAL: Missing SWITCH ACK")
-
-            self.switch_ack_received = True
-            self.switch_ack_thread = None
-
-            if self.antenna_control != None:
-                try:
-                    self.antenna_control.move_to(self.next_channel_pos)
-                except:
-                    pass
-
-            self.curr_channel_id = self.next_channel_id
-            self.last_ping_time = time.time() + 200*self.max_message_timeout
-            self.state = self.STATE_FORWARD_PAYLOAD
+            print 'RRRM: handle_radar_message'
+            msg_cdr = pmt.cdr(msg_pmt)
+            msg_vect = pmt.u8vector_elements(msg_cdr)
+            msg_chan = msg_vect[0]
+            self.next_channel_id = msg_chan
 
     def build_link_layer_packet(self, msg_str):
         msg_str = chr(self.node_id) + msg_str
@@ -241,123 +165,61 @@ class rrrm(gr.basic_block):
         self.message_port_pub(pmt.intern('rrrm_out'), send_pmt)
 
     def handle_rrrm_message(self, msg_pmt):
-            #print 'RRRM: rrrm_in ###############################################'
+        msg_str = self.get_data_str_from_pmt(msg_pmt)
+        meta = self.get_meta_dict_from_pmt(msg_pmt)
 
-            msg_str = self.get_data_str_from_pmt(msg_pmt)
-            meta = self.get_meta_dict_from_pmt(msg_pmt)
+        packet_rx_time = meta["rx_time"]
+        packet_rx_time_full_sec = packet_rx_time[0]
+        packet_rx_time_frac_sec = packet_rx_time[1]
+        timestamp = packet_rx_time_full_sec + packet_rx_time_frac_sec
 
-            packet_rx_time = meta["rx_time"]
-            packet_rx_time_full_sec = packet_rx_time[0]
-            packet_rx_time_frac_sec = packet_rx_time[1]
-            timestamp = packet_rx_time_full_sec + packet_rx_time_frac_sec
+        ok, node_id, msg_type, msg_data = self.parse_rrrm_message(msg_str)
 
-            ok, node_id, msg_type, msg_data = self.parse_rrrm_message(msg_str)
+        if not ok:
+            print 'RRRM: Bad CRC'
+            return
 
-            if not ok:
-                print 'RRRM: Bad CRC'
+        if node_id == self.node_id:
+            return
+
+        if self.last_ping_time < time.time():
+            self.last_ping_time = time.time()
+
+        if msg_type == self.PACKET_TYPE_DATA:
+            send_pmt = self.get_pmt_from_data_str(msg_data)
+            self.message_port_pub(pmt.intern('payload_out'), send_pmt)
+
+        if msg_type == self.PACKET_TYPE_SWITCH:
+            channel_id = ord(msg_data[0])
+            if self.curr_channel_id == channel_id:
                 return
+            print('RRRM: SWITCH REQ: ' + str(channel_id))
 
-            if node_id == self.node_id:
+            #make sure switch ack reaches other side before turning antenna
+            self.state = self.STATE_SWITCH
+            self.send_switch_accept()
+            self.send_switch_accept()
+            self.send_switch_accept()
+
+            self.next_channel_id = channel_id
+
+            self.switch_thread = threading.Thread(target=self.move_antenna)
+            self.switch_thread.start()
+
+        if msg_type == self.PACKET_TYPE_SWITCH_ACCEPT:
+            if self.switch_ack_received == True: #Duplicate ACK, we'll receive 3 ACKs
                 return
+            self.switch_ack_received = True
+            self.switch_ack_thread = None
 
-            if self.last_ping_time < time.time():
-                self.last_ping_time = time.time()
-
-            if msg_type == self.PACKET_TYPE_DATA:
-                self.log_file.write("{:.8f}".format(timestamp) + ";Got Data;"+str(meta["packet_num"])+";\r\n")
-                self.log_file.flush()
-                send_pmt = self.get_pmt_from_data_str(msg_data)
-                self.message_port_pub(pmt.intern('payload_out'), send_pmt)
-
-            if msg_type == self.PACKET_TYPE_PING:
-                self.log_file.write("{:.8f}".format(timestamp) + ";Got Ping;"+str(meta["packet_num"])+";\r\n")
-                self.log_file.flush()
-
-            if msg_type == self.PACKET_TYPE_SWITCH:
-
-                channel_id = ord(msg_data[0])
-                if self.curr_channel_id == channel_id:
-                    return
-
-                self.state = self.STATE_SWITCH
-
-                print('RRRM: SWITCH REQ: ' + str(channel_id))
-                self.log_file.write("{:.8f}".format(timestamp) + ";Switch Req;" + str(channel_id) + ";" + str(meta["packet_num"]) +";\r\n")
-                self.log_file.flush()
-
-                self.next_channel_pos = self.channel_map[channel_id]
-                #make sure switch ack reaches other side before turning antenna
-                self.send_switch_accept()
-                self.log_file.write("{:.8f}".format(time.time()) + ";ACK;;;\r\n")
-                time.sleep(1.0/self.ping_frequency)
-                self.send_switch_accept()
-                self.log_file.write("{:.8f}".format(time.time()) + ";ACK;;;\r\n")
-                time.sleep(1.0/self.ping_frequency)
-                self.send_switch_accept()
-                self.log_file.write("{:.8f}".format(time.time()) + ";ACK;;;\r\n")
-                self.log_file.flush()
-
-                self.curr_channel_id = channel_id
-
-                try:
-                    if self.antenna_control != None:
-                        self.log_file.write("{:.8f}".format(time.time()) + ";Steer Start;\r\n")
-                        self.antenna_control.move_to(self.next_channel_pos)
-                        self.log_file.write("{:.8f}".format(time.time()) + ";Steer End;\r\n")
-                        self.last_ping_time = time.time() + 200*self.max_message_timeout
-                        self.state = self.STATE_FORWARD_PAYLOAD
-                    else:
-                        self.last_ping_time = time.time() + 200*self.max_message_timeout
-                        self.state = self.STATE_FORWARD_PAYLOAD
-                except:
-                    self.last_ping_time = time.time() + 200*self.max_message_timeout
-                    self.state = self.STATE_FORWARD_PAYLOAD
-
-            if msg_type == self.PACKET_TYPE_SWITCH_ACCEPT:
-
-                self.log_file.write("{:.8f}".format(timestamp) + ";Switch ACK;" + str(meta["packet_num"]) +";\r\n")
-                self.log_file.flush()
-
-                if self.switch_ack_received == True: #Duplicate ACK, we'll receive 3 ACKs
-                    return
-
-                print('RRRM: SWITCH ACK')
-
-                self.switch_ack_received = True
-                if (self.switch_ack_thread != None and self.switch_ack_thread.isAlive()):
-                    self.switch_ack_thread.join()
-
-                self.switch_ack_thread = None
-
-                self.curr_channel_id = self.next_channel_id
-
-                try:
-                    if self.antenna_control != None:
-                        self.log_file.write("{:.8f}".format(time.time()) + ";Steer Start;\r\n")
-                        self.antenna_control.move_to(self.next_channel_pos)
-                        self.log_file.write("{:.8f}".format(time.time()) + ";Steer End;\r\n")
-                        self.last_ping_time = time.time() + 200*self.max_message_timeout
-                        self.state = self.STATE_FORWARD_PAYLOAD
-                    else:
-                        self.last_ping_time = time.time() + 200*self.max_message_timeout
-                        self.state = self.STATE_FORWARD_PAYLOAD
-                except:
-                    self.last_ping_time = time.time() + 200*self.max_message_timeout
-                    self.state = self.STATE_FORWARD_PAYLOAD
-
-    def steer_antenna(self):
-        if self.antenna_control != None:
-            try:
-                self.log_file.write("{:.8f}".format(time.time()) + ";Steer Start;\r\n")
-                self.antenna_control.move_to(self.next_channel_pos)
-                self.log_file.write("{:.8f}".format(time.time()) + ";Steer Stop;\r\n")
-                if self.state == self.STATE_SWITCH:
-                    self.last_ping_time = time.time() + 200*self.max_message_timeout
-                    print("Steering complete. Setting default state")
-                    self.state = self.STATE_FORWARD_PAYLOAD
-            except:
-                self.last_ping_time = time.time() + 200*self.max_message_timeout
-                self.state = self.STATE_FORWARD_PAYLOAD
+    def move_antenna(self):
+        try:
+            if self.antenna_control != None:
+                self.antenna_control.move_to(self.channel_map[self.next_channel_id])
+        except:
+            pass
+        self.curr_channel_id = self.next_channel_id
+        self.state = self.STATE_FORWARD_PAYLOAD
 
     def parse_link_layer_packet(self, msg_str):
         (ok, msg_str) = digital.crc.check_crc32(msg_str)
