@@ -182,9 +182,6 @@ class rrrm(gr.basic_block):
         if node_id == self.node_id:
             return
 
-        if self.last_ping_time < time.time():
-            self.last_ping_time = time.time()
-
         if msg_type == self.PACKET_TYPE_DATA:
             send_pmt = self.get_pmt_from_data_str(msg_data)
             self.message_port_pub(pmt.intern('payload_out'), send_pmt)
