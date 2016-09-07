@@ -190,8 +190,6 @@ class rrrm(gr.basic_block):
 
         if msg_type == self.PACKET_TYPE_SWITCH:
             channel_id = ord(msg_data[0])
-            if self.curr_channel_id == channel_id:
-                return
             print('RRRM: SWITCH REQ: ' + str(channel_id))
 
             #make sure switch ack reaches other side before turning antenna
@@ -217,8 +215,6 @@ class rrrm(gr.basic_block):
         except:
             pass
         self.state = self.STATE_FORWARD_PAYLOAD
-        self.current_channel_id = move_to_id
-        self.next_channel_id = move_to_id
 
     def parse_link_layer_packet(self, msg_str):
         (ok, msg_str) = digital.crc.check_crc32(msg_str)
