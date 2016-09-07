@@ -106,8 +106,8 @@ class rrrm(gr.basic_block):
 
                 if count >= 3:
                     print("RRRM: FATAL: No ACK")
+                    print(count)
                 else:
-                    print("RRRM: ACK received")
                     if self.antenna_control != None:
                         try:
                             self.antenna_control.move_to(self.channel_map[self.next_channel_id])
@@ -126,6 +126,7 @@ class rrrm(gr.basic_block):
             msg_cdr = pmt.cdr(msg_pmt)
             msg_vect = pmt.u8vector_elements(msg_cdr)
             msg_chan = msg_vect[0]
+            self.switch_ack_received = False
             self.next_channel_id = msg_chan
 
     def build_link_layer_packet(self, msg_str):
@@ -206,6 +207,7 @@ class rrrm(gr.basic_block):
             self.switch_thread.start()
 
         if msg_type == self.PACKET_TYPE_SWITCH_ACCEPT:
+            print("RRRM: ACK received")
             if self.switch_ack_received == True: #Duplicate ACK, we'll receive 3 ACKs
                 return
             self.switch_ack_received = True
