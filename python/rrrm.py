@@ -48,7 +48,6 @@ class rrrm(gr.basic_block):
     PACKET_TYPE_SWITCH_REJECT = 3
     PACKET_TYPE_PING = 4
 
-
     def __init__(self, node_id, channel_map):
         gr.basic_block.__init__(self,
             name="rrrm",
@@ -71,10 +70,12 @@ class rrrm(gr.basic_block):
         self.state = self.STATE_FORWARD_PAYLOAD
         self.curr_channel_id = 0
         self.next_channel_id = 0
+        self.radar_request_chan_id = 0
         self.thread_lock = threading.Lock()
         self.switch_ack_thread = None
         self.switch_ack_received = False
         self.last_message_tx_time = 0
+        self.channel_switch_pending = False
 
         if HAS_TURNTABLE:
             try:
@@ -87,7 +88,7 @@ class rrrm(gr.basic_block):
 
         self.run_threads = True
         self.steering_thread = threading.Thread(target=self.handle_steering)
-        self.steering_thread .start()
+        self.steering_thread.start()
 
     def handle_payload_message(self, msg_pmt):
         with self.thread_lock:
@@ -96,12 +97,19 @@ class rrrm(gr.basic_block):
 
     def handle_steering(self):
         while(self.run_threads):
-            if(self.curr_channel_id != self.next_channel_id):
+            self.thread_lock.acquire()
+
+            if(self.channel_switch_pending):
+                self.channel_switch_pending = False
+                self.move_to_tmp_chan_id = self.radar_request_chan_id
+                self.thread_lock.release()
                 self.state = self.STATE_SWITCH
+
                 count = 0
+                self.switch_ack_received = False
                 while(self.switch_ack_received == False and count < 3):
-                    self.send_switch_command(self.next_channel_id)
-                    time.sleep(0.35)
+                    self.send_switch_command(self.move_to_tmp_chan_id)
+                    time.sleep(0.15)
                     count += 1
 
                 if count >= 3:
@@ -109,14 +117,15 @@ class rrrm(gr.basic_block):
                 else:
                     if self.antenna_control != None:
                         try:
-                            self.antenna_control.move_to(self.channel_map[self.next_channel_id])
-                            self.curr_channel_id = self.next_channel_id
+                            self.antenna_control.move_to(self.channel_map[self.move_to_tmp_chan_id])
+                            self.curr_channel_id = self.move_to_tmp_chan_id
+                            self.state = self.STATE_FORWARD_PAYLOAD
                         except:
                             print("RRRM: ERROR: Antenna Control exception")
                             pass
-                self.state = self.STATE_FORWARD_PAYLOAD
             else:
-                pass
+                self.thread_lock.release()
+
             time.sleep(0.01)
 
 
@@ -126,8 +135,8 @@ class rrrm(gr.basic_block):
             msg_cdr = pmt.cdr(msg_pmt)
             msg_vect = pmt.u8vector_elements(msg_cdr)
             msg_chan = msg_vect[0]
-            self.switch_ack_received = False
-            self.next_channel_id = msg_chan
+            self.radar_request_chan_id = msg_chan
+            self.channel_switch_pending = True
 
     def build_link_layer_packet(self, msg_str):
         msg_str = chr(self.node_id) + msg_str
@@ -191,21 +200,22 @@ class rrrm(gr.basic_block):
             self.message_port_pub(pmt.intern('payload_out'), send_pmt)
 
         if msg_type == self.PACKET_TYPE_SWITCH:
-            channel_id = ord(msg_data[0])
-            print('RRRM: SWITCH REQ: ' + str(channel_id))
+            if self.state != self.STATE_SWITCH:
+                tmp_channel_id = ord(msg_data[0])
+                print('RRRM: SWITCH PKT: ' + str(tmp_channel_id))
 
-            #make sure switch ack reaches other side before turning antenna
-            self.state = self.STATE_SWITCH
-            self.send_switch_accept()
-            self.send_switch_accept()
-            self.send_switch_accept()
+                #make sure switch ack reaches other side before turning antenna
+                self.state = self.STATE_SWITCH
+                self.send_switch_accept()
+                self.send_switch_accept()
+                self.send_switch_accept()
 
-            self.move_to_id = channel_id
-            self.switch_thread = threading.Thread(target=self.move_antenna)
-            self.switch_thread.start()
+                self.move_to_id = tmp_channel_id
+                self.switch_thread = threading.Thread(target=self.move_antenna)
+                self.switch_thread.start()
 
         if msg_type == self.PACKET_TYPE_SWITCH_ACCEPT:
-            print("RRRM: ACK received")
+            print("RRRM: ACK PKT")
             if self.switch_ack_received == True: #Duplicate ACK, we'll receive 3 ACKs
                 return
             self.switch_ack_received = True
@@ -217,10 +227,11 @@ class rrrm(gr.basic_block):
             if self.antenna_control != None:
                 self.antenna_control.move_to(self.channel_map[self.move_to_id])
                 print('RRRM: Moved Antenna')
+                self.state = self.STATE_FORWARD_PAYLOAD
+                self.curr_channel_id = self.move_to_id
         except:
             print('RRRM: ERROR: Antenna control exception')
             pass
-        self.state = self.STATE_FORWARD_PAYLOAD
 
     def parse_link_layer_packet(self, msg_str):
         (ok, msg_str) = digital.crc.check_crc32(msg_str)
