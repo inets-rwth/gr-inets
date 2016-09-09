@@ -114,6 +114,7 @@ class rrrm(gr.basic_block):
 
                 if count >= 3:
                     print("RRRM: FATAL: No ACK")
+                    self.channel_switch_pending = True
                 else:
                     if self.antenna_control != None:
                         try:
@@ -122,7 +123,6 @@ class rrrm(gr.basic_block):
                             self.state = self.STATE_FORWARD_PAYLOAD
                         except:
                             print("RRRM: ERROR: Antenna Control exception")
-                            pass
             else:
                 self.thread_lock.release()
 
