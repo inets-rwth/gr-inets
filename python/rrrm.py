@@ -41,6 +41,7 @@ class rrrm(gr.basic_block):
     """
     STATE_FORWARD_PAYLOAD = 0
     STATE_SWITCH = 1
+    STATE_WAIT_FOR_LINK = 2
 
     PACKET_TYPE_DATA = 0
     PACKET_TYPE_SWITCH = 1
@@ -76,6 +77,7 @@ class rrrm(gr.basic_block):
         self.switch_ack_received = False
         self.last_message_tx_time = 0
         self.channel_switch_pending = False
+        self.wait_for_link_cnt = 0
 
         if HAS_TURNTABLE:
             try:
@@ -126,7 +128,15 @@ class rrrm(gr.basic_block):
             else:
                 self.thread_lock.release()
 
-            time.sleep(0.01)
+            if self.state == self.STATE_WAIT_FOR_LINK:
+                print("RRRM: INFO: Waiting for link after resteering")
+                self.wait_for_link_cnt += 1
+                if self.wait_for_link_cnt > 100):
+                    self.move_to_id = 0
+                    self.move_antenna()
+                    self.wait_for_link_cnt = 0
+
+            time.sleep(0.05)
 
 
     def handle_radar_message(self, msg_pmt):
@@ -197,6 +207,9 @@ class rrrm(gr.basic_block):
 
         if msg_type == self.PACKET_TYPE_DATA:
             send_pmt = self.get_pmt_from_data_str(msg_data)
+            if self.state == self.STATE_WAIT_FOR_LINK:
+                self.wait_for_link_cnt = 0
+                self.state = self.STATE_FORWARD_PAYLOAD
             self.message_port_pub(pmt.intern('payload_out'), send_pmt)
 
         if msg_type == self.PACKET_TYPE_SWITCH:
@@ -231,7 +244,7 @@ class rrrm(gr.basic_block):
             if self.antenna_control != None:
                 self.antenna_control.move_to(self.channel_map[self.move_to_id])
                 print('RRRM: Moved Antenna')
-                self.state = self.STATE_FORWARD_PAYLOAD
+                self.state = STATE_WAIT_FOR_LINK
                 self.curr_channel_id = self.move_to_id
         except:
             print('RRRM: ERROR: Antenna control exception')
