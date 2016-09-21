@@ -207,7 +207,9 @@ class rrrm(gr.basic_block):
                 #make sure switch ack reaches other side before turning antenna
                 self.state = self.STATE_SWITCH
                 self.send_switch_accept()
+                time.sleep(0.05)
                 self.send_switch_accept()
+                time.sleep(0.05)
                 self.send_switch_accept()
 
                 self.move_to_id = tmp_channel_id
@@ -223,6 +225,8 @@ class rrrm(gr.basic_block):
 
     def move_antenna(self):
         print('RRRM: Moving Antenna')
+        #wait so that ap can recv ACKs
+        time.sleep(0.25)
         try:
             if self.antenna_control != None:
                 self.antenna_control.move_to(self.channel_map[self.move_to_id])
