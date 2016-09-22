@@ -49,8 +49,8 @@ class rrrm(gr.basic_block):
     PACKET_TYPE_SWITCH_REJECT = 3
     PACKET_TYPE_PING = 4
 
-    ROLE_CLIENT 0
-    ROLE_AP 1
+    ROLE_CLIENT = 0
+    ROLE_AP = 1
 
     def __init__(self, node_id, channel_map, role):
         gr.basic_block.__init__(self,
@@ -144,7 +144,7 @@ class rrrm(gr.basic_block):
             if self.state == self.STATE_WAIT_FOR_LINK:
                 print("RRRM: INFO: Waiting for link after resteering")
                 self.wait_for_link_cnt += 1
-                if self.wait_for_link_cnt > 100):
+                if self.wait_for_link_cnt > 100:
                     self.move_to_id = 0
                     self.move_antenna()
                     self.wait_for_link_cnt = 0
