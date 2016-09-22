@@ -1,7 +1,7 @@
 <block>
   <name>Variable Rotator</name>
   <key>inets_variable_rotator</key>
-  <category>INETS</category>
+  <category>[iNets]</category>
   <import>import inets</import>
   <make>inets.variable_rotator($num_delay)</make>
   <param>

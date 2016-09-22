@@ -2,7 +2,7 @@
 <block>
   <name>rrrm</name>
   <key>inets_rrrm</key>
-  <category>iNets</category>
+  <category>[iNets]</category>
   <import>import inets</import>
   <make>inets.rrrm($node_id, $channel_map, $role)</make>
   <param>

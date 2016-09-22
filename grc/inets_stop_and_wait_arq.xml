@@ -2,7 +2,7 @@
 <block>
   <name>Stop and Wait Arq</name>
   <key>inets_stop_and_wait_arq</key>
-  <category>iNets</category>
+  <category>[iNets]</category>
   <import>import inets</import>
   <make>inets.stop_and_wait_arq($ack_timeout, $max_mtu, $use_ack, $stat_update_interval)</make>
   <param>

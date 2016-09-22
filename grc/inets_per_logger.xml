@@ -2,7 +2,7 @@
 <block>
   <name>per_logger</name>
   <key>inets_per_logger</key>
-  <category>iNets</category>
+  <category>[iNets]</category>
   <import>import inets</import>
   <make>inets.per_logger()</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.

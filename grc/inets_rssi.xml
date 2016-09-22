@@ -2,7 +2,7 @@
 <block>
   <name>rssi</name>
   <key>inets_rssi</key>
-  <category>inets</category>
+  <category>[iNets]</category>
   <import>import inets</import>
   <make>inets.rssi($alpha, $th_low_db, $num_idle_det)</make>
   <callback>set_alpha($alpha)</callback>

@@ -2,7 +2,7 @@
 <block>
   <name>unmake_packet_python</name>
   <key>inets_unmake_packet_python</key>
-  <category>iNets</category>
+  <category>[iNets]</category>
   <import>import inets</import>
   <make>inets.unmake_packet_python()</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
