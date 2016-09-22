@@ -4,16 +4,21 @@
   <key>inets_rrrm</key>
   <category>iNets</category>
   <import>import inets</import>
-  <make>inets.rrrm($node_id, $channel_map)</make>
+  <make>inets.rrrm($node_id, $channel_map, $role)</make>
   <param>
-    <name>Channel Map</name>
-    <key>channel_map</key>
-    <type>raw</type>
+    <name>Role</name>
+    <key>role</key>
+    <type>string</type>
   </param>
   <param>
     <name>Node ID</name>
     <key>node_id</key>
     <type>int</type>
+  </param>
+  <param>
+    <name>Channel Map</name>
+    <key>channel_map</key>
+    <type>raw</type>
   </param>
 
   <sink>
@@ -21,12 +26,13 @@
     <type>message</type>
   </sink>
   <sink>
-    <name>radar_in</name>
+    <name>rrrm_in</name>
     <type>message</type>
   </sink>
   <sink>
-    <name>rrrm_in</name>
+    <name>radar_in</name>
     <type>message</type>
+    <optional>1</optional>
   </sink>
 
   <source>
