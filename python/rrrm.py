@@ -107,19 +107,21 @@ class rrrm(gr.basic_block):
                 self.thread_lock.release()
                 self.state = self.STATE_SWITCH
 
-                count = 0
+                self.count = 0
                 self.switch_ack_received = False
-                while(self.switch_ack_received == False and count < 3):
+                while not self.switch_ack_received and self.count < 3:
                     self.send_switch_command(self.move_to_tmp_chan_id)
                     time.sleep(0.15)
-                    count += 1
+                    self.count += 1
+                    print("RRRM: send switch pkt. count = " + str(self.count) + "swack recv = " + str(self.switch_ack_received))
 
-                if count >= 3:
+                if self.count >= 3:
                     print("RRRM: FATAL: No ACK")
                     self.channel_switch_pending = True
                 else:
                     if self.antenna_control != None:
                         try:
+                            print("moving turntable to idx: " + str(self.move_to_tmp_chan_id))
                             self.antenna_control.move_to(self.channel_map[self.move_to_tmp_chan_id])
                             self.curr_channel_id = self.move_to_tmp_chan_id
                             self.state = self.STATE_FORWARD_PAYLOAD
@@ -131,7 +133,7 @@ class rrrm(gr.basic_block):
             if self.state == self.STATE_WAIT_FOR_LINK:
                 print("RRRM: INFO: Waiting for link after resteering")
                 self.wait_for_link_cnt += 1
-                if self.wait_for_link_cnt > 100):
+                if self.wait_for_link_cnt > 100:
                     self.move_to_id = 0
                     self.move_antenna()
                     self.wait_for_link_cnt = 0
