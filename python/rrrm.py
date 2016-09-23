@@ -49,7 +49,10 @@ class rrrm(gr.basic_block):
     PACKET_TYPE_SWITCH_REJECT = 3
     PACKET_TYPE_PING = 4
 
-    def __init__(self, node_id, channel_map):
+    ROLE_CLIENT = 0
+    ROLE_AP = 1
+
+    def __init__(self, node_id, channel_map, role):
         gr.basic_block.__init__(self,
             name="rrrm",
             in_sig=[],
@@ -68,7 +71,16 @@ class rrrm(gr.basic_block):
         self.channel_map = channel_map
         self.node_id = node_id
 
-        self.state = self.STATE_FORWARD_PAYLOAD
+        if role == "client":
+            self.role = self.ROLE_CLIENT
+        else:
+            self.role = self.ROLE_AP
+
+        if self.role == self.ROLE_AP:
+            self.state = self.STATE_FORWARD_PAYLOAD
+        else:
+            self.state = self.STATE_WAIT_FOR_LINK
+
         self.curr_channel_id = 0
         self.next_channel_id = 0
         self.radar_request_chan_id = 0
@@ -78,6 +90,7 @@ class rrrm(gr.basic_block):
         self.last_message_tx_time = 0
         self.channel_switch_pending = False
         self.wait_for_link_cnt = 0
+
 
         if HAS_TURNTABLE:
             try:

@@ -1,7 +1,7 @@
 <block>
   <name>Frame Sync</name>
   <key>inets_frame_sync_cc</key>
-  <category>iNets</category>
+  <category>[iNets]</category>
   <import>import inets</import>
   <make>inets.frame_sync_cc($preamble, $constellation, $threshold, $len_tag_key)</make>
   <callback>set_constellation($constellation)</callback>

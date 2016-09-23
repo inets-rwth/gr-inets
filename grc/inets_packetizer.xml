@@ -1,7 +1,7 @@
 <block>
   <name>Packetizer</name>
   <key>inets_packetizer</key>
-  <category>iNets</category>
+  <category>[iNets]</category>
   <import>import inets</import>
   <make>inets.packetizer($preamble, $padding, $bps)</make>
   <param>
